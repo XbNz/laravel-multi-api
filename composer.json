@@ -1,0 +1,27 @@
+{
+    "name": "xbnz/laravel-multi-ip",
+    "description": "Wrapper for several IP resolver APIs",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "A G",
+            "email": "fdwnct@gmail.com"
+        }
+    ],
+    "require": {},
+     "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "XbNz\\Resolver\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "XbNz\\Resolver\\Tests\\": "tests"
+        }
+    }
+}
