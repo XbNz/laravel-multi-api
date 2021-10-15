@@ -9,8 +9,10 @@
             "email": "fdwnct@gmail.com"
         }
     ],
-    "require": {},
-     "require-dev": {
+    "require": {
+        "spatie/data-transfer-object": "^3.7"
+    },
+    "require-dev": {
         "orchestra/testbench": "^6.0",
         "phpunit/phpunit": "^9.5"
     },

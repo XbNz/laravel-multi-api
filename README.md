@@ -98,7 +98,13 @@ You can receive complete information for an IP using all of your APIs to put tog
 ```php
 public function example(Resolver $resolver)
 {
-	$resolver->all('99.99.99.99'); // IPCollection
+	$resolver
+        ->ip('99.99.99.99')  
+        ->ipApi()
+        ->ipInfo()
+        ->ipGeolocation()
+        ->maxMind() 
+        ->execute() // IPCollection
 }
 
 ```
