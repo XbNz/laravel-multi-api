@@ -99,12 +99,11 @@ You can receive complete information for an IP using all of your APIs to put tog
 public function example(Resolver $resolver)
 {
 	$resolver
-        ->ip('99.99.99.99')  
         ->ipApi()
         ->ipInfo()
         ->ipGeolocation()
         ->maxMind() 
-        ->execute() // IPCollection
+        ->execute('9.9.9.9') // IPCollection
 }
 
 ```

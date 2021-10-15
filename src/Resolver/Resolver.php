@@ -7,11 +7,13 @@ use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 
 class Resolver
 {
-    public function __construct(VerifyIpIntegrityAction $verifyIpIntegrity)
+    public function __construct(
+        private DriverBuilder $driverBuilder
+    )
     {}
 
-    public function ip(string $ip): DriverBuilder
+    public function ip(): DriverBuilder
     {
-
+        return $this->driverBuilder;
     }
 }
