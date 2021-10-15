@@ -25,5 +25,15 @@
         "psr-4": {
             "XbNz\\Resolver\\Tests\\": "tests"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "XbNz\\Resolver\\ServiceProviders\\IpServiceProvider"
+            ],
+            "aliases": {
+                "Resolver": "XbNz\\Resolver\\Facades\\ResolverFacade"
+            }
+        }
     }
 }
