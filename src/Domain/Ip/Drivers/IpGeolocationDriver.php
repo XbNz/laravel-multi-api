@@ -5,7 +5,7 @@ namespace XbNz\Resolver\Domain\Ip\Drivers;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
 
-class IpGeolocation implements Driver
+class IpGeolocationDriver implements Driver
 {
     private string $apiKey;
 
@@ -21,6 +21,16 @@ class IpGeolocation implements Driver
 
     public function supports(): string
     {
-        return 'ipInfo';
+        return 'ipGeolocation';
+    }
+
+    public function requiresApiKey(): bool
+    {
+        // TODO: Implement requiresApiKey() method.
+    }
+
+    public function requiresFile(): bool
+    {
+        // TODO: Implement requiresFile() method.
     }
 }

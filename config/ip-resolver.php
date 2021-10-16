@@ -2,13 +2,24 @@
 
 return [
     'api-keys' => [
-        'ipApi' => env('IPAPI_KEY'),
-        'ipGeolocation' => env('IPGEOLOCATION_KEY'),
-        'ipInfo' => env('IPINFO_KEY'),
+        'ipApi' => [
+            'f093kf934k0932kf4092k3g9j34',
+            'f093kf934k0932kf4092k3g9j34',
+        ],
+
+        'ipGeolocation' => [
+            'f093kf934k0932kf4092k3g9j34',
+            'f093kf934k0932kf4092k3g9j34',
+        ],
+
+        'ipInfo' => [
+            'f093kf934k0932kf4092k3g9j34',
+            'f093kf934k0932kf4092k3g9j34',
+        ],
     ],
 
     'files' => [
-        'maxMind' => env('MAXMIND_LOCATION'),
-        'ipDb' => env('IPDB_LOCATION')
+//        'maxMind' => ,
+//        'ipDb' => ,
     ]
 ];

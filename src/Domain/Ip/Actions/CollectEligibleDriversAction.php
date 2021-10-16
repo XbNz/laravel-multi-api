@@ -8,9 +8,9 @@ use XbNz\Resolver\Domain\Ip\Drivers\Driver;
 class CollectEligibleDriversAction
 {
     public function __construct(
-        private array                    $drivers,
-        private GetApiKeyForDriverAction $driversWithApiKeys,
-        private CollectDriversWithFiles  $driversWithFiles,
+        private array                     $drivers,
+        private GetApiKeysForDriverAction $driversWithApiKeys,
+        private CollectDriversWithFiles   $driversWithFiles,
     )
     {}
 

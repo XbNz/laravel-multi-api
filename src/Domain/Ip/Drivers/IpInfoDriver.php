@@ -2,24 +2,24 @@
 
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
-use XbNz\Resolver\Domain\Ip\Actions\GetApiKeyForDriverAction;
+use XbNz\Resolver\Domain\Ip\Actions\GetApiKeysForDriverAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
 
 class IpInfoDriver implements Driver
 {
-    private string $apiKey;
+    private array $apiKeys;
 
     public function __construct(
-        GetApiKeyForDriverAction $apiKey
+        GetApiKeysForDriverAction $apiKeys
     )
     {
-        $this->apiKey = $apiKey->execute($this);
+        $this->apiKeys = $apiKeys->execute($this);
     }
 
     public function query(IpData $ipData): QueriedIpData
     {
-
+        dd('were in boys!!');
     }
 
     public function supports(): string
