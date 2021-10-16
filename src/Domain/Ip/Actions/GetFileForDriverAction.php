@@ -2,6 +2,7 @@
 
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
+use Illuminate\Filesystem\Filesystem;
 use phpDocumentor\Reflection\File;
 use XbNz\Resolver\Domain\Ip\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
@@ -23,13 +24,14 @@ class GetFileForDriverAction
 
         $filePath = config("ip-resolver.files.{$driver->supports()}");
 
-        dd(\File::get($filePath));
         $file = \File::exists($filePath)
             ?
-            \File::get($filePath)
+            $filePath
             :
             throw new FileNotFoundException(
                 "Could not find {$filePath}. Please check your config file"
             );
+
+        return $file;
     }
 }
