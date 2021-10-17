@@ -3,7 +3,9 @@
 namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
+use XbNz\Resolver\Factories\QueriedIpDataFactory;
 use XbNz\Resolver\Resolver\Resolver;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 
@@ -16,12 +18,15 @@ class IpInfoDriverTest extends \XbNz\Resolver\Tests\TestCase
         $driverMock->shouldReceive('supports')
             ->andReturn('ipInfo');
         $driverMock->shouldReceive('query')
-            ->once();
+            ->once()
+            ->andReturn(QueriedIpDataFactory::generateTestData());
 
         app(Resolver::class)
             ->ip()
             ->ipInfo()
             ->execute('1.1.1.1');
+
+
     }
 
     /** @test */

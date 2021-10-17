@@ -9,6 +9,7 @@ use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
 use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
+use XbNz\Resolver\Domain\Ip\Drivers\Driver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 
@@ -62,16 +63,17 @@ class DriverBuilder
         return $this;
     }
 
-    public function execute(string $ip)
+    public function execute(string $ip): Collection
     {
         $ipData = $this->verifyIpIntegrity->execute($ip);
-        $pipes = $this->chosenDrivers->toArray();
 
-        $test = $this->pipeline
-            ->send($ipData)
-            ->through($pipes)
-            ->via('query')
-            ->thenReturn();
+        $queriedResults = collect();
+
+        $this->chosenDrivers->map(function (Driver $driver) use ($ipData, &$queriedResults){
+            $queriedResults[] = $driver->query($ipData);
+        });
+
+
 
     }
 

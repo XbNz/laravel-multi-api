@@ -7,6 +7,7 @@ use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\Exceptions\InvalidIpAddressException;
 use XbNz\Resolver\Factories\IpDataFactory;
 
+
 class VerifyIpIntegrityAction
 {
     public function execute(string $ip): IpData | false

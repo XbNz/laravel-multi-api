@@ -19,7 +19,7 @@ class IpInfoDriver implements Driver
 
     public function query(IpData $ipData): QueriedIpData
     {
-        dd('were in boys!!');
+        //
     }
 
     public function supports(): string
