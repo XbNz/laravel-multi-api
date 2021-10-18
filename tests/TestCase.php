@@ -4,6 +4,7 @@ namespace XbNz\Resolver\Tests;
 
 use XbNz\Resolver\Facades\ResolverFacade;
 use XbNz\Resolver\ServiceProviders\IpServiceProvider;
+use XbNz\Resolver\ServiceProviders\ResolverServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -11,6 +12,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         return [
             IpServiceProvider::class,
+            ResolverServiceProvider::class,
         ];
     }
 

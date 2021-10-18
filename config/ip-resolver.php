@@ -12,8 +12,7 @@ return [
         ],
 
         'ipInfo' => [
-            'f093kf934k0932kf4092k3g9j34',
-            'f093kf934k0932kf4092k3g9j34',
+            'dd4ce596215c8d',
         ],
     ],
 

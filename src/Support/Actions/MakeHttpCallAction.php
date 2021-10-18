@@ -3,14 +3,27 @@
 namespace XbNz\Resolver\Support\Actions;
 
 use Config;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
+use XbNz\Resolver\Domain\Ip\Drivers\Driver;
 
 class MakeHttpCallAction
 {
-
-    public function execute(string $url, array $params = [])
+    public function execute(string $url, array $params = []): Response
     {
-        if (Config::has('resolver.use_proxy') && Config::get('resolver.use_proxy') === true){
-            //TODO: Make universal config file (not IP specific)
+        $options = [
+            'timeout' => config('resolver.timeout'),
+        ];
+
+        if ($this->usingProxy()){
+            $options['proxy'] = \Arr::random(config('resolver.proxies'));
         }
+
+        return Http::withOptions($options)->get($url, $params);
+    }
+
+    private function usingProxy(): bool
+    {
+        return Config::get('resolver.use_proxy') === true;
     }
 }
