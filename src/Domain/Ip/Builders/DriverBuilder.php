@@ -21,8 +21,8 @@ class DriverBuilder
     public function __construct(
         array $drivers,
         private VerifyIpIntegrityAction $verifyIpIntegrity,
-        private Pipeline $pipeline
-//        private CreateCollectionFromQueriedIpDataAction $collectionFromQueriedIpDataAction,
+        private Pipeline $pipeline,
+        private CreateCollectionFromQueriedIpDataAction $collectionFromQueriedIpDataAction,
     )
     {
         $this->allDrivers = collect($drivers);
@@ -63,7 +63,7 @@ class DriverBuilder
         return $this;
     }
 
-    public function execute(string $ip): Collection
+    public function execute(string $ip): IpCollection
     {
         $ipData = $this->verifyIpIntegrity->execute($ip);
 
@@ -73,8 +73,8 @@ class DriverBuilder
             $queriedResults[] = $driver->query($ipData);
         });
 
-
-
+        $this->collectionFromQueriedIpDataAction
+            ->execute($queriedResults);
     }
 
 }

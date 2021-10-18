@@ -24,7 +24,14 @@ class IpInfoDriverTest extends \XbNz\Resolver\Tests\TestCase
         app(Resolver::class)
             ->ip()
             ->ipInfo()
-            ->execute('1.1.1.1');
+            ->execute('1.1.1.1')
+            ->
+
+
+//        app(Resolver::class)
+//            ->ip()
+//            ->ipInfo()
+//            ->execute('1.1.1.1');
 
 
     }
