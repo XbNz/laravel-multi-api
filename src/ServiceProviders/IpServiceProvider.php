@@ -3,8 +3,8 @@
 namespace XbNz\Resolver\ServiceProviders;
 
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
-use XbNz\Resolver\Domain\Ip\Drivers\Driver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDriver;
+use XbNz\Resolver\Support\Drivers\Driver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
 
 class IpServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -15,7 +15,7 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->tag([
             IpInfoDriver::class,
-            IpGeolocationDriver::class
+            IpGeolocationDotIoDriver::class
         ], 'ip-drivers');
 
         $this

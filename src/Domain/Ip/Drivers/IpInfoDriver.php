@@ -6,6 +6,7 @@ use XbNz\Resolver\Domain\Ip\Actions\GetApiKeysForDriverAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
 use XbNz\Resolver\Support\Actions\MakeHttpCallAction;
+use XbNz\Resolver\Support\Drivers\Driver;
 
 class IpInfoDriver implements Driver
 {
@@ -40,7 +41,7 @@ class IpInfoDriver implements Driver
         return false;
     }
 
-    private function raw(IpData $ipData): array
+    public function raw(IpData $ipData): array
     {
         return \Cache::remember(
             self::class . $ipData->ip,

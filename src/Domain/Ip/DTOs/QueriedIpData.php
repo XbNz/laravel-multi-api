@@ -2,7 +2,7 @@
 
 namespace XbNz\Resolver\Domain\Ip\DTOs;
 
-use XbNz\Resolver\Domain\Ip\Drivers\Driver;
+use XbNz\Resolver\Support\Drivers\Driver;
 
 class QueriedIpData extends \Spatie\DataTransferObject\DataTransferObject
 {

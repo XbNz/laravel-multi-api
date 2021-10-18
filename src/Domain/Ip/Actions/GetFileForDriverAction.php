@@ -4,7 +4,7 @@ namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Filesystem\Filesystem;
 use phpDocumentor\Reflection\File;
-use XbNz\Resolver\Domain\Ip\Drivers\Driver;
+use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 use XbNz\Resolver\Support\Exceptions\FileNotFoundException;
 

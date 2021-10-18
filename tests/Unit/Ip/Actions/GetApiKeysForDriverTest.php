@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 
 use XbNz\Resolver\Domain\Ip\Actions\GetApiKeysForDriverAction;
-use XbNz\Resolver\Domain\Ip\Drivers\Driver;
+use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 

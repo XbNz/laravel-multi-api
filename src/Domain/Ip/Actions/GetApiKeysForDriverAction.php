@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Collection;
-use XbNz\Resolver\Domain\Ip\Drivers\Driver;
+use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 
 class GetApiKeysForDriverAction

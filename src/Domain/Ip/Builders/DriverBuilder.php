@@ -9,7 +9,7 @@ use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
 use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
-use XbNz\Resolver\Domain\Ip\Drivers\Driver;
+use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 
@@ -17,11 +17,11 @@ class DriverBuilder
 {
     private Collection $chosenDrivers;
     private Collection $allDrivers;
+    private IpData $ipData;
 
     public function __construct(
         array $drivers,
         private VerifyIpIntegrityAction $verifyIpIntegrity,
-        private Pipeline $pipeline,
         private CreateCollectionFromQueriedIpDataAction $collectionFromQueriedIpDataAction,
     )
     {
@@ -46,16 +46,16 @@ class DriverBuilder
         return $this;
     }
 
-    public function ipGeolocation()
+    public function ipGeolocationDotIo()
     {
         try {
             $ipGeolocationDriver = $this->allDrivers
                 ->firstOrFail(function ($value, $key){
-                    return $value->supports() === 'ipGeolocation';
+                    return $value->supports() === 'ipGeolocationDotIo';
                 });
         } catch (ItemNotFoundException $e) {
             throw new DriverNotFoundException(
-                "The requested driver for ipGeolocation was not discoverable"
+                "The requested driver for ipGeolocationDotIo was not discoverable"
             );
         }
 
@@ -63,18 +63,29 @@ class DriverBuilder
         return $this;
     }
 
-    public function execute(string $ip): IpCollection
+    public function normalize(): IpCollection
     {
-        $ipData = $this->verifyIpIntegrity->execute($ip);
-
         $queriedResults = collect();
-
-        $this->chosenDrivers->map(function (Driver $driver) use ($ipData, &$queriedResults){
-            $queriedResults[] = $driver->query($ipData);
+        $this->chosenDrivers->map(function (Driver $driver) use (&$queriedResults){
+            $queriedResults[] = $driver->query($this->ipData);
         });
-
-        $this->collectionFromQueriedIpDataAction
+        return $this->collectionFromQueriedIpDataAction
             ->execute($queriedResults);
+    }
+
+    public function raw(): Collection
+    {
+        $rawResults = collect();
+        $this->chosenDrivers->map(function (Driver $driver) use (&$rawResults) {
+            $rawResults[] = $driver->raw($this->ipData);
+        });
+        return $rawResults;
+    }
+
+    public function withIp(string $ip)
+    {
+        $this->ipData = $this->verifyIpIntegrity->execute($ip);
+        return $this;
     }
 
 }

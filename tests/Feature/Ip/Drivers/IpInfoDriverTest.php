@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
-use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
 use XbNz\Resolver\Factories\QueriedIpDataFactory;
 use XbNz\Resolver\Resolver\Resolver;

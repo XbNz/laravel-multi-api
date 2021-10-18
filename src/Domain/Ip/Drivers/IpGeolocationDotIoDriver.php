@@ -5,14 +5,17 @@ namespace XbNz\Resolver\Domain\Ip\Drivers;
 use XbNz\Resolver\Domain\Ip\Actions\GetApiKeysForDriverAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
+use XbNz\Resolver\Support\Actions\MakeHttpCallAction;
+use XbNz\Resolver\Support\Drivers\Driver;
 
-class IpGeolocationDriver implements Driver
+class IpGeolocationDotIoDriver implements Driver
 {
     private array $apiKeys;
     const API_URL = 'https://api.ipgeolocation.io/ipgeo';
 
     public function __construct(
-        GetApiKeysForDriverAction $apiKeys
+        GetApiKeysForDriverAction $apiKeys,
+        private MakeHttpCallAction $httpCallAction,
     )
     {
         $this->apiKeys = $apiKeys->execute($this);
@@ -20,11 +23,7 @@ class IpGeolocationDriver implements Driver
 
     public function query(IpData $ipData): QueriedIpData
     {
-        $response = \Http::get(self::API_URL, [
-            'apiKey' => $this->apiKeys[array_rand($this->apiKeys)],
-            'ip' => $ipData->ip
-        ])->json();
-
+        $response = $this->raw($ipData);
 
         return new QueriedIpData(
             driver: self::class,
@@ -38,7 +37,7 @@ class IpGeolocationDriver implements Driver
 
     public function supports(): string
     {
-        return 'ipGeolocation';
+        return 'ipGeolocationDotIo';
     }
 
     public function requiresApiKey(): bool
@@ -50,4 +49,24 @@ class IpGeolocationDriver implements Driver
     {
         // TODO: Implement requiresFile() method.
     }
+
+    public function raw(IpData $ipData): array
+    {
+        return \Cache::remember(
+            self::class . $ipData->ip,
+            now()->addSeconds(config('resolver.cache_period')),
+            function () use ($ipData){
+                return $this->httpCallAction->execute(
+                    self::API_URL,
+                    $this,
+                    [
+                        'apiKey' => \Arr::random($this->apiKeys),
+                        'ip' => $ipData->ip
+                    ]
+                )->json();
+            }
+        );
+    }
+
+
 }

@@ -5,15 +5,27 @@ namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use XbNz\Resolver\Support\Actions\MakeHttpCallAction;
+use XbNz\Resolver\Support\Drivers\Driver;
+use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
 {
+    //TODO: Either mock http calls or tag test under online group
+
+    private Driver $driver;
+
+    protected function setUp(): void
+    {
+        $this->driver = $this->createMock(Driver::class);
+        parent::setUp();
+    }
+
     /** @test */
     public function it_successfully_makes_a_call()
     {
         \Config::set('resolver.use_proxy', false);
         $result = app(MakeHttpCallAction::class)
-            ->execute('http://ip-api.com/json/');
+            ->execute('http://ip-api.com/json/', $this->driver);
         $this->assertEquals('success', $result->json()['status']);
     }
 
@@ -26,11 +38,30 @@ class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
 
         try {
             app(MakeHttpCallAction::class)
-                ->execute('http://ip-api.com/json/');
+                ->execute('http://ip-api.com/json/', $this->driver);
         } catch (ConnectionException $e){
             $this->assertInstanceOf(ConnectionException::class, $e);
             return;
         }
         $this->fail('Timeout not respected.');
+    }
+
+    /** @test */
+    public function it_throws_api_exception_if_response_unsuccessful()
+    {
+        \Config::set('resolver.use_proxy', false);
+        \Config::set('resolver.timeout', 10);
+        $this->driver->method('supports')->willReturn('testValue');
+
+        try {
+            app(MakeHttpCallAction::class)
+                ->execute('https://google.com/kwpfkowqfkqewfkpw[ek', $this->driver);
+        } catch (ApiProviderException $e){
+            $this->assertStringContainsString('testValue', $e->getMessage());
+            $this->assertInstanceOf(ApiProviderException::class, $e);
+            return;
+        }
+        $this->fail('Api provider exception expected, none returned.');
+
     }
 }
