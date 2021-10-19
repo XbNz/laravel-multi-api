@@ -8,7 +8,7 @@ use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
 use XbNz\Resolver\Support\Actions\MakeHttpCallAction;
 use XbNz\Resolver\Support\Drivers\Driver;
 
-class IpInfoDriverDotIoDriver implements Driver
+class IpInfoDotIoDriver implements Driver
 {
     private array $apiKeys;
     const API_URL = 'https://ipinfo.io';
@@ -27,11 +27,12 @@ class IpInfoDriverDotIoDriver implements Driver
 
         $coordinates = explode(',', $response['loc']);
         $country = \Locale::getDisplayRegion("-{$response['country']}", 'en');
+        dd($country);
 
         return new QueriedIpData(
             driver: self::class,
             ip: $ipData->ip,
-            country: ,
+//            country: ,
             city: $response['city'],
             longitude: $coordinates[1],
             latitude: $coordinates[0]

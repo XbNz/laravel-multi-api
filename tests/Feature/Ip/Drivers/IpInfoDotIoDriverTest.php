@@ -5,7 +5,7 @@ namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Factories\QueriedIpDataFactory;
 use XbNz\Resolver\Resolver\Resolver;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
@@ -24,13 +24,13 @@ class IpInfoDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
 
         dd($info);
         $this->assertInstanceOf(IpCollection::class, $info);
-        $this->assertTrue(\Cache::has(IpInfoDriverDotIoDriver::class . '1.1.1.1'));
+        $this->assertTrue(\Cache::has(IpInfoDotIoDriver::class . '1.1.1.1'));
     }
 
     /** @test */
     public function it_throws_an_exception_when_a_driver_is_not_supported()
     {
-        $driverMock = $this->mock(IpInfoDriverDotIoDriver::class);
+        $driverMock = $this->mock(IpInfoDotIoDriver::class);
         $driverMock->shouldReceive('supports')
             ->once()
             ->andReturn('definitely-not-ip-info');

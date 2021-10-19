@@ -4,7 +4,7 @@ namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 
 use XbNz\Resolver\Domain\Ip\Actions\GetApiKeysForDriverAction;
 use XbNz\Resolver\Support\Drivers\Driver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 
 class GetApiKeysForDriverTest extends \XbNz\Resolver\Tests\TestCase

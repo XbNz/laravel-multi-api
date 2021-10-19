@@ -27,9 +27,12 @@ class MakeHttpCallAction
         }
 
         try {
-            $response = Http::retry(config('resolver.retry_times'), config('resolver.retry_sleep'))
-                ->withOptions($options)
-                ->get($url, $params);
+            $response = tap(Http::withOptions($options), function ($client) use ($url, $params){
+                if (! $this->usingRetries()){
+                    return $client;
+                }
+                return $client->retry(config('resolver.tries'), config('resolver.retry_sleep'));
+            })->get($url, $params);
         } catch (RequestException $e) {
             $message = "{$driver->supports()} has hit a snag and threw a {$e->response->status()} error" . PHP_EOL;
             throw new ApiProviderException($message);
@@ -41,5 +44,10 @@ class MakeHttpCallAction
     private function usingProxy(): bool
     {
         return Config::get('resolver.use_proxy') === true;
+    }
+
+    private function usingRetries(): bool
+    {
+        return Config::get('resolver.use_retries') === true;
     }
 }

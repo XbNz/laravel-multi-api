@@ -5,7 +5,7 @@ namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Resolver\Resolver;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 

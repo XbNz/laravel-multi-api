@@ -9,6 +9,8 @@ use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
 use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
@@ -16,50 +18,26 @@ use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 class DriverBuilder
 {
     private Collection $chosenDrivers;
-    private Collection $allDrivers;
+//    private Collection $allDrivers;
     private IpData $ipData;
 
     public function __construct(
-        array $drivers,
         private VerifyIpIntegrityAction $verifyIpIntegrity,
         private CreateCollectionFromQueriedIpDataAction $collectionFromQueriedIpDataAction,
     )
     {
-        $this->allDrivers = collect($drivers);
         $this->chosenDrivers = collect();
     }
 
     public function ipInfoDotIo()
     {
-        try {
-            $ipInfoDriver = $this->allDrivers
-                ->firstOrFail(function ($value, $key){
-                    return $value->supports() === 'ipInfoDotIo';
-                });
-        } catch (ItemNotFoundException $e) {
-            throw new DriverNotFoundException(
-                "The requested driver for ipInfoDotIo was not discoverable"
-            );
-        }
-
-        $this->chosenDrivers[] = $ipInfoDriver;
+        $this->chosenDrivers[] = app(IpInfoDotIoDriver::class);
         return $this;
     }
 
     public function ipGeolocationDotIo()
     {
-        try {
-            $ipGeolocationDriver = $this->allDrivers
-                ->firstOrFail(function ($value, $key){
-                    return $value->supports() === 'ipGeolocationDotIo';
-                });
-        } catch (ItemNotFoundException $e) {
-            throw new DriverNotFoundException(
-                "The requested driver for ipGeolocationDotIo was not discoverable"
-            );
-        }
-
-        $this->chosenDrivers[] = $ipGeolocationDriver;
+        $this->chosenDrivers[] = app(IpGeolocationDotIoDriver::class);
         return $this;
     }
 
