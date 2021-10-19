@@ -29,16 +29,16 @@ class DriverBuilder
         $this->chosenDrivers = collect();
     }
 
-    public function ipInfo()
+    public function ipInfoDotIo()
     {
         try {
             $ipInfoDriver = $this->allDrivers
                 ->firstOrFail(function ($value, $key){
-                    return $value->supports() === 'ipInfo';
+                    return $value->supports() === 'ipInfoDotIo';
                 });
         } catch (ItemNotFoundException $e) {
             throw new DriverNotFoundException(
-                "The requested driver for ipInfo was not discoverable"
+                "The requested driver for ipInfoDotIo was not discoverable"
             );
         }
 

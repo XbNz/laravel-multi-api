@@ -5,7 +5,7 @@ namespace XbNz\Resolver\ServiceProviders;
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
 
 class IpServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -14,7 +14,7 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../../config/ip-resolver.php', 'ip-resolver');
 
         $this->app->tag([
-            IpInfoDriver::class,
+            IpInfoDriverDotIoDriver::class,
             IpGeolocationDotIoDriver::class
         ], 'ip-drivers');
 

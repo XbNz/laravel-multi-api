@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 
 use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
 
 class CollectEligibleDriversTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -26,8 +26,8 @@ class CollectEligibleDriversTest extends \XbNz\Resolver\Tests\TestCase
             ->execute();
 
         $this->assertCount(2, $driverCollection);
-        $this->assertNotInstanceOf($driverCollection[0], IpInfoDriver::class);
-        $this->assertNotInstanceOf($driverCollection[1], IpInfoDriver::class);
+        $this->assertNotInstanceOf($driverCollection[0], IpInfoDriverDotIoDriver::class);
+        $this->assertNotInstanceOf($driverCollection[1], IpInfoDriverDotIoDriver::class);
     }
 
 

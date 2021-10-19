@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Factories;
 
 
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
 
 class QueriedIpDataFactory
@@ -11,7 +11,7 @@ class QueriedIpDataFactory
     public static function generateTestData(array $overrides = []): QueriedIpData
     {
         $data = array_merge([
-            'driver' => IpInfoDriver::class,
+            'driver' => IpInfoDriverDotIoDriver::class,
             'ip' => '1.1.1.1',
             'country' => 'Fakemenistan',
             'city' => 'Somewheresville',

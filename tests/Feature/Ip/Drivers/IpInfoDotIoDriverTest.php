@@ -3,25 +3,34 @@
 namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
+use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
+use XbNz\Resolver\Factories\QueriedIpDataFactory;
 use XbNz\Resolver\Resolver\Resolver;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 
-class IpGeolocationDriverTest extends \XbNz\Resolver\Tests\TestCase
+class IpInfoDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
 {
     /** @test */
-    public function it_successfully_reaches_the_query_method_of_the_ip_info_driver()
+    public function it_resolves_and_caches_the_ip_information()
     {
-        app(Resolver::class)
+        \Config::set('resolver.cache_period', 3600);
+        $info = app(Resolver::class)
             ->ip()
-            ->ipInfo()
-            ->execute('1.1.1.1');
+            ->ipInfoDotIo()
+            ->withIp('1.1.1.1')
+            ->normalize();
+
+        dd($info);
+        $this->assertInstanceOf(IpCollection::class, $info);
+        $this->assertTrue(\Cache::has(IpInfoDriverDotIoDriver::class . '1.1.1.1'));
     }
 
     /** @test */
     public function it_throws_an_exception_when_a_driver_is_not_supported()
     {
-        $driverMock = $this->mock(IpInfoDriver::class);
+        $driverMock = $this->mock(IpInfoDriverDotIoDriver::class);
         $driverMock->shouldReceive('supports')
             ->once()
             ->andReturn('definitely-not-ip-info');
@@ -29,6 +38,7 @@ class IpGeolocationDriverTest extends \XbNz\Resolver\Tests\TestCase
         try {
             app(Resolver::class)
                 ->ip()
+                ->withIp('1.1.1.1')
                 ->ipInfo();
         } catch (DriverNotFoundException $e) {
             $this->assertInstanceOf(DriverNotFoundException::class, $e);

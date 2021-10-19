@@ -7,6 +7,6 @@ return [
     ],
     'timeout' => 1,
     'cache_period' => 3600,
-    'retry_times' => 3,
-    'retry_sleep' => 500
+    'retry_times' => 2,
+    'retry_sleep' => 1
 ];

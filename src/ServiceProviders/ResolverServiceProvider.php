@@ -4,7 +4,7 @@ namespace XbNz\Resolver\ServiceProviders;
 
 use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDriverDotIoDriver;
 
 class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
 {

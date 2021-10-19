@@ -20,7 +20,9 @@ class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
         parent::setUp();
     }
 
-    /** @test */
+    /** @test
+     * @group Online
+     */
     public function it_successfully_makes_a_call()
     {
         \Config::set('resolver.use_proxy', false);
@@ -30,7 +32,7 @@ class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
     }
 
     /** @test */
-    public function it_applies_the_config_timeout()
+    public function it_times_out_and_throws_exception()
     {
         \Config::set('resolver.use_proxy', true);
         \Config::set('resolver.timeout', 0.01);
@@ -53,15 +55,21 @@ class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
         \Config::set('resolver.timeout', 10);
         $this->driver->method('supports')->willReturn('testValue');
 
+        Http::fake([
+            '*' => Http::response([], 404)
+        ]);
+
         try {
             app(MakeHttpCallAction::class)
-                ->execute('https://google.com/kwpfkowqfkqewfkpw[ek', $this->driver);
+                ->execute('https://random.com', $this->driver);
         } catch (ApiProviderException $e){
             $this->assertStringContainsString('testValue', $e->getMessage());
+            $this->assertStringContainsString(404, $e->getMessage());
             $this->assertInstanceOf(ApiProviderException::class, $e);
             return;
         }
         $this->fail('Api provider exception expected, none returned.');
 
     }
+
 }

@@ -15,7 +15,5 @@ class ResolverTest extends \XbNz\Resolver\Tests\TestCase
             ->ip();
 
         $this->assertInstanceOf(DriverBuilder::class, $builder);
-
-
     }
 }
