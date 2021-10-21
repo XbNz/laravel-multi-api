@@ -2,233 +2,175 @@
 
 # Usage
 
-The minimum you can expect from each API:
+The **minimum** normalized response you can expect from each API:
 
-- Provider name
 - IP address quried
 - Country
 - City
-- ISP
-- ASN
 - Latitude
 - Longitude
 
-If an API does not support a piece of information, it will be null in the returned collection instance.
-
-
-```php
-public function example(Resolver $resolver)
-{
-	$providerOne = $resolver->ipGeolocation('99.99.99.99'); // IPCollection
-	$resolver->ipInfo('99.99.99.99'); // IPCollection
-	$resolver->ipApi('99.99.99.99'); // IPCollection
-
-
-	$providerOne->getCity(); // ['Portland']
-	$providerOne->getCountry(); // ['United States']
-
-	// ...
-
-}
-
-```
-
-The return for ONE provider will look like this:
-
-```bash
-=> Illuminate\Support\Collection {#3693
-     all: [
-       // Guaranteed returns
-       "query" => "99.99.99.99",
-       "country" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "United States"
-           ]
-       ],
-       "city" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "Portland"
-           ]
-       ],
-       "isp" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "Verizon"
-           ]
-       ],
-       "asn" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "12345"
-           ]
-       ],
-       "latitude" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => 45.33
-           ]
-       ],
-       "longitude" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => 34.65
-           ]
-       ],
-
-       // Possible returns
-       "state" => null,
-       "blacklist" => null,
-       "type" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "Datacenter"
-           ]
-       ]
-     ],
-   }
-```
 
 ## Combining all of your APIs
 
 You can receive complete information for an IP using all of your APIs to put together a comprehensive report. Note this will use more API hits and take longer.
 
-
 ```php
 public function example(Resolver $resolver)
 {
-	$resolver
-        ->ipApi()
-        ->ipInfo()
-        ->ipGeolocation()
-        ->maxMind() 
-        ->execute('9.9.9.9') // IPCollection
-}
+	$result = $resolver
+	    ->ip()
+	    ->withIp('8.8.8.8')
+	    ->ipGeolocationDotIo()
+	    ->ipApiDotCom()
+	    ->ipInfoDotIo()
+	    ->normalize();
+	// ...
 
+}
 ```
 
-This will use all of your APIs/CSV files, the return will be:
-
+The return will look like this:
 
 ```bash
 => Illuminate\Support\Collection {#3693
      all: [
-       // Guaranteed returns
-       "query" => "99.99.99.99",
+       "query" => "8.8.8.8",
        "country" => [
            [
-           	  "provider" => "IpGeolocation",
+           	  "driver" => "IpGeolocationDotIoDriver::class",
            	  "data" => "United States"
            ],
            [
-           	  "provider" => "IpInfo",
+           	  "driver" => "ipApiDotComDriver::class",
            	  "data" => "United States"
            ],
            [
-           	  "provider" => "IpApi",
+           	  "driver" => "IpInfoDotIoDriver::class",
            	  "data" => "United States"
-           ],
+           ]
        ],
        "city" => [
-           [
-           	  "provider" => "IpGeolocation",
+            [
+           	  "driver" => "IpGeolocationDotIoDriver::class",
            	  "data" => "Portland"
            ],
            [
-           	  "provider" => "IpInfo",
+           	  "driver" => "ipApiDotComDriver::class",
            	  "data" => "Seattle"
            ],
            [
-           	  "provider" => "IpApi",
-           	  "data" => "Seattle"
-           ],
-       ],
-       "isp" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "Verizon"
-           ],
-           [
-           	  "provider" => "IpInfo",
-           	  "data" => "Verizon Ltd."
-           ],
-           [
-           	  "provider" => "IpApi",
-           	  "data" => "Verizon Limited"
-           ],
-       ],
-       "asn" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "12345"
-           ],
-           [
-           	  "provider" => "IpInfo",
-           	  "data" => "12345"
-           ],
-           [
-           	  "provider" => "IpApi",
-           	  "data" => "12345"
-           ],
+           	  "driver" => "IpInfoDotIoDriver::class",
+           	  "data" => "Los Angeles"
+           ]
        ],
        "latitude" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => 44.33
+            [
+           	  "driver" => "IpGeolocationDotIoDriver::class",
+           	  "data" => "33.43"
            ],
            [
-           	  "provider" => "IpInfo",
-           	  "data" => 45.54
+           	  "driver" => "ipApiDotComDriver::class",
+           	  "data" => "36.63"
            ],
            [
-           	  "provider" => "IpApi",
-           	  "data" => 45.54
-           ],
+           	  "driver" => "IpInfoDotIoDriver::class",
+           	  "data" => "31.43"
+           ]
        ],
        "longitude" => [
            [
-           	  "provider" => "IpGeolocation",
-           	  "data" => 34.33
+           	  "driver" => "IpGeolocationDotIoDriver::class",
+           	  "data" => "23.43"
            ],
            [
-           	  "provider" => "IpInfo",
-           	  "data" => 35.54
+           	  "driver" => "ipApiDotComDriver::class",
+           	  "data" => "32.63"
            ],
            [
-           	  "provider" => "IpApi",
-           	  "data" => 35.54
-           ],
-       ],
-
-       // Possible returns
-
-       "state" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "Oregon"
-           ],
-           [
-           	  "provider" => "IpInfo",
-           	  "data" => "Washington"
-           ],
-       ],
-       "blacklist" => [
-           [
-           	  "provider" => "Maxmind",
-           	  "data" => \Whatever\Whatever\Blacklist::class
-           ],
-       ],
-       "type" => [
-           [
-           	  "provider" => "IpGeolocation",
-           	  "data" => "Datacenter"
-           ],
-           [
-           	  "provider" => "Maxmind",
-           	  "data" => "Datacenter"
+           	  "driver" => "IpInfoDotIoDriver::class",
+           	  "data" => "11.43"
            ]
-       ]
+       ],
      ],
    }
 ```
+
+## Raw API output
+
+If you do not wish to receive condensed, normalized information, you may use thr raw method:
+
+```php
+public function example(Resolver $resolver)
+{
+	$result = $resolver
+	    ->ip()
+	    ->withIp('8.8.8.8')
+	    ->ipGeolocationDotIo()
+	    ->ipApiDotCom()
+	    ->ipInfoDotIo()
+	    ->raw();
+	// ...
+}
+```
+
+This works in the same way as normalize() and supports chaining. Keep in mind there is no guarantee of data integrity with this option.
+
+
+# Configuration
+
+Ensure that your composer.json file tells Laravel to auto-wire package service providers to your project:
+
+```json
+"extra": {
+  "laravel": {
+    "dont-discover": []
+  }
+},
+```
+
+- Publish config files:
+
+```bash
+php artisan vendor:publish --tag=ip-resolver
+php artisan vendor:publish --tag=resolver
+```
+
+```php
+// resolver.php
+
+'use_proxy' => (bool),
+'proxies' => ['https://2.2.2.2:8080', 'https://user:pass@2.2.2.2:8080'],
+'timeout' => (int) //seconds,
+'cache_period' => (int) // seconds,
+'use_retries' => (bool),
+'tries' => (int),
+'retry_sleep' => (int) // milliseconds
+```
+
+```php
+// ip-resolver.php
+
+'api-keys' => [
+    'driver' => [
+        'key_1', 'key_2', 'key_3' //...
+    ]   
+],
+
+'files' => [
+    'driver' => [
+        'v4' => __DIR__.'../storage/v4.csv'
+        'v6' => __DIR__.'../storage/v6.csv'
+    ]
+]
+```
+
+## Caching
+
+Caching is enforced by default as the alternative with exhaust your rate limiting very quickly. This package will use your default application cache driver and save keys in the following format: 
+```php
+Driver::class . {$entity}
+``` 
+
+Entity may be an IP or anything else the driver is responsible for.
+
