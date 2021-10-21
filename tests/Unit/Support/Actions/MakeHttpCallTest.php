@@ -10,8 +10,6 @@ use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
 {
-    //TODO: Either mock http calls or tag test under online group
-
     private Driver $driver;
 
     protected function setUp(): void
@@ -26,33 +24,21 @@ class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
     public function it_successfully_makes_a_call()
     {
         \Config::set('resolver.use_proxy', false);
+        \Config::set('resolver.use_retries', false);
+
         $result = app(MakeHttpCallAction::class)
             ->execute('http://ip-api.com/json/', $this->driver);
         $this->assertEquals('success', $result->json()['status']);
     }
 
-    /** @test */
-    public function it_times_out_and_throws_exception()
-    {
-        \Config::set('resolver.use_proxy', true);
-        \Config::set('resolver.timeout', 0.01);
-        \Config::set('resolver.proxies', ['https://1.1.1.1:8080']);
-
-        try {
-            app(MakeHttpCallAction::class)
-                ->execute('http://ip-api.com/json/', $this->driver);
-        } catch (ConnectionException $e){
-            $this->assertInstanceOf(ConnectionException::class, $e);
-            return;
-        }
-        $this->fail('Timeout not respected.');
-    }
 
     /** @test */
     public function it_throws_api_exception_if_response_unsuccessful()
     {
         \Config::set('resolver.use_proxy', false);
-        \Config::set('resolver.timeout', 10);
+        \Config::set('resolver.timeout', 1);
+        \Config::set('resolver.use_retries', false);
+
         $this->driver->method('supports')->willReturn('testValue');
 
         Http::fake([

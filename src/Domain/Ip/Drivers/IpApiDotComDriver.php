@@ -8,14 +8,14 @@ use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
 use XbNz\Resolver\Support\Actions\MakeHttpCallAction;
 use XbNz\Resolver\Support\Drivers\Driver;
 
-class IpInfoDotIoDriver implements Driver
+class IpApiDotComDriver implements Driver
 {
     private array $apiKeys;
-    const API_URL = 'https://ipinfo.io';
+    const API_URL = 'http://api.ipapi.com/api';
 
     public function __construct(
         GetApiKeysForDriverAction $apiKeys,
-        private MakeHttpCallAction $httpCallAction,
+        private MakeHttpCallAction $httpCallAction
     )
     {
         $this->apiKeys = $apiKeys->execute($this);
@@ -24,32 +24,15 @@ class IpInfoDotIoDriver implements Driver
     public function query(IpData $ipData): QueriedIpData
     {
         $response = $this->raw($ipData);
-        $coordinates = explode(',', $response['loc']);
-        $country = \Locale::getDisplayRegion("-{$response['country']}", 'en');
 
         return new QueriedIpData(
             driver: self::class,
             ip: $ipData->ip,
-            country: $country,
+            country: $response['country_name'],
             city: $response['city'],
-            longitude: $coordinates[1],
-            latitude: $coordinates[0]
+            longitude: $response['longitude'],
+            latitude: $response['latitude']
         );
-    }
-
-    public function supports(): string
-    {
-        return 'ipInfoDotIo';
-    }
-
-    public function requiresApiKey(): bool
-    {
-        return true;
-    }
-
-    public function requiresFile(): bool
-    {
-        return false;
     }
 
     public function raw(IpData $ipData): array
@@ -62,10 +45,25 @@ class IpInfoDotIoDriver implements Driver
                     self::API_URL . "/{$ipData->ip}",
                     $this,
                     [
-                        'token' => \Arr::random($this->apiKeys),
+                        'access_key' => \Arr::random($this->apiKeys),
                     ]
                 )->json();
             }
         );
+    }
+
+    public function supports(): string
+    {
+        return 'ipApiDotCom';
+    }
+
+    public function requiresApiKey(): bool
+    {
+        return true;
+    }
+
+    public function requiresFile(): bool
+    {
+        return false;
     }
 }

@@ -2,8 +2,8 @@
 
 return [
     'api-keys' => [
-        'ipApi' => [
-
+        'ipApiDotCom' => [
+            '10e58aa40f198b53e365ac02e7faf37f'
         ],
 
         'ipGeolocationDotIo' => [

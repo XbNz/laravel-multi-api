@@ -9,6 +9,7 @@ use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
 use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Support\Drivers\Driver;
@@ -38,6 +39,12 @@ class DriverBuilder
     public function ipGeolocationDotIo()
     {
         $this->chosenDrivers[] = app(IpGeolocationDotIoDriver::class);
+        return $this;
+    }
+
+    public function ipApiDotCom()
+    {
+        $this->chosenDrivers[] = app(IpApiDotComDriver::class);
         return $this;
     }
 

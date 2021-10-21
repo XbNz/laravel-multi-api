@@ -27,12 +27,16 @@ class MakeHttpCallAction
         }
 
         try {
+
             $response = tap(Http::withOptions($options), function ($client) use ($url, $params){
                 if (! $this->usingRetries()){
                     return $client;
                 }
                 return $client->retry(config('resolver.tries'), config('resolver.retry_sleep'));
-            })->get($url, $params);
+            })
+                ->get($url, $params)
+                ->throw();
+
         } catch (RequestException $e) {
             $message = "{$driver->supports()} has hit a snag and threw a {$e->response->status()} error" . PHP_EOL;
             throw new ApiProviderException($message);
