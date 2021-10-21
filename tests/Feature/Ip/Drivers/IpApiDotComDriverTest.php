@@ -2,14 +2,12 @@
 
 namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
-use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Resolver\Resolver;
-use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 
-class IpGeolocationDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
+class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
 {
     /** @test
      * @group Online
@@ -19,12 +17,11 @@ class IpGeolocationDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
         \Config::set('resolver.cache_period', 3600);
         $info = app(Resolver::class)
             ->ip()
-            ->ipGeolocationDotIo()
+            ->ipApiDotCom()
             ->withIp('1.1.1.1')
             ->normalize();
 
         $this->assertInstanceOf(IpCollection::class, $info);
-        $this->assertTrue(\Cache::has(IpGeolocationDotIoDriver::class . '1.1.1.1'));
+        $this->assertTrue(\Cache::has(IpApiDotComDriver::class . '1.1.1.1'));
     }
-
 }

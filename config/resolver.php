@@ -10,5 +10,5 @@ return [
 
     'use_retries' => true,
     'tries' => 2,
-    'retry_sleep' => 55555
+    'retry_sleep' => 5
 ];

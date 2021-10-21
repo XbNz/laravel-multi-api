@@ -9,7 +9,7 @@ use function app;
 class ResolverTest extends \XbNz\Resolver\Tests\TestCase
 {
     /** @test */
-    public function builder_is_successfully_instantiated()
+    public function ip_builder_is_successfully_instantiated()
     {
         $builder = app(Resolver::class)
             ->ip();
