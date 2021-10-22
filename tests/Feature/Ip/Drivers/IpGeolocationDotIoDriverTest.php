@@ -17,6 +17,7 @@ class IpGeolocationDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
     public function it_resolves_and_caches_the_ip_information()
     {
         \Config::set('resolver.cache_period', 3600);
+
         $info = app(Resolver::class)
             ->ip()
             ->ipGeolocationDotIo()

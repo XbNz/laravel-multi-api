@@ -20,6 +20,7 @@ class GetRandomProxyAction
             $validated[] = $proxy;
         }
 
+        //TODO: Refactor to "GetValidProxies" action and do Arr::random on calling code as needed.
         return \Arr::random($validated);
     }
 }

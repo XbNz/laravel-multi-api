@@ -7,6 +7,7 @@ use XbNz\Resolver\Support\Exceptions\ProxyNotValidException;
 
 class GetRandomProxyTest extends \XbNz\Resolver\Tests\TestCase
 {
+
     /** @test */
     public function it_throws_a_proxy_exception_for_invalid_proxy_structures()
     {

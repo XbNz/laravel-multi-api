@@ -27,7 +27,6 @@ class MakeHttpCallAction
         }
 
         try {
-
             $response = tap(Http::withOptions($options), function ($client) use ($url, $params){
                 if (! $this->usingRetries()){
                     return $client;
