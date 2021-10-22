@@ -18,6 +18,7 @@ class IpInfoDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
     public function it_resolves_and_caches_the_ip_information()
     {
         \Config::set('resolver.cache_period', 3600);
+        dump(env('IP_INFO_DOT_IO_API_KEY'));
         $info = app(Resolver::class)
             ->ip()
             ->ipInfoDotIo()

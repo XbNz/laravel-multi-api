@@ -10,15 +10,12 @@ on:
 jobs: 
 
   php-tests:
-
     runs-on: ${{ matrix.os }}
-
     strategy:
-
       matrix:
         php: [8.0]
         laravel: [8.*]
-        dependency-version: [prefer-lowest, prefer-stable]
+        dependency-version: [prefer-stable]
         os: [ubuntu-latest]
         include:
           - laravel: 8.*
@@ -28,7 +25,6 @@ jobs:
 
 
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -41,8 +37,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-            composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-            composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+            composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+            composer require --dev "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+            composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
         run: vendor/bin/phpunit
