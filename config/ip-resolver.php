@@ -15,7 +15,7 @@ return [
         ],
     ],
 
-    'files' => [
+    'databases' => [
 //        'maxMind' => ,
 //        'ipDb' => ,
     ]

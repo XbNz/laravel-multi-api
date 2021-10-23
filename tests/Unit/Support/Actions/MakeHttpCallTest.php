@@ -58,4 +58,16 @@ class MakeHttpCallTest extends \XbNz\Resolver\Tests\TestCase
 
     }
 
+    /** @test */
+    public function it_rehydrates_api_key_on_every_try_if_retry_is_enabled()
+    {
+        //TODO: this
+    }
+
+    /** @test */
+    public function it_rehydrates_proxy_on_every_try_if_retry_is_enabled()
+    {
+        //TODO: this
+    }
+
 }

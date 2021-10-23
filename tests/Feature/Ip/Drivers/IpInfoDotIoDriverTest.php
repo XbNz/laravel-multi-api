@@ -25,6 +25,7 @@ class IpInfoDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
             ->withIp('1.1.1.1')
             ->normalize();
 
+        //TODO: Feed wrong API key, API doesn't throw expected 401.
         $this->assertInstanceOf(IpCollection::class, $info);
         $this->assertTrue(\Cache::has(IpInfoDotIoDriver::class . '1.1.1.1'));
     }
