@@ -1,5 +1,6 @@
 composer.lock
 /vendor
-phpunit.xml
+/phpunit.xml
 .env
-.phpunit.result.cache
+/.phpunit.result.cache
+/.gitignore
