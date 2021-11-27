@@ -29,7 +29,9 @@ class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
         $this->assertTrue(\Cache::has(IpApiDotComDriver::class . '1.1.1.1'));
     }
 
-    /** @test **/
+    /** @test
+     * @group Online
+     */
     public function provided_an_incorrect_api_key_it_throws_the_expected_exception(): void
     {
         Cache::flush();
