@@ -45,6 +45,7 @@ jobs:
           IP_API_DOT_COM_API_KEY: ${{ secrets.IP_API_DOT_COM_API_KEY }}
           IP_GEOLOCATION_DOT_IO_API_KEY: ${{ secrets.IP_GEOLOCATION_DOT_IO_API_KEY }}
           IP_INFO_DOT_IO_API_KEY: ${{ secrets.IP_INFO_DOT_IO_API_KEY }}
+          IP_DATA_DOT_CO_API_KEY: ${{ secrets.IP_DATA_DOT_CO_API_KEY }}
 
       - name: Discord notification
         env:
