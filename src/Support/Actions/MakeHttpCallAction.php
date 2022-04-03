@@ -2,12 +2,11 @@
 
 namespace XbNz\Resolver\Support\Actions;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use XbNz\Resolver\Support\ApiExceptionHandlers\Handler;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 

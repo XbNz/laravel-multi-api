@@ -10,6 +10,7 @@ use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
 use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Support\Drivers\Driver;
@@ -19,7 +20,6 @@ use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 class DriverBuilder
 {
     private Collection $chosenDrivers;
-//    private Collection $allDrivers;
     private IpData $ipData;
 
     public function __construct(
@@ -30,21 +30,27 @@ class DriverBuilder
         $this->chosenDrivers = collect();
     }
 
-    public function ipInfoDotIo()
+    public function ipInfoDotIo(): static
     {
         $this->chosenDrivers[] = app(IpInfoDotIoDriver::class);
         return $this;
     }
 
-    public function ipGeolocationDotIo()
+    public function ipGeolocationDotIo(): static
     {
         $this->chosenDrivers[] = app(IpGeolocationDotIoDriver::class);
         return $this;
     }
 
-    public function ipApiDotCom()
+    public function ipApiDotCom(): static
     {
         $this->chosenDrivers[] = app(IpApiDotComDriver::class);
+        return $this;
+    }
+
+    public function ipDataDotCo(): static
+    {
+        $this->chosenDrivers[] = app(IpDataDotCoDriver::class);
         return $this;
     }
 
@@ -67,7 +73,7 @@ class DriverBuilder
         return $rawResults;
     }
 
-    public function withIp(string $ip)
+    public function withIp(string $ip): static
     {
         $this->ipData = $this->verifyIpIntegrity->execute($ip);
         return $this;

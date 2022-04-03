@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Resolver\Resolver;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
-class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
+class IpDataDotCoDriverTest extends \XbNz\Resolver\Tests\TestCase
 {
     /** @test
      * @group Online
@@ -21,12 +22,12 @@ class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
 
         $info = app(Resolver::class)
             ->ip()
-            ->ipApiDotCom()
+            ->ipDataDotCo()
             ->withIp('1.1.1.1')
             ->normalize();
 
         $this->assertInstanceOf(IpCollection::class, $info);
-        $this->assertTrue(Cache::has(IpApiDotComDriver::class . '1.1.1.1'));
+        $this->assertTrue(Cache::has(IpDataDotCoDriver::class . '1.1.1.1'));
     }
 
     /** @test
@@ -35,12 +36,12 @@ class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
     public function provided_an_incorrect_api_key_it_throws_the_expected_exception(): void
     {
         Cache::flush();
-        Config::set('ip-resolver.api-keys.ipApiDotCom', ['wrong-api-key-should-be-refused']);
+        Config::set('ip-resolver.api-keys.ipDataDotCo', ['wrong-api-key-should-be-refused']);
         $this->expectException(ApiProviderException::class);
 
         app(Resolver::class)
             ->ip()
-            ->ipApiDotCom()
+            ->ipDataDotCo()
             ->withIp('1.1.1.1')
             ->normalize();
 

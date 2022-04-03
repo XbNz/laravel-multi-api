@@ -13,6 +13,10 @@ return [
         'ipInfoDotIo' => [
             '', '', ''
         ],
+
+        'ipDataDotCo' => [
+            '', '', ''
+        ],
     ],
 
     'databases' => [

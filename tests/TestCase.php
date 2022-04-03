@@ -3,6 +3,7 @@
 namespace XbNz\Resolver\Tests;
 
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
+use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Facades\ResolverFacade;
 use XbNz\Resolver\ServiceProviders\IpServiceProvider;
 use XbNz\Resolver\ServiceProviders\ResolverServiceProvider;
@@ -30,7 +31,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         $app->bootstrapWith([LoadEnvironmentVariables::class]);
         parent::getEnvironmentSetUp($app);
 
-        \Config::set('ip-resolver.api-keys', [
+        Config::set('ip-resolver.api-keys', [
             'ipApiDotCom' => [
                 env('IP_API_DOT_COM_API_KEY')
             ],
@@ -41,6 +42,10 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
             'ipInfoDotIo' => [
                 env('IP_INFO_DOT_IO_API_KEY')
+            ],
+
+            'ipDataDotCo' => [
+                env('IP_DATA_DOT_CO_API_KEY')
             ],
         ]);
     }
