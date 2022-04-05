@@ -43,7 +43,5 @@ class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
             ->ipApiDotCom()
             ->withIp('1.1.1.1')
             ->normalize();
-
-
     }
 }

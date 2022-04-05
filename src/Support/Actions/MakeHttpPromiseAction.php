@@ -2,6 +2,7 @@
 
 namespace XbNz\Resolver\Support\Actions;
 
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
@@ -10,12 +11,12 @@ use Illuminate\Support\Facades\Http;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
-class MakeHttpCallAction
+class MakeHttpPromiseAction
 {
     public function __construct(private GetRandomProxyAction $randomProxy)
     {}
 
-    public function execute(string $url, Driver $driver, array $params = []): Response
+    public function execute(string $url, array $params = []): PromiseInterface
     {
         $options = [
             'timeout' => config('resolver.timeout'),
@@ -25,22 +26,13 @@ class MakeHttpCallAction
             $options['proxy'] = $this->randomProxy->execute();
         }
 
-        try {
-            $response = tap(Http::withOptions($options), function ($client) use ($url, $params){
-                if (! $this->usingRetries()){
-                    return $client;
-                }
-                return $client->retry(config('resolver.tries'), config('resolver.retry_sleep'));
-            })
-                ->get($url, $params)
-                ->throw();
+        return tap(Http::withOptions($options), function ($client) use ($url, $params){
+            if (! $this->usingRetries()){
+                return $client;
+            }
+            return $client->retry(config('resolver.tries'), config('resolver.retry_sleep'));
+        })->async()->get($url, $params);
 
-        } catch (RequestException $e) {
-            $message = "{$driver->supports()} has hit a snag and threw a {$e->response->status()} error" . PHP_EOL;
-            throw new ApiProviderException($message);
-        }
-
-        return $response;
     }
 
     private function usingProxy(): bool

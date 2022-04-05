@@ -2,11 +2,16 @@
 
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Arr;
 use XbNz\Resolver\Domain\Ip\Actions\GetApiKeysForDriverAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
-use XbNz\Resolver\Support\Actions\MakeHttpCallAction;
+use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
+use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class IpGeolocationDotIoDriver implements Driver
 {
@@ -14,10 +19,9 @@ class IpGeolocationDotIoDriver implements Driver
     const API_URL = 'https://api.ipgeolocation.io/ipgeo';
 
     public function __construct(
-        GetApiKeysForDriverAction $apiKeys,
-        private MakeHttpCallAction $httpCallAction,
-    )
-    {
+        GetApiKeysForDriverAction     $apiKeys,
+        private MakeHttpPromiseAction $httpPromiseAction,
+    ) {
         $this->apiKeys = $apiKeys->execute($this);
     }
 
@@ -56,16 +60,39 @@ class IpGeolocationDotIoDriver implements Driver
             self::class . $ipData->ip,
             now()->addSeconds(config('resolver.cache_period')),
             function () use ($ipData){
-                return $this->httpCallAction->execute(
-                    self::API_URL,
-                    $this,
-                    [
-                        'apiKey' => \Arr::random($this->apiKeys),
-                        'ip' => $ipData->ip
-                    ]
-                )->json();
+                return $this->resolvePromise()->json();
             }
         );
+    }
+
+    public function initiateAsync(IpData $ipData): void
+    {
+        $this->promise = $this->httpPromiseAction->execute(
+            self::API_URL,
+            [
+                'apiKey' => Arr::random($this->apiKeys),
+                'ip' => $ipData->ip
+            ]
+        );
+    }
+
+    public function resolvePromise(): Response
+    {
+        if ($this->promise === null) {
+            throw new \BadMethodCallException('Promise not initiated');
+        }
+
+        try {
+            $response = $this->promise->wait()->throw();
+        } catch (RequestException $e) {
+            $message = "{$this->supports()} has hit a snag and threw a {$e->response->status()} error";
+            throw new ApiProviderException($message);
+        } catch (ConnectionException $e) {
+            $message = "{$this->supports()} has failed to establish a connection";
+            throw new ApiProviderException($message);
+        }
+
+        return $response;
     }
 
 

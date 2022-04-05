@@ -57,9 +57,12 @@ class DriverBuilder
     public function normalize(): IpCollection
     {
         $queriedResults = collect();
-        $this->chosenDrivers->map(function (Driver $driver) use (&$queriedResults){
-            $queriedResults[] = $driver->query($this->ipData);
-        });
+        $this->chosenDrivers
+            ->each->initiateAsync($this->ipData)
+            ->map(function (Driver $driver) use (&$queriedResults){
+                $queriedResults[] = $driver->query($this->ipData);
+            });
+
         return $this->collectionFromQueriedIpDataAction
             ->execute($queriedResults);
     }
@@ -67,7 +70,9 @@ class DriverBuilder
     public function raw(): Collection
     {
         $rawResults = collect();
-        $this->chosenDrivers->map(function (Driver $driver) use (&$rawResults) {
+        $this->chosenDrivers
+            ->each->initiateAsync($this->ipData)
+            ->map(function (Driver $driver) use (&$rawResults) {
             $rawResults[] = $driver->raw($this->ipData);
         });
         return $rawResults;
