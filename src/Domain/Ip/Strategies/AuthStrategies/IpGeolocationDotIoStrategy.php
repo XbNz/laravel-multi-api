@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
 
 use GuzzleHttp\Psr7\Uri;
@@ -8,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
 use XbNz\Resolver\Domain\Ip\Strategies\Strategy;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 
-class IpGeolocationDotIoStrategy implements Strategy
+class IpGeolocationDotIoStrategy implements AuthStrategy
 {
     public function __construct(
         private GetRandomApiKeyAction $getRandomApiKey,
@@ -18,13 +20,17 @@ class IpGeolocationDotIoStrategy implements Strategy
 
     public function guzzleMiddleware(): callable
     {
-        return static function (callable $handler) {
-            return function (RequestInterface $request, array $options) use ($handler) {
+        $getRandomApiKey = $this->getRandomApiKey;
+        return static function (callable $handler) use ($getRandomApiKey) {
+            return static function (RequestInterface $request, array $options) use ($handler, $getRandomApiKey) {
                 $uri = $request->getUri();
-                $randomKey = $this->getRandomApiKey->execute($uri, 'ip-resolver.api-keys');
+
+                $randomKey = $getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
+
 
                 $newUri = Uri::withQueryValue($uri, 'apiKey', $randomKey);
-                $request->withUri($newUri);
+                $request = $request->withUri($newUri);
+
 
                 return $handler($request, $options);
             };

@@ -10,6 +10,8 @@ use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
@@ -34,13 +36,12 @@ class MakeHttpPromiseAction
                 $stack->push($middleware);
             });
 
-
-        return (new Client([
-            'base_uri' => $config->baseUri,
+        $client = new Client([
             'handler' => $stack,
-        ]))->sendAsync($config->request, [
-            'query' => $config->queryParams
         ]);
+
+        return $client->sendAsync(new Request('GET', 'http://testing.com'));
+
     }
 
 

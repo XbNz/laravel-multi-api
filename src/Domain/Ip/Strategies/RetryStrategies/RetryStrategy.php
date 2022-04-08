@@ -1,8 +1,8 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Strategies;
+namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
-interface Strategy
+interface RetryStrategy
 {
     public function guzzleMiddleware(): callable;
     public function supports(string $apiBaseUri): bool;

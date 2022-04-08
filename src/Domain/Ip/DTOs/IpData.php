@@ -2,10 +2,15 @@
 
 namespace XbNz\Resolver\Domain\Ip\DTOs;
 
-use Spatie\DataTransferObject\DataTransferObject;
 
-class IpData extends DataTransferObject
+use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
+
+class IpData
 {
-    public string $ip;
-    public int $version;
+
+    public function __construct(
+        public readonly string $ip,
+        public readonly int $version,
+    ) {
+    }
 }

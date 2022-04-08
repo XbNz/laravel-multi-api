@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
+use XbNz\Resolver\Support\Exceptions\MissingApiKeyException;
 use function app;
 
 class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
@@ -23,9 +24,9 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
             '::just random noiseeee::' => ['::these shouldnt::', '::even see::', '::the light of::', '::day::'],
         ]);
 
-        $uri = new Uri('https://this-needs-to-be-picked-up-by-the-action.org');
+        $provider = 'https://this-needs-to-be-picked-up-by-the-action.org';
 
-        $key = Str::of(app(GetRandomApiKeyAction::class)->execute($uri, 'ip-resolver.api-keys'));
+        $key = Str::of(app(GetRandomApiKeyAction::class)->execute($provider, 'ip-resolver.api-keys'));
 
         $this->assertTrue(
             $key->contains('::api-key-1::') || $key->contains('::api-key-2::')
@@ -37,12 +38,31 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
     {
         Config::set('ip-resolver.api-keys', null);
 
-        $uri = new Uri('https://uri-doesnt-exist-in-null-config-and-should-fail.com.au');
+        $provider = 'doesnt-exist-in-null-config-and-should-fail.com.au';
 
         try {
-            app(GetRandomApiKeyAction::class)->execute($uri, 'ip-resolver.api-keys');
+            app(GetRandomApiKeyAction::class)->execute($provider, 'ip-resolver.api-keys');
         } catch (ConfigNotFoundException $e) {
             $this->assertInstanceOf(ConfigNotFoundException::class, $e);
+            return;
+        }
+
+        $this->fail('Did not throw config error');
+    }
+
+    /** @test **/
+    public function if_the_api_host_is_in_the_config_but_no_key_is_provided_it_throws_an_exception(): void
+    {
+        Config::set('ip-resolver.api-keys', [
+            'any-name-is-set-but-no-api-key-is-set.biz' => [],
+        ]);
+
+        $provider = 'any-name-is-set-but-no-api-key-is-set.biz';
+
+        try {
+            app(GetRandomApiKeyAction::class)->execute($provider, 'ip-resolver.api-keys');
+        } catch (MissingApiKeyException $e) {
+            $this->assertInstanceOf(MissingApiKeyException::class, $e);
             return;
         }
 

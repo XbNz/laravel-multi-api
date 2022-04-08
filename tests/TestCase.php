@@ -32,19 +32,19 @@ class TestCase extends \Orchestra\Testbench\TestCase
         parent::getEnvironmentSetUp($app);
 
         Config::set('ip-resolver.api-keys', [
-            'ipApiDotCom' => [
+            'ipapi.com' => [
                 env('IP_API_DOT_COM_API_KEY')
             ],
 
-            'ipGeolocationDotIo' => [
+            'ipgeolocation.io' => [
                 env('IP_GEOLOCATION_DOT_IO_API_KEY')
             ],
 
-            'ipInfoDotIo' => [
+            'ipinfo.io' => [
                 env('IP_INFO_DOT_IO_API_KEY')
             ],
 
-            'ipDataDotCo' => [
+            'ipdata.co' => [
                 env('IP_DATA_DOT_CO_API_KEY')
             ],
         ]);

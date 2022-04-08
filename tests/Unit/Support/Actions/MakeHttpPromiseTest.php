@@ -2,13 +2,10 @@
 
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
+use XbNz\Resolver\Domain\Ip\Factories\IpConfigFactory;
 use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
-use XbNz\Resolver\Support\Exceptions\ApiProviderException;
-use XbNz\Resolver\Support\Factories\GuzzleConfigFactory;
 
 class MakeHttpPromiseTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -19,11 +16,13 @@ class MakeHttpPromiseTest extends \XbNz\Resolver\Tests\TestCase
     {
         // Arrange
         $promise = app(MakeHttpPromiseAction::class);
-        $factory = app(GuzzleConfigFactory::class);
+        $factory = app(IpConfigFactory::class);
 
 
         // Act
-        $promise = $promise->execute($factory->forIpGeolocationDotIo(new IpData(ip: '1.1.1.1', version: 4)));
+        $promise = $promise->execute(
+            $factory->for('1.1.1.1', 'ipgeolocation.io')
+        );
 
 
         // Assert

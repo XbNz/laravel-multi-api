@@ -4,7 +4,7 @@ return [
     'use_proxy' => false,
     'proxies' => [],
 
-    'timeout' => 2,
+    'timeout' => 0.4,
     'cache_period' => 3600,
 
     'use_retries' => true,

@@ -12,7 +12,6 @@ class GuzzleConfigData
      * @param ?array<callable> $middlewares
      */
     public function __construct(
-        public readonly RequestInterface $request,
         public readonly ?array $middlewares = null
     ) {
         Assert::allIsInstanceOf($middlewares, Closure::class);
