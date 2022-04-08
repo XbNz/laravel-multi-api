@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Support\Actions;
 
-use Exception;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Config;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use XbNz\Resolver\Support\Guzzle\Middlewares\WithProxy;
+use XbNz\Resolver\Support\Guzzle\Middlewares\WithTimeout;
 
 class UniversalMiddlewaresAction
 {
@@ -20,104 +17,35 @@ class UniversalMiddlewaresAction
         private GetRandomProxyAction $randomProxy,
     ) {}
 
-    // TODO: Refactor closed based middlewares to their own invokable classes
-    public function execute(HandlerStack $stack): HandlerStack
+    /**
+     * @return array<callable>
+     */
+    public function execute(): array
     {
-        if ($this->usingRetries()) {
-            $stack->push($this->addRetries());
-        }
-
         if ($this->usingProxy()) {
-            $stack->push($this->addRandomProxy());
+            $this->addRandomProxy();
         }
 
-        $stack->push($this->addTimeout());
+        $this->addTimeout();
 
-        return $stack;
+        return $this->middlewares;
     }
 
     private function usingProxy(): bool
     {
-        return (bool) Config::get('resolver.use_proxy');
+        return (bool) Config::get('resolver.use_proxy', false);
     }
 
-    private function usingRetries(): bool
+    private function addTimeout(): void
     {
-        return (bool) Config::get('resolver.use_retries');
+        $timeout = (float) Config::get('resolver.timeout', 5);
+
+        $this->middlewares[] = (new WithTimeout)($timeout);
     }
 
-    private function addRetries(): callable
+    private function addRandomProxy(): void
     {
-        return Middleware::retry($this->retryDecider(), $this->retryDelay());
+        $this->middlewares[] = (new WithProxy)($this->randomProxy->execute());
     }
-
-
-    private function addTimeout(): callable
-    {
-        return static function (callable $handler) {
-            return static function (RequestInterface $request, array $options) use ($handler) {
-
-                $timeout = match (is_numeric(Config::get('resolver.timeout'))) {
-                    true => Config::get('resolver.timeout'),
-                    false => 5,
-                };
-
-                $options[ 'timeout' ] = (int) $timeout;
-
-                return $handler($request, $options);
-
-            };
-        };
-    }
-
-    private function addRandomProxy(): callable
-    {
-        return function (callable $handler) {
-            return function (RequestInterface $request, array $options) use ($handler) {
-                $options[ 'proxy' ] = $this->randomProxy->execute();
-                return $handler($request, $options);
-            };
-        };
-    }
-
-    private function retryDecider(): callable
-    {
-        return static function (
-            int $retries,
-            RequestInterface $request,
-            ResponseInterface $response = null,
-            Exception $exception = null
-        ): bool {
-            if ($retries >= Config::get('resolver.tries')) {
-                return false;
-            }
-
-            if ($exception instanceof ConnectException) {
-                return true;
-            }
-
-            if ($response && $response->getStatusCode() >= 400) {
-                return true;
-            }
-
-            return false;
-        };
-    }
-
-    private function retryDelay(): callable
-    {
-        $numberOfRetries = Config::get('resolver.tries');
-
-        return static function () use ($numberOfRetries) {
-            if (Config::has('resolver.retry_sleep')) {
-                return (int) Config::get('resolver.retry_sleep');
-            }
-
-            return 1000 * $numberOfRetries;
-        };
-
-        // TODO: Impl of exponential backoff may not work. Need to test.
-    }
-
 
 }

@@ -18,10 +18,12 @@ class MakeHttpPromiseTest extends \XbNz\Resolver\Tests\TestCase
     public function example(): void
     {
         // Arrange
-        $action = app(MakeHttpPromiseAction::class);
+        $promise = app(MakeHttpPromiseAction::class);
+        $factory = app(GuzzleConfigFactory::class);
+
 
         // Act
-        $promise = $action->execute(GuzzleConfigFactory::forIpGeolocationDotIo(new IpData(ip: '1.1.1.1', version: 4)));
+        $promise = $promise->execute($factory->forIpGeolocationDotIo(new IpData(ip: '1.1.1.1', version: 4)));
 
 
         // Assert

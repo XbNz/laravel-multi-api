@@ -12,7 +12,8 @@
     "require": {
         "spatie/data-transfer-object": "^3.7",
         "guzzlehttp/guzzle": "^7.4",
-        "ext-intl": "*"
+        "ext-intl": "*",
+        "caseyamcl/guzzle_retry_middleware": "^2.7"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\Actions;
 
 use GuzzleHttp\Client;
@@ -22,16 +24,10 @@ use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 class MakeHttpPromiseAction
 {
 
-    public function __construct(
-        private UniversalMiddlewaresAction $universalMiddlewares,
-    )
-    {}
-
     public function execute(GuzzleConfigData $config): PromiseInterface
     {
         $stack = HandlerStack::create(new CurlHandler());
 
-        $this->universalMiddlewares->execute($stack);
 
         Collection::make($config->middlewares)
             ->each(function (callable $middleware) use (&$stack) {
