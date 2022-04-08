@@ -1,8 +1,8 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\AuthStrategies;
+namespace XbNz\Resolver\Domain\Ip\Strategies;
 
-interface AuthStrategy
+interface Strategy
 {
     public function guzzleMiddleware(): callable;
     public function supports(string $apiBaseUri): bool;

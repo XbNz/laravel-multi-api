@@ -7,9 +7,9 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use XbNz\Resolver\Domain\Ip\Actions\GetApiKeysForDriverAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
+use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
@@ -20,7 +20,7 @@ class IpInfoDotIoDriver implements Driver
     const API_URL = 'https://ipinfo.io';
 
     public function __construct(
-        GetApiKeysForDriverAction     $apiKeys,
+        GetRandomApiKeyAction         $apiKeys,
         private MakeHttpPromiseAction $httpPromiseAction,
     ) {
         $this->apiKeys = $apiKeys->execute($this);
