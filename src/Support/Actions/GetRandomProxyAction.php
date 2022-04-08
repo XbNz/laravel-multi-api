@@ -2,25 +2,25 @@
 
 namespace XbNz\Resolver\Support\Actions;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Support\Exceptions\ProxyNotValidException;
 
 class GetRandomProxyAction
 {
     public function execute(): string
     {
-        $proxies = config('resolver.proxies');
+        $proxies = Config::get('resolver.proxies');
         $validated = [];
         foreach ($proxies as $proxy) {
-            $proxy = filter_var($proxy, FILTER_VALIDATE_URL);
 
-            if (! $proxy){
-                throw new ProxyNotValidException("The provided proxy: {$proxy} is not a valid structure");
+            if (! filter_var($proxy, FILTER_VALIDATE_URL)){
+                throw new ProxyNotValidException("The provided proxy: '{$proxy}' is not a valid structure");
             }
 
             $validated[] = $proxy;
         }
 
-        //TODO: Refactor to "GetValidProxies" action and do Arr::random on calling code as needed.
-        return \Arr::random($validated);
+        return Arr::random($validated);
     }
 }

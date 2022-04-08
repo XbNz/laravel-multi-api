@@ -25,8 +25,7 @@ class DriverBuilder
     public function __construct(
         private VerifyIpIntegrityAction $verifyIpIntegrity,
         private CreateCollectionFromQueriedIpDataAction $collectionFromQueriedIpDataAction,
-    )
-    {
+    ) {
         $this->chosenDrivers = collect();
     }
 
@@ -51,6 +50,12 @@ class DriverBuilder
     public function ipDataDotCo(): static
     {
         $this->chosenDrivers[] = app(IpDataDotCoDriver::class);
+        return $this;
+    }
+
+    public function withDrivers(array $drivers): static
+    {
+        $this->chosenDrivers = collect($drivers);
         return $this;
     }
 

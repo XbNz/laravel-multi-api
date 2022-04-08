@@ -42,4 +42,10 @@ class GetRandomProxyTest extends \XbNz\Resolver\Tests\TestCase
 
         $this->assertContains($randomProxy, $proxies);
     }
+
+    /** @test **/
+    public function if_the_client_has_chosen_to_use_proxies_but_hasnt_provided_any_it_throws_an_exception(): void
+    {
+        // TODO: This
+    }
 }
