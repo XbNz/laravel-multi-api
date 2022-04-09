@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Support\Actions;
 
 use GuzzleHttp\HandlerStack;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Kevinrob\GuzzleCache\CacheMiddleware;
+use Kevinrob\GuzzleCache\Storage\LaravelCacheStorage;
+use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithProxy;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithTimeout;
 
@@ -22,6 +26,8 @@ class UniversalMiddlewaresAction
      */
     public function execute(): array
     {
+        $this->addCache();
+
         if ($this->usingProxy()) {
             $this->addRandomProxy();
         }
@@ -47,5 +53,17 @@ class UniversalMiddlewaresAction
     {
         $this->middlewares[] = (new WithProxy)($this->randomProxy->execute());
     }
+
+    private function addCache(): void
+    {
+        $this->middlewares[] = new CacheMiddleware(
+            new GreedyCacheStrategy(
+                new LaravelCacheStorage(
+                    Cache::store()
+                ), Config::get('resolver.cache_period', 3600)
+            )
+        );
+    }
+
 
 }

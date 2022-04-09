@@ -2,7 +2,9 @@
 
 namespace XbNz\Resolver\ServiceProviders;
 
-use XbNz\Resolver\Domain\Ip\Factories\IpConfigFactory;
+use XbNz\Resolver\Domain\Ip\Actions\FetchRawDataForIpsAction;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Factories\GuzzleIpClientFactory;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\SoloIpAddressStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoSoloIpStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoRetryStrategy;
@@ -27,17 +29,25 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             IpGeolocationDotIoRetryStrategy::class,
         ], 'retry-strategies');
 
-        $this->app->when(IpConfigFactory::class)
+        $this->app->tag([
+            IpGeolocationDotIoDriver::class,
+        ], 'drivers');
+
+        $this->app->when(GuzzleIpClientFactory::class)
             ->needs('$soloIpStrategies')
             ->giveTagged('solo-ip-strategies');
 
-        $this->app->when(IpConfigFactory::class)
+        $this->app->when(GuzzleIpClientFactory::class)
             ->needs('$authStrategies')
             ->giveTagged('auth-strategies');
 
-        $this->app->when(IpConfigFactory::class)
+        $this->app->when(GuzzleIpClientFactory::class)
             ->needs('$retryStrategies')
             ->giveTagged('retry-strategies');
+
+        $this->app->when(FetchRawDataForIpsAction::class)
+            ->needs('$drivers')
+            ->giveTagged('drivers');
     }
 
     public function boot()

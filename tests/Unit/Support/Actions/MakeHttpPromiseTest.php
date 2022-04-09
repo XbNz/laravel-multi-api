@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\Factories\IpConfigFactory;
+use XbNz\Resolver\Domain\Ip\Factories\GuzzleIpClientFactory;
 use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
 
@@ -16,7 +16,7 @@ class MakeHttpPromiseTest extends \XbNz\Resolver\Tests\TestCase
     {
         // Arrange
         $promise = app(MakeHttpPromiseAction::class);
-        $factory = app(IpConfigFactory::class);
+        $factory = app(GuzzleIpClientFactory::class);
 
 
         // Act

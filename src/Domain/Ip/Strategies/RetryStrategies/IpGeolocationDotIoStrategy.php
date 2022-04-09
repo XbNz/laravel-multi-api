@@ -35,11 +35,8 @@ class IpGeolocationDotIoStrategy implements RetryStrategy
                 $uri = $request->getUri();
                 $randomKey = $this->getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
 
-                dump("New API key: {$randomKey}");
-
                 $newUri = Uri::withQueryValue($uri, 'apiKey', $randomKey);
                 $request->withUri($newUri);
-                // TODO: See if you can make this cleaner
             }
         );
     }

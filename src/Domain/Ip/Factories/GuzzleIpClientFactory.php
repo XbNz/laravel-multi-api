@@ -2,6 +2,9 @@
 
 namespace XbNz\Resolver\Domain\Ip\Factories;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -15,41 +18,35 @@ use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\NullStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\RetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\SoloIpAddressStrategies\SoloIpStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\UriStrategies\IpGeolocationDotIoStrategy;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Actions\UniversalMiddlewaresAction;
 use XbNz\Resolver\Support\DTOs\GuzzleConfigData;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 
-class IpConfigFactory
+class GuzzleIpClientFactory
 {
+    /**
+     * @param array<SoloIpStrategy> $soloIpStrategies
+     * @param array<AuthStrategy> $authStrategies
+     * @param array<RetryStrategy> $retryStrategies
+     */
     public function __construct(
         private UniversalMiddlewaresAction $universalMiddlewares,
-        private VerifyIpIntegrityAction $verifyIpIntegrity,
-        private GetRandomApiKeyAction $getRandomApiKey,
-        private $soloIpStrategies,
-        private $authStrategies,
-        private $retryStrategies,
+        private array $authStrategies,
+        private array $retryStrategies,
     )
     {}
 
     /**
-     * @param string $ip Accepts Ipv4 or Ipv6
      * @param string $provider API host. e.g. ipgeolocation.io. Refer to config file for all supported hosts.
      * @throws \XbNz\Resolver\Support\Exceptions\MissingApiKeyException
      * @throws \XbNz\Resolver\Domain\Ip\Exceptions\InvalidIpAddressException
      * @throws ConfigNotFoundException
      */
-    public function for(string $ip, string $provider, $overrides = []): GuzzleConfigData
+    public function for(string $provider, $overrides = []): Client
     {
-        $this->getRandomApiKey->execute($provider, 'ip-resolver.api-keys');
-
         $contextualMiddlewares = [];
-
-        $contextualMiddlewares[] = Collection::make($this->soloIpStrategies)
-            ->first(fn (SoloIpStrategy $strategy) => $strategy->supports($provider), new NullStrategy())
-            ->guzzleMiddleware($this->verifyIpIntegrity->execute($ip));
 
         $contextualMiddlewares[] = Collection::make($this->authStrategies)
             ->first(fn (AuthStrategy $strategy) => $strategy->supports($provider), new NullStrategy())
@@ -69,9 +66,19 @@ class IpConfigFactory
             ]
         ], $overrides);
 
-        return new GuzzleConfigData(
+        $dto = new GuzzleConfigData(
             $data['middlewares']
         );
+
+        $stack = HandlerStack::create(new CurlHandler());
+
+        foreach ($dto->middlewares as $middleware) {
+            $stack->push($middleware);
+        }
+
+        return new Client([
+            'handler' => $stack,
+        ]);
     }
 
 }

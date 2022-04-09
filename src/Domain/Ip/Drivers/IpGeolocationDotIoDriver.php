@@ -1,13 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
+use XbNz\Resolver\Domain\Ip\Factories\GuzzleIpClientFactory;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
@@ -15,85 +26,26 @@ use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class IpGeolocationDotIoDriver implements Driver
 {
-    private array $apiKeys;
-    const API_URL = 'https://api.ipgeolocation.io/ipgeo';
+    const API_URL = 'https://api.ipgeolocation.io/ipgeo/';
 
-    public function __construct(
-        GetRandomApiKeyAction         $apiKeys,
-        private MakeHttpPromiseAction $httpPromiseAction,
-    ) {
-        $this->apiKeys = $apiKeys->execute($this);
-    }
-
-    public function query(IpData $ipData): QueriedIpData
+    public function getRequests(array $ipDataObjects): Collection
     {
-        $response = $this->raw($ipData);
+        Assert::allIsInstanceOf($ipDataObjects, IpData::class, '$ipDataObjects must be an array of IpData objects');
 
-        return new QueriedIpData(
-            driver: self::class,
-            ip: $ipData->ip,
-            country: $response['country_name'],
-            city: $response['city'],
-            longitude: $response['longitude'],
-            latitude: $response['latitude']
-        );
-    }
-
-    public function supports(): string
-    {
-        return 'ipGeolocationDotIo';
-    }
-
-    public function requiresApiKey(): bool
-    {
-        // TODO: Implement requiresApiKey() method.
-    }
-
-    public function requiresFile(): bool
-    {
-        // TODO: Implement requiresFile() method.
-    }
-
-    public function raw(IpData $ipData): array
-    {
-        return \Cache::remember(
-            self::class . $ipData->ip,
-            now()->addSeconds(config('resolver.cache_period')),
-            function () use ($ipData){
-                return $this->resolvePromise()->json();
+        $generator = static function (array $ipDataObjects) {
+            foreach ($ipDataObjects as $ipData) {
+                $uri = Uri::withQueryValue(new Uri(self::API_URL), 'ip', $ipData->ip);
+                yield new Request('GET', $uri);
             }
-        );
+        };
+
+        return new Collection(iterator_to_array($generator($ipDataObjects)));
     }
 
-    public function initiateAsync(IpData $ipData): void
+    public function supports(string $provider): bool
     {
-        $this->promise = $this->httpPromiseAction->execute(
-            self::API_URL,
-            [
-                'apiKey' => Arr::random($this->apiKeys),
-                'ip' => $ipData->ip
-            ]
-        );
+        return Str::of($provider)
+            ->lower()
+            ->contains('ipgeolocation.io');
     }
-
-    public function resolvePromise(): Response
-    {
-        if ($this->promise === null) {
-            throw new \BadMethodCallException('Promise not initiated');
-        }
-
-        try {
-            $response = $this->promise->wait()->throw();
-        } catch (RequestException $e) {
-            $message = "{$this->supports()} has hit a snag and threw a {$e->response->status()} error";
-            throw new ApiProviderException($message);
-        } catch (ConnectionException $e) {
-            $message = "{$this->supports()} has failed to establish a connection";
-            throw new ApiProviderException($message);
-        }
-
-        return $response;
-    }
-
-
 }

@@ -121,6 +121,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/_laravel_idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/caseyamcl/guzzle_retry_middleware" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kevinrob/guzzle-cache-middleware" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

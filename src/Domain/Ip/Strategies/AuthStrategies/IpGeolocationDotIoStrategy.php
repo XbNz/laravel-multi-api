@@ -27,10 +27,8 @@ class IpGeolocationDotIoStrategy implements AuthStrategy
 
                 $randomKey = $getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
 
-
                 $newUri = Uri::withQueryValue($uri, 'apiKey', $randomKey);
                 $request = $request->withUri($newUri);
-
 
                 return $handler($request, $options);
             };

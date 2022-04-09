@@ -14,6 +14,6 @@ class GuzzleConfigData
     public function __construct(
         public readonly ?array $middlewares = null
     ) {
-        Assert::allIsInstanceOf($middlewares, Closure::class);
+        Assert::allIsCallable($middlewares);
     }
 }
