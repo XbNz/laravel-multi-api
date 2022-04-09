@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\Factories\GuzzleIpClientFactory;
 use XbNz\Resolver\Support\Drivers\Driver;
 
@@ -28,29 +29,37 @@ class FetchRawDataForIpsAction
     )
     {}
 
-    public function execute(array $ipDataObjects, string $provider): array
+    /**
+     * @param array<IpData> $ipDataObjects
+     * @param array $providers
+     */
+    public function execute(array $ipDataObjects, array $providers): array
     {
-        [$requests, $builders] = Collection::make($this->drivers)
-            ->sole(fn (Driver $driver) => $driver->supports($provider))
-            ->getRequests($ipDataObjects)
-            ->partition(fn ($requestOrBuilder) => $requestOrBuilder instanceof RequestInterface);
+        $pools = Collection::make();
 
-        $client = $this->guzzleIpClientFactory->for($provider);
+        foreach ($providers as $provider) {
+            [$requests, $builders] = Collection::make($this->drivers)
+                ->sole(fn (Driver $driver) => $driver->supports($provider))
+                ->getRequests($ipDataObjects)
+                ->partition(fn ($requestOrBuilder) => $requestOrBuilder instanceof RequestInterface);
 
-
-        $pool = new Pool($client, $requests->toArray(), [
-            'concurrency' => Config::get('resolver.async_concurrent_requests', 10),
-            'fulfilled' => static function (Response $response, $index) {
-                dump(Utils::jsonDecode($response->getBody()->getContents(), true));
-            },
-            'rejected' => static function (RequestException $reason, $index) {
-                // this is delivered each failed request
-            },
-        ]);
-
-        $pool->promise()->wait();
+            $client = $this->guzzleIpClientFactory->for($provider);
 
 
+            $pools->push(new Pool($client, $requests->toArray(), [
+                'concurrency' => Config::get('resolver.async_concurrent_requests', 10),
+                'fulfilled' => static function (Response $response, $index) {
+
+                },
+                'rejected' => static function (RequestException $reason, $index) {
+
+                },
+            ]));
+        }
+
+
+        $pools->map(fn (Pool $pool) => $pool->promise())
+            ->each(fn (PromiseInterface $promise) => $promise->wait());
 
 
     }

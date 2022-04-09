@@ -23,7 +23,7 @@ class FetchRawDataForIpsTest extends \XbNz\Resolver\Tests\TestCase
                 new IpData('5.5.5.5', 4),
                 new IpData('4.2.2.4', 4),
             ],
-            'ipgeolocation.io'
+            ['ipgeolocation.io']
         );
 
         // Assert

@@ -70,7 +70,7 @@ class GuzzleIpClientFactory
             $data['middlewares']
         );
 
-        $stack = HandlerStack::create(new CurlHandler());
+        $stack = HandlerStack::create();
 
         foreach ($dto->middlewares as $middleware) {
             $stack->push($middleware);
