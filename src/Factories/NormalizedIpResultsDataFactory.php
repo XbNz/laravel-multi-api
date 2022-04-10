@@ -3,16 +3,28 @@
 namespace XbNz\Resolver\Factories;
 
 
+use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
+use XbNz\Resolver\Domain\Ip\Mappings\Mapper;
 
 class NormalizedIpResultsDataFactory
 {
-    public function fromResponse(RawIpResultsData $ipResultsData): NormalizedIpResultsData
-    {
+    /**
+     * @param array<Mapper> $mappers
+     */
+    public function __construct(
+        private array $mappers
+    )
+    {}
 
+    public function fromRaw(RawIpResultsData $ipResultsData): NormalizedIpResultsData
+    {
+        return Collection::make($this->mappers)
+            ->sole(fn (Mapper $mapper) => $mapper->supports($ipResultsData->provider))
+            ->map($ipResultsData);
     }
 
     public function generateTestData(array $overrides = []): NormalizedIpResultsData

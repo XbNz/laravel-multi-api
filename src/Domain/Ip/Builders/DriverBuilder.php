@@ -7,85 +7,108 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
 use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
+use XbNz\Resolver\Domain\Ip\Actions\FetchRawDataForIpsAction;
 use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
+use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
+use XbNz\Resolver\Factories\NormalizedIpResultsDataFactory;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 
 class DriverBuilder
 {
-    private Collection $chosenDrivers;
-    private IpData $ipData;
+    /**
+     * @var Collection<string> $chosenDrivers
+     * @var Collection<IpData> $chosenIps
+     */
+    private Collection $chosenProviders;
+    private Collection $chosenIps;
 
     public function __construct(
         private VerifyIpIntegrityAction $verifyIpIntegrity,
-        private CreateCollectionFromQueriedIpDataAction $collectionFromQueriedIpDataAction,
+        private FetchRawDataForIpsAction $fetchRawDataForIps,
+        private NormalizedIpResultsDataFactory $normalizedResultsFactory,
     ) {
-        $this->chosenDrivers = collect();
+        $this->chosenProviders = collect();
+        $this->chosenIps = collect();
     }
 
     public function ipInfoDotIo(): static
     {
-        $this->chosenDrivers[] = app(IpInfoDotIoDriver::class);
+        $this->chosenProviders[] = 'ipinfo.io';
         return $this;
     }
 
     public function ipGeolocationDotIo(): static
     {
-        $this->chosenDrivers[] = app(IpGeolocationDotIoDriver::class);
+        $this->chosenProviders[] = 'ipgeolocation.io';
         return $this;
     }
 
     public function ipApiDotCom(): static
     {
-        $this->chosenDrivers[] = app(IpApiDotComDriver::class);
+        $this->chosenProviders[] = 'ipapi.com';
         return $this;
     }
 
     public function ipDataDotCo(): static
     {
-        $this->chosenDrivers[] = app(IpDataDotCoDriver::class);
+        $this->chosenProviders[] = 'ipdata.co';
         return $this;
     }
 
-    public function withDrivers(array $drivers): static
+    public function abuseIpDbDotCom(): static
     {
-        $this->chosenDrivers = collect($drivers);
+        $this->chosenProviders[] = 'abuseipdb.com';
         return $this;
     }
 
-    public function normalize(): IpCollection
+    /**
+     * @param array<string> $providers Provider names in string format: e.g ['ipgeolocation.io', 'ipinfo.io']
+     */
+    public function withProviders(array $providers): static
     {
-        $queriedResults = collect();
-        $this->chosenDrivers
-            ->each->initiateAsync($this->ipData)
-            ->map(function (Driver $driver) use (&$queriedResults){
-                $queriedResults[] = $driver->query($this->ipData);
-            });
-
-        return $this->collectionFromQueriedIpDataAction
-            ->execute($queriedResults);
+        $this->chosenProviders->push($providers);
+        return $this;
     }
 
-    public function raw(): Collection
+
+    /**
+     * @return array<NormalizedIpResultsData>
+     */
+    public function normalize(): array
     {
-        $rawResults = collect();
-        $this->chosenDrivers
-            ->each->initiateAsync($this->ipData)
-            ->map(function (Driver $driver) use (&$rawResults) {
-            $rawResults[] = $driver->raw($this->ipData);
-        });
-        return $rawResults;
+        return Collection::make($this->raw())
+            ->map(fn (RawIpResultsData $rawData) => $this->normalizedResultsFactory->fromRaw($rawData))
+            ->toArray();
     }
 
-    public function withIp(string $ip): static
+    /**
+     * @return array<RawIpResultsData>
+     */
+    public function raw(): array
     {
-        $this->ipData = $this->verifyIpIntegrity->execute($ip);
+        return $this->fetchRawDataForIps->execute(
+                $this->chosenIps->toArray(),
+                $this->chosenProviders->toArray()
+            );
+    }
+
+    /**
+     * @param array<string> $ips IPv4 or IPv6 addresses in string format: e.g ['1.1.1.1', '9.9.9.9']
+     */
+    public function withIps(array $ips): static
+    {
+        foreach ($ips as $ip) {
+            $this->chosenIps->push($this->verifyIpIntegrity->execute($ip));
+        }
+
         return $this;
     }
 

@@ -9,9 +9,9 @@ class WithProxy
 {
     public function __invoke(string $proxy): Closure
     {
-        return static function (callable $handler) {
+        return static function (callable $handler) use ($proxy) {
             return static function (RequestInterface $request, array $options) use ($handler, $proxy) {
-                $options[ 'proxy' ] = $proxy;
+                $options['proxy'] = $proxy;
                 return $handler($request, $options);
             };
         };

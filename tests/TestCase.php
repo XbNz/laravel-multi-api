@@ -47,6 +47,10 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'ipdata.co' => [
                 env('IP_DATA_DOT_CO_API_KEY')
             ],
+
+            'abuseipdb.com' => [
+                env('ABUSE_IP_DB_DOT_COM_API_KEY')
+            ],
         ]);
     }
 

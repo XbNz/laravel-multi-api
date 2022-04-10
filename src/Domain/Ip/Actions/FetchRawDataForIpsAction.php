@@ -51,7 +51,7 @@ class FetchRawDataForIpsAction
                 'fulfilled' => static function (Response $response, $index) use ($rawIpResultsData, $provider) {
                     $rawIpResultsData->push(RawIpResultsDataFactory::fromResponse($response, $provider));
                 },
-                'rejected' => static function (TransferException $reason, $index) {
+                'rejected' => static function (\Throwable $reason, $index) {
                     throw new ApiProviderException($reason->getMessage(), $reason->getCode(), $reason);
                 },
             ]));

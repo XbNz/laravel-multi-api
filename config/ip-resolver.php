@@ -18,6 +18,10 @@ return [
         'ipdata.co' => [
             '', '', ''
         ],
+
+        'abuseipdb.com' => [
+            '', '', ''
+        ],
     ],
 
     'databases' => [
