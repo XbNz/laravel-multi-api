@@ -4,25 +4,13 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
-use XbNz\Resolver\Domain\Ip\Factories\GuzzleIpClientFactory;
-use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
-use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
-use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class IpGeolocationDotIoDriver implements Driver
 {

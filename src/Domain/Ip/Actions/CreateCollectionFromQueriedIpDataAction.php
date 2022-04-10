@@ -4,7 +4,7 @@ namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Collection;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
-use XbNz\Resolver\Domain\Ip\DTOs\QueriedIpData;
+use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
 
 class CreateCollectionFromQueriedIpDataAction
 {
@@ -14,7 +14,7 @@ class CreateCollectionFromQueriedIpDataAction
             'query' => $queriedIpData[0]->ip,
         ];
 
-        $queriedIpData->map(function (QueriedIpData $value, $key) use (&$ipCollection){
+        $queriedIpData->map(function (NormalizedIpResultsData $value, $key) use (&$ipCollection){
             $ipCollection['country'][] = [
                 'driver' => $value->driver,
                 'data' => $value->country,

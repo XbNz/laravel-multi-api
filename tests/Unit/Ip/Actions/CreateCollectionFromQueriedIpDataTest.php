@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
-use XbNz\Resolver\Factories\QueriedIpDataFactory;
+use XbNz\Resolver\Factories\NormalizedIpResultsDataFactory;
 
 class CreateCollectionFromQueriedIpDataTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -11,9 +11,9 @@ class CreateCollectionFromQueriedIpDataTest extends \XbNz\Resolver\Tests\TestCas
     public function it_takes_a_collection_of_queried_dtos_and_returns_a_normalized_collection()
     {
         $queriedResults = collect([
-            QueriedIpDataFactory::generateTestData(['country' => 'Canada']),
-            QueriedIpDataFactory::generateTestData(['city' => 'Berlin']),
-            QueriedIpDataFactory::generateTestData(['latitude' => '11.11'])
+            NormalizedIpResultsDataFactory::generateTestData(['country' => 'Canada']),
+            NormalizedIpResultsDataFactory::generateTestData(['city' => 'Berlin']),
+            NormalizedIpResultsDataFactory::generateTestData(['latitude' => '11.11'])
         ]);
 
         $collection = app(CreateCollectionFromQueriedIpDataAction::class)

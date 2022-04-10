@@ -1,28 +1,18 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Factories;
+namespace XbNz\Resolver\Factories;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\ItemNotFoundException;
-use Illuminate\Support\Str;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
-use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\NullStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\RetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\SoloIpAddressStrategies\SoloIpStrategy;
-use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Actions\UniversalMiddlewaresAction;
 use XbNz\Resolver\Support\DTOs\GuzzleConfigData;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
-use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 
 class GuzzleIpClientFactory
 {
@@ -66,9 +56,7 @@ class GuzzleIpClientFactory
             ]
         ], $overrides);
 
-        $dto = new GuzzleConfigData(
-            $data['middlewares']
-        );
+        $dto = new GuzzleConfigData($data['middlewares']);
 
         $stack = HandlerStack::create();
 

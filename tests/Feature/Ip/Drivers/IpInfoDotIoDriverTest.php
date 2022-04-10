@@ -8,7 +8,7 @@ use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
-use XbNz\Resolver\Factories\QueriedIpDataFactory;
+use XbNz\Resolver\Factories\NormalizedIpResultsDataFactory;
 use XbNz\Resolver\Resolver\Resolver;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
