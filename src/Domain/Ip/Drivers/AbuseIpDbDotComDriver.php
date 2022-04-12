@@ -32,10 +32,8 @@ class AbuseIpDbDotComDriver implements Driver
         return new Collection(iterator_to_array($generator($ipDataObjects)));
     }
 
-    public function supports(string $provider): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($provider)
-            ->lower()
-            ->contains('abuseipdb.com');
+        return $driver === __CLASS__;
     }
 }

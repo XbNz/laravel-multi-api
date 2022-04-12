@@ -4,6 +4,7 @@ namespace XbNz\Resolver\Domain\Ip\Mappings;
 
 use Illuminate\Support\Str;
 use Locale;
+use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
 
@@ -22,10 +23,8 @@ class AbuseIpDbDotComMapper implements Mapper
         );
     }
 
-    public function supports(string $provider): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($provider)
-            ->lower()
-            ->contains('abuseipdb.com');
+        return $driver === AbuseIpDbDotComDriver::class;
     }
 }

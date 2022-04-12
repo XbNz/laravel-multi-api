@@ -2,10 +2,9 @@
 
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
-use Illuminate\Pipeline\Pipeline;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\Exceptions\InvalidIpAddressException;
-use XbNz\Resolver\Factories\IpDataFactory;
+use XbNz\Resolver\Factories\Ip\IpDataFactory;
 
 
 class VerifyIpIntegrityAction

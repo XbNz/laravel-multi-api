@@ -1,11 +1,9 @@
 <?php
 
-namespace XbNz\Resolver\Factories;
+namespace XbNz\Resolver\Factories\Ip;
 
 
 use Illuminate\Support\Collection;
-use Psr\Http\Message\ResponseInterface;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
 use XbNz\Resolver\Domain\Ip\Mappings\Mapper;

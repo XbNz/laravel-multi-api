@@ -46,17 +46,17 @@ class UniversalMiddlewaresAction
     {
         $timeout = (float) Config::get('resolver.timeout', 5);
 
-        $this->middlewares[] = (new WithTimeout)($timeout);
+        $this->middlewares['timeout'] = (new WithTimeout)($timeout);
     }
 
     private function addRandomProxy(): void
     {
-        $this->middlewares[] = (new WithProxy)($this->randomProxy->execute());
+        $this->middlewares['proxy'] = (new WithProxy)($this->randomProxy->execute());
     }
 
     private function addCache(): void
     {
-        $this->middlewares[] = new CacheMiddleware(
+        $this->middlewares['caching'] = new CacheMiddleware(
             new GreedyCacheStrategy(
                 new LaravelCacheStorage(
                     Cache::store()
@@ -64,6 +64,4 @@ class UniversalMiddlewaresAction
             )
         );
     }
-
-
 }

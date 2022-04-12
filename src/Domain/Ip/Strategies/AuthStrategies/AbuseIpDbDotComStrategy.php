@@ -5,6 +5,7 @@ namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
+use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 
 class AbuseIpDbDotComStrategy implements AuthStrategy
@@ -21,7 +22,7 @@ class AbuseIpDbDotComStrategy implements AuthStrategy
             return static function (RequestInterface $request, array $options) use ($handler, $getRandomApiKey) {
                 $uri = $request->getUri();
 
-                $randomKey = $getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
+                $randomKey = $getRandomApiKey->execute(AbuseIpDbDotComDriver::class, 'ip-resolver.api-keys');
                 $request = $request->withAddedHeader('key', $randomKey);
 
                 return $handler($request, $options);
@@ -29,10 +30,8 @@ class AbuseIpDbDotComStrategy implements AuthStrategy
         };
     }
 
-    public function supports(string $apiBaseUri): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($apiBaseUri)
-            ->lower()
-            ->contains('abuseipdb.com');
+        return $driver === AbuseIpDbDotComDriver::class;
     }
 }

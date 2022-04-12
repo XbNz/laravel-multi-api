@@ -2,24 +2,21 @@
 
 namespace XbNz\Resolver\Domain\Ip\Builders;
 
-use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
-use Illuminate\Support\ItemNotFoundException;
 use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
 use XbNz\Resolver\Domain\Ip\Actions\FetchRawDataForIpsAction;
 use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
+use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
+use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
-use XbNz\Resolver\Factories\NormalizedIpResultsDataFactory;
-use XbNz\Resolver\Support\Drivers\Driver;
-use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
+use XbNz\Resolver\Factories\Ip\NormalizedIpResultsDataFactory;
 
 class DriverBuilder
 {
@@ -27,7 +24,7 @@ class DriverBuilder
      * @var Collection<string> $chosenDrivers
      * @var Collection<IpData> $chosenIps
      */
-    private Collection $chosenProviders;
+    private Collection $chosenDrivers;
     private Collection $chosenIps;
 
     public function __construct(
@@ -35,46 +32,46 @@ class DriverBuilder
         private FetchRawDataForIpsAction $fetchRawDataForIps,
         private NormalizedIpResultsDataFactory $normalizedResultsFactory,
     ) {
-        $this->chosenProviders = collect();
+        $this->chosenDrivers = collect();
         $this->chosenIps = collect();
     }
 
     public function ipInfoDotIo(): static
     {
-        $this->chosenProviders[] = 'ipinfo.io';
+        $this->chosenDrivers[] = IpInfoDotIoDriver::class;
         return $this;
     }
 
     public function ipGeolocationDotIo(): static
     {
-        $this->chosenProviders[] = 'ipgeolocation.io';
+        $this->chosenDrivers[] = IpGeolocationDotIoDriver::class;
         return $this;
     }
 
     public function ipApiDotCom(): static
     {
-        $this->chosenProviders[] = 'ipapi.com';
+        $this->chosenDrivers[] = IpApiDotComDriver::class;
         return $this;
     }
 
     public function ipDataDotCo(): static
     {
-        $this->chosenProviders[] = 'ipdata.co';
+        $this->chosenDrivers[] = IpDataDotCoDriver::class;
         return $this;
     }
 
     public function abuseIpDbDotCom(): static
     {
-        $this->chosenProviders[] = 'abuseipdb.com';
+        $this->chosenDrivers[] = AbuseIpDbDotComDriver::class;
         return $this;
     }
 
     /**
-     * @param array<string> $providers Provider names in string format: e.g ['ipgeolocation.io', 'ipinfo.io']
+     * @param array<string> $drivers Provider names in string format: e.g [IpGeolocationDotIoDriver::class, IpInfoDotIo::class]
      */
-    public function withProviders(array $providers): static
+    public function withDrivers(array $drivers): static
     {
-        $this->chosenProviders->push($providers);
+        $this->chosenDrivers->push($drivers);
         return $this;
     }
 
@@ -96,7 +93,7 @@ class DriverBuilder
     {
         return $this->fetchRawDataForIps->execute(
                 $this->chosenIps->toArray(),
-                $this->chosenProviders->toArray()
+                $this->chosenDrivers->toArray()
             );
     }
 

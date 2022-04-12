@@ -1,13 +1,15 @@
 <?php
 
-namespace XbNz\Resolver\Factories;
+namespace XbNz\Resolver\Factories\Ip;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\NullStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\ResponseFormatterStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\RetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\SoloIpAddressStrategies\SoloIpStrategy;
 use XbNz\Resolver\Support\Actions\UniversalMiddlewaresAction;
@@ -17,51 +19,56 @@ use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 class GuzzleIpClientFactory
 {
     /**
-     * @param array<SoloIpStrategy> $soloIpStrategies
      * @param array<AuthStrategy> $authStrategies
      * @param array<RetryStrategy> $retryStrategies
+     * @param array<ResponseFormatterStrategy> $responseFormatters
      */
     public function __construct(
         private UniversalMiddlewaresAction $universalMiddlewares,
         private array $authStrategies,
         private array $retryStrategies,
+        private array $responseFormatters
     )
     {}
 
     /**
-     * @param string $provider API host. e.g. ipgeolocation.io. Refer to config file for all supported hosts.
+     * @param string $driver Driver FQN e.g. IpGeolocationDotIoDriver::class. Refer to config file for all supported drivers.
      * @throws \XbNz\Resolver\Support\Exceptions\MissingApiKeyException
      * @throws \XbNz\Resolver\Domain\Ip\Exceptions\InvalidIpAddressException
      * @throws ConfigNotFoundException
      */
-    public function for(string $provider, $overrides = []): Client
+    public function for(string $driver, $overrides = []): Client
     {
-        $contextualMiddlewares = [];
+        $contextualMiddlewares = Collection::make();
 
         $contextualMiddlewares[] = Collection::make($this->authStrategies)
-            ->first(fn (AuthStrategy $strategy) => $strategy->supports($provider), new NullStrategy())
+            ->first(fn (AuthStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
+            ->guzzleMiddleware();
+
+        $contextualMiddlewares[] = Collection::make($this->responseFormatters)
+            ->first(fn (ResponseFormatterStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
             ->guzzleMiddleware();
 
         if ((bool) Config::get('resolver.use_retries', false))
         {
             $contextualMiddlewares[] = Collection::make($this->retryStrategies)
-                ->first(fn (RetryStrategy $strategy) => $strategy->supports($provider), new NullStrategy())
+                ->first(fn (RetryStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
                 ->guzzleMiddleware();
         }
 
         $data = array_merge([
             'middlewares' => [
                 ...$this->universalMiddlewares->execute(),
-                ...$contextualMiddlewares,
+                ...$contextualMiddlewares->filter(),
             ]
         ], $overrides);
 
-        $dto = new GuzzleConfigData($data['middlewares']);
-
         $stack = HandlerStack::create();
 
-        foreach ($dto->middlewares as $middleware) {
-            $stack->push($middleware);
+        Assert::allIsCallable($data['middlewares']);
+
+        foreach ($data['middlewares'] as $middlewareName => $middleware) {
+            $stack->push($middleware, $middlewareName);
         }
 
         return new Client([

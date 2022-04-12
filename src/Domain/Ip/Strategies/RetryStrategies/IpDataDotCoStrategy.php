@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 
@@ -31,7 +32,7 @@ class IpDataDotCoStrategy implements RetryStrategy
                 ?ResponseInterface $response
             ) {
                 $uri = $request->getUri();
-                $randomKey = $this->getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
+                $randomKey = $this->getRandomApiKey->execute(IpDataDotCoDriver::class, 'ip-resolver.api-keys');
 
                 $newUri = Uri::withQueryValue($uri, 'api-key', $randomKey);
                 $request->withUri($newUri);
@@ -39,10 +40,8 @@ class IpDataDotCoStrategy implements RetryStrategy
         );
     }
 
-    public function supports(string $apiBaseUri): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($apiBaseUri)
-            ->lower()
-            ->contains('ipdata.co');
+        return $driver === IpDataDotCoDriver::class;
     }
 }

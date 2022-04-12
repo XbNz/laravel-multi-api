@@ -7,7 +7,7 @@ namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
-use XbNz\Resolver\Domain\Ip\Strategies\Strategy;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 
 class IpGeolocationDotIoStrategy implements AuthStrategy
@@ -25,7 +25,7 @@ class IpGeolocationDotIoStrategy implements AuthStrategy
             return static function (RequestInterface $request, array $options) use ($handler, $getRandomApiKey) {
                 $uri = $request->getUri();
 
-                $randomKey = $getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
+                $randomKey = $getRandomApiKey->execute(IpGeolocationDotIoDriver::class, 'ip-resolver.api-keys');
 
                 $newUri = Uri::withQueryValue($uri, 'apiKey', $randomKey);
                 $request = $request->withUri($newUri);
@@ -35,10 +35,8 @@ class IpGeolocationDotIoStrategy implements AuthStrategy
         };
     }
 
-    public function supports(string $apiBaseUri): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($apiBaseUri)
-            ->lower()
-            ->contains('ipgeolocation.io');
+        return $driver === IpGeolocationDotIoDriver::class;
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 
@@ -30,17 +31,15 @@ class AbuseIpDbDotComStrategy implements RetryStrategy
                 array &$options,
                 ?ResponseInterface $response
             ) {
-                $randomKey = $this->getRandomApiKey->execute($request->getUri()->__toString(), 'ip-resolver.api-keys');
+                $randomKey = $this->getRandomApiKey->execute(AbuseIpDbDotComDriver::class, 'ip-resolver.api-keys');
                 $uri = $request->getUri();
                 $request->withAddedHeader('key', $randomKey);
             }
         );
     }
 
-    public function supports(string $apiBaseUri): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($apiBaseUri)
-            ->lower()
-            ->contains('abuseipdb.com');
+        return $driver === AbuseIpDbDotComDriver::class;
     }
 }

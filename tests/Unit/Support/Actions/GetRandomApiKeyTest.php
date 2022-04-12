@@ -16,7 +16,7 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
     public function it_fetches_the_key_for_the_given_uri()
     {
         Config::set('ip-resolver.api-keys', [
-            'this-needs-to-be-picked-up-by-the-action.org' => ['::api-key-1::', '::api-key-2::'],
+            'SomeRandomDriver::class' => ['::api-key-1::', '::api-key-2::'],
 
             '::just random noise::' => ['::these shouldnt::', '::even see::', '::the light of::', '::day::'],
             '::just random noisee::' => ['::these shouldnt::', '::even see::', '::the light of::', '::day::'],
@@ -24,9 +24,9 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
             '::just random noiseeee::' => ['::these shouldnt::', '::even see::', '::the light of::', '::day::'],
         ]);
 
-        $provider = 'https://this-needs-to-be-picked-up-by-the-action.org';
+        $driver = 'SomeRandomDriver::class';
 
-        $key = Str::of(app(GetRandomApiKeyAction::class)->execute($provider, 'ip-resolver.api-keys'));
+        $key = Str::of(app(GetRandomApiKeyAction::class)->execute($driver, 'ip-resolver.api-keys'));
 
         $this->assertTrue(
             $key->contains('::api-key-1::') || $key->contains('::api-key-2::')
@@ -38,10 +38,10 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
     {
         Config::set('ip-resolver.api-keys', null);
 
-        $provider = 'doesnt-exist-in-null-config-and-should-fail.com.au';
+        $driver = 'SomeRandomDriver::class';
 
         try {
-            app(GetRandomApiKeyAction::class)->execute($provider, 'ip-resolver.api-keys');
+            app(GetRandomApiKeyAction::class)->execute($driver, 'ip-resolver.api-keys');
         } catch (ConfigNotFoundException $e) {
             $this->assertInstanceOf(ConfigNotFoundException::class, $e);
             return;
@@ -54,13 +54,13 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
     public function if_the_api_host_is_in_the_config_but_no_key_is_provided_it_throws_an_exception(): void
     {
         Config::set('ip-resolver.api-keys', [
-            'any-name-is-set-but-no-api-key-is-set.biz' => [],
+            'DriverIsPresentButNoApiKeyAssigned::class' => [],
         ]);
 
-        $provider = 'any-name-is-set-but-no-api-key-is-set.biz';
+        $driver = 'DriverIsPresentButNoApiKeyAssigned::class';
 
         try {
-            app(GetRandomApiKeyAction::class)->execute($provider, 'ip-resolver.api-keys');
+            app(GetRandomApiKeyAction::class)->execute($driver, 'ip-resolver.api-keys');
         } catch (MissingApiKeyException $e) {
             $this->assertInstanceOf(MissingApiKeyException::class, $e);
             return;

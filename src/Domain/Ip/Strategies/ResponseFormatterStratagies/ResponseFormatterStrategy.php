@@ -1,8 +1,8 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
+namespace XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies;
 
-interface AuthStrategy
+interface ResponseFormatterStrategy
 {
     public function guzzleMiddleware(): callable;
     public function supports(string $driver): bool;

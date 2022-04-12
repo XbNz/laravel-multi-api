@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 
@@ -33,7 +34,7 @@ class IpGeolocationDotIoStrategy implements RetryStrategy
                 ?ResponseInterface $response
             ) {
                 $uri = $request->getUri();
-                $randomKey = $this->getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
+                $randomKey = $this->getRandomApiKey->execute(IpGeolocationDotIoDriver::class, 'ip-resolver.api-keys');
 
                 $newUri = Uri::withQueryValue($uri, 'apiKey', $randomKey);
                 $request->withUri($newUri);
@@ -41,10 +42,8 @@ class IpGeolocationDotIoStrategy implements RetryStrategy
         );
     }
 
-    public function supports(string $apiBaseUri): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($apiBaseUri)
-            ->lower()
-            ->contains('ipgeolocation.io');
+        return $driver === IpGeolocationDotIoDriver::class;
     }
 }

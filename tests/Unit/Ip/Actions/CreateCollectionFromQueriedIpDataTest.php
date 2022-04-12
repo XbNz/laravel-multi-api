@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 
 use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
-use XbNz\Resolver\Factories\NormalizedIpResultsDataFactory;
+use XbNz\Resolver\Factories\Ip\NormalizedIpResultsDataFactory;
 
 class CreateCollectionFromQueriedIpDataTest extends \XbNz\Resolver\Tests\TestCase
 {

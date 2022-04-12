@@ -2,7 +2,7 @@
 
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
-use XbNz\Resolver\Factories\GuzzleIpClientFactory;
+use XbNz\Resolver\Factories\Ip\GuzzleIpClientFactory;
 use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
 

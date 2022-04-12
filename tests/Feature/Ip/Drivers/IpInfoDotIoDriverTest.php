@@ -4,14 +4,10 @@ namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
-use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
-use XbNz\Resolver\Factories\NormalizedIpResultsDataFactory;
 use XbNz\Resolver\Resolver\Resolver;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
-use XbNz\Resolver\Support\Exceptions\DriverNotFoundException;
 
 class IpInfoDotIoDriverTest extends \XbNz\Resolver\Tests\TestCase
 {

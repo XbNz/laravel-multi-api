@@ -119,6 +119,7 @@
       <path value="$PROJECT_DIR$/vendor/_laravel_idea" />
       <path value="$PROJECT_DIR$/vendor/caseyamcl/guzzle_retry_middleware" />
       <path value="$PROJECT_DIR$/vendor/kevinrob/guzzle-cache-middleware" />
+      <path value="$PROJECT_DIR$/vendor/spatie/invade" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

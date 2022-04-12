@@ -5,6 +5,7 @@ namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 
 class IpDataDotCoStrategy implements AuthStrategy
@@ -21,7 +22,7 @@ class IpDataDotCoStrategy implements AuthStrategy
             return static function (RequestInterface $request, array $options) use ($handler, $getRandomApiKey) {
                 $uri = $request->getUri();
 
-                $randomKey = $getRandomApiKey->execute($uri->__toString(), 'ip-resolver.api-keys');
+                $randomKey = $getRandomApiKey->execute(IpDataDotCoDriver::class, 'ip-resolver.api-keys');
 
                 $newUri = Uri::withQueryValue($uri, 'api-key', $randomKey);
                 $request = $request->withUri($newUri);
@@ -31,10 +32,8 @@ class IpDataDotCoStrategy implements AuthStrategy
         };
     }
 
-    public function supports(string $apiBaseUri): bool
+    public function supports(string $driver): bool
     {
-        return Str::of($apiBaseUri)
-            ->lower()
-            ->contains('ipdata.co');
+        return $driver === IpDataDotCoDriver::class;
     }
 }

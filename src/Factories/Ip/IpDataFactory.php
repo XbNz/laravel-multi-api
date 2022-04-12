@@ -1,6 +1,6 @@
 <?php
 
-namespace XbNz\Resolver\Factories;
+namespace XbNz\Resolver\Factories\Ip;
 
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 

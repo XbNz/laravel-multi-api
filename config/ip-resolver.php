@@ -3,29 +3,31 @@
 return [
 
     'api-keys' => [
-        'ipapi.com' => [
+        \XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver::class => [
             '', '', ''
         ],
 
-        'ipgeolocation.io' => [
+        \XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver::class => [
             '', '', ''
         ],
 
-        'ipinfo.io' => [
+        \XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver::class => [
             '', '', ''
         ],
 
-        'ipdata.co' => [
+        \XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver::class => [
             '', '', ''
         ],
 
-        'abuseipdb.com' => [
+        \XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver::class => [
             '', '', ''
         ],
     ],
 
-    'databases' => [
-//        'maxMind' => ,
-//        'ipDb' => ,
-    ]
+    /**
+     * Visit https://mtr.sh/probes.json to retrieve the list of probe IDs
+     */
+    \XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver::class => [
+        'search' => ['frankfurt']
+    ],
 ];

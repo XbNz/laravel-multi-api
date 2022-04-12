@@ -6,17 +6,19 @@ use XbNz\Resolver\Domain\Ip\Actions\FetchRawDataForIpsAction;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
 use XbNz\Resolver\Domain\Ip\Mappings\AbuseIpDbDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpDataDotCoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpGeolocationDotIoMapper;
-use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoAuthStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoRetryStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy as IpDataDotCoAuthStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy as IpDataDotCoRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComAuthStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy as IpDataDotCoAuthStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoAuthStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShMtrStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComRetryStrategy;
-use XbNz\Resolver\Factories\GuzzleIpClientFactory;
-use XbNz\Resolver\Factories\NormalizedIpResultsDataFactory;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy as IpDataDotCoRetryStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoRetryStrategy;
+use XbNz\Resolver\Factories\Ip\GuzzleIpClientFactory;
+use XbNz\Resolver\Factories\Ip\NormalizedIpResultsDataFactory;
 
 
 class IpServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -41,6 +43,7 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             IpGeolocationDotIoDriver::class,
             IpDataDotCoDriver::class,
             AbuseIpDbDotComDriver::class,
+            MtrDotShMtrDriver::class,
         ], 'drivers');
 
         $this->app->tag([
@@ -49,6 +52,10 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             AbuseIpDbDotComMapper::class,
         ], 'mappers');
 
+        $this->app->tag([
+            MtrDotShMtrStrategy::class
+        ], 'response-formatters');
+
         $this->app->when(GuzzleIpClientFactory::class)
             ->needs('$authStrategies')
             ->giveTagged('auth-strategies');
@@ -56,6 +63,10 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->when(GuzzleIpClientFactory::class)
             ->needs('$retryStrategies')
             ->giveTagged('retry-strategies');
+
+        $this->app->when(GuzzleIpClientFactory::class)
+            ->needs('$responseFormatters')
+            ->giveTagged('response-formatters');
 
         $this->app->when(FetchRawDataForIpsAction::class)
             ->needs('$drivers')

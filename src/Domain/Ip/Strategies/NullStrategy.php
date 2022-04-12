@@ -4,9 +4,9 @@ namespace XbNz\Resolver\Domain\Ip\Strategies;
 
 class NullStrategy
 {
-    public function guzzleMiddleware(...$gibberish): callable
+    public function guzzleMiddleware(...$gibberish): void
     {
-        return static function () {};
+
     }
 
     public function supports(...$gibberish): bool
