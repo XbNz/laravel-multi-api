@@ -4,7 +4,7 @@ namespace XbNz\Resolver\Factories\Ip;
 
 
 use Illuminate\Support\Collection;
-use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
 use XbNz\Resolver\Domain\Ip\Mappings\Mapper;
 
@@ -18,14 +18,14 @@ class NormalizedIpResultsDataFactory
     )
     {}
 
-    public function fromRaw(RawIpResultsData $ipResultsData): NormalizedIpResultsData
+    public function fromRaw(RawIpResultsData $ipResultsData): NormalizedGeolocationResultsData
     {
         return Collection::make($this->mappers)
             ->sole(fn (Mapper $mapper) => $mapper->supports($ipResultsData->provider))
             ->map($ipResultsData);
     }
 
-    public function generateTestData(array $overrides = []): NormalizedIpResultsData
+    public function generateTestData(array $overrides = []): NormalizedGeolocationResultsData
     {
 //        $data = array_merge([
 //            'provider' => 'exampleprovider.io',

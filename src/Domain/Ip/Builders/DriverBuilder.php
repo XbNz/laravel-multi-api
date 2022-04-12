@@ -14,7 +14,7 @@ use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
 use XbNz\Resolver\Factories\Ip\NormalizedIpResultsDataFactory;
 
@@ -77,7 +77,7 @@ class DriverBuilder
 
 
     /**
-     * @return array<NormalizedIpResultsData>
+     * @return array<NormalizedGeolocationResultsData>
      */
     public function normalize(): array
     {

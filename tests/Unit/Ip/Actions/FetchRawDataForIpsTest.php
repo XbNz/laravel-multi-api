@@ -25,7 +25,6 @@ class FetchRawDataForIpsTest extends \XbNz\Resolver\Tests\TestCase
             [MtrDotShMtrDriver::class]
         );
 
-
         dd($data);
 
 

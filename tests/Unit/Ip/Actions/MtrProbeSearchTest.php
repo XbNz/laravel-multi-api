@@ -5,7 +5,7 @@ namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use XbNz\Resolver\Domain\Ip\Actions\MtrProbeSearchAction;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbe;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbeData;
 use XbNz\Resolver\Tests\TestCase;
 
 class MtrProbeSearchTest extends TestCase
@@ -55,7 +55,7 @@ class MtrProbeSearchTest extends TestCase
         $collection = $action->execute('*');
 
         // Assert
-        $this->assertContainsOnlyInstancesOf(MtrDotShProbe::class, $collection);
+        $this->assertContainsOnlyInstancesOf(MtrDotShProbeData::class, $collection);
         $this->assertTrue(Cache::has('mtr_probes'));
     }
 
@@ -70,8 +70,8 @@ class MtrProbeSearchTest extends TestCase
         $collectionB = $action->execute(searchTerm: '::gibberish::');
 
         // Assert
-        $this->assertContainsOnlyInstancesOf(MtrDotShProbe::class, $collection);
-        $this->assertContainsOnlyInstancesOf(MtrDotShProbe::class, $collectionB);
+        $this->assertContainsOnlyInstancesOf(MtrDotShProbeData::class, $collection);
+        $this->assertContainsOnlyInstancesOf(MtrDotShProbeData::class, $collectionB);
         $this->assertCount(1, $collection);
         $this->assertCount(0, $collectionB);
     }

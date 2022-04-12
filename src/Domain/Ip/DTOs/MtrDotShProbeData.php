@@ -4,7 +4,7 @@ namespace XbNz\Resolver\Domain\Ip\DTOs;
 
 use Webmozart\Assert\Assert;
 
-class MtrDotShProbe
+class MtrDotShProbeData
 {
     public function __construct(
         public readonly string $probeId,

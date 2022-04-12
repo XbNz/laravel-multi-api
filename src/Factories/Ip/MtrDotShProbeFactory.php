@@ -2,13 +2,13 @@
 
 namespace XbNz\Resolver\Factories\Ip;
 
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbe;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbeData;
 
 class MtrDotShProbeFactory
 {
-    public static function fromRaw(string $probeId, array $raw): MtrDotShProbe
+    public static function fromRaw(string $probeId, array $raw): MtrDotShProbeData
     {
-        return new MtrDotShProbe(
+        return new MtrDotShProbeData(
             $probeId,
             $raw['asnumber'],
             $raw['city'],

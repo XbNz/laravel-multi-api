@@ -5,14 +5,14 @@ namespace XbNz\Resolver\Domain\Ip\Mappings;
 use Illuminate\Support\Str;
 use Locale;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
-use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
 
 class AbuseIpDbDotComMapper implements Mapper
 {
-    public function map(RawIpResultsData $rawIpResults): NormalizedIpResultsData
+    public function map(RawIpResultsData $rawIpResults): NormalizedGeolocationResultsData
     {
-        return new NormalizedIpResultsData(
+        return new NormalizedGeolocationResultsData(
             $rawIpResults->provider,
             $rawIpResults->data['data']['ipAddress'],
             Locale::getDisplayRegion("-{$rawIpResults->data['data']['countryCode']}", 'en'),

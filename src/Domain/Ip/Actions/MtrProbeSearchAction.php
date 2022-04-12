@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbe;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbeData;
 use XbNz\Resolver\Factories\Ip\MtrDotShProbeFactory;
 
 class MtrProbeSearchAction
 {
     /**
-     * @return Collection<MtrDotShProbe>
+     * @return Collection<MtrDotShProbeData>
      */
     public function execute(
         ?bool $v4 = null,
@@ -49,28 +49,28 @@ class MtrProbeSearchAction
             ->when(
                 ! is_null($v4),
                 fn (Collection $collection) => $collection->filter(
-                    fn (MtrDotShProbe $probe) => $probe->supportsVersion4 === $v4
+                    fn (MtrDotShProbeData $probe) => $probe->supportsVersion4 === $v4
                 )
             )
 
             ->when(
                 ! is_null($v6),
                 fn (Collection $collection) => $collection->filter(
-                    fn (MtrDotShProbe $probe) => $probe->supportsVersion6 === $v6
+                    fn (MtrDotShProbeData $probe) => $probe->supportsVersion6 === $v6
                 )
             )
 
             ->when(
                 ! is_null($isOnline),
                 fn (Collection $collection) => $collection->filter(
-                    fn (MtrDotShProbe $probe) => $probe->isOnline === $isOnline
+                    fn (MtrDotShProbeData $probe) => $probe->isOnline === $isOnline
                 )
             )
 
             ->when(
                 $searchTerm !== '*',
                 fn (Collection $collection) => $collection->reject(
-                    fn (MtrDotShProbe $probe) => Collection::make($probe)->filter(
+                    fn (MtrDotShProbeData $probe) => Collection::make($probe)->filter(
                         fn ($value) => Str::of($searchTerm)->lower()->contains(Str::of($value)->lower())
                     )->isEmpty()
                 )

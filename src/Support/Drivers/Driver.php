@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Prophecy\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 
 interface Driver
 {

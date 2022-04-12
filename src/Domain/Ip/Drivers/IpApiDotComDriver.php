@@ -9,7 +9,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\DTOs\NormalizedIpResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Actions\MakeHttpPromiseAction;
 use XbNz\Resolver\Support\Drivers\Driver;
@@ -29,11 +29,11 @@ class IpApiDotComDriver implements Driver
         $this->apiKeys = $apiKeys->execute($this);
     }
 
-    public function query(IpData $ipData): NormalizedIpResultsData
+    public function query(IpData $ipData): NormalizedGeolocationResultsData
     {
         $response = $this->raw($ipData);
 
-        return new NormalizedIpResultsData(
+        return new NormalizedGeolocationResultsData(
             driver: self::class,
             ip: $ipData->ip,
             country: $response['country_name'],
