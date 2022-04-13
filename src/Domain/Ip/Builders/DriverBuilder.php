@@ -13,10 +13,11 @@ use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
-use XbNz\Resolver\Factories\Ip\NormalizedIpResultsDataFactory;
+use XbNz\Resolver\Factories\Ip\MappedResultFactory;
 
 class DriverBuilder
 {
@@ -28,9 +29,9 @@ class DriverBuilder
     private Collection $chosenIps;
 
     public function __construct(
-        private VerifyIpIntegrityAction $verifyIpIntegrity,
+        private VerifyIpIntegrityAction  $verifyIpIntegrity,
         private FetchRawDataForIpsAction $fetchRawDataForIps,
-        private NormalizedIpResultsDataFactory $normalizedResultsFactory,
+        private MappedResultFactory      $mapperResultFactory,
     ) {
         $this->chosenDrivers = collect();
         $this->chosenIps = collect();
@@ -66,6 +67,12 @@ class DriverBuilder
         return $this;
     }
 
+    public function mtrDotShMtr(): static
+    {
+        $this->chosenDrivers[] = MtrDotShMtrDriver::class;
+        return $this;
+    }
+
     /**
      * @param array<string> $drivers Provider names in string format: e.g [IpGeolocationDotIoDriver::class, IpInfoDotIo::class]
      */
@@ -82,7 +89,7 @@ class DriverBuilder
     public function normalize(): array
     {
         return Collection::make($this->raw())
-            ->map(fn (RawIpResultsData $rawData) => $this->normalizedResultsFactory->fromRaw($rawData))
+            ->map(fn (RawIpResultsData $rawData) => $this->mapperResultFactory->fromRaw($rawData))
             ->toArray();
     }
 

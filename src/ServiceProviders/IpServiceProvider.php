@@ -10,6 +10,7 @@ use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
 use XbNz\Resolver\Domain\Ip\Mappings\AbuseIpDbDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpDataDotCoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpGeolocationDotIoMapper;
+use XbNz\Resolver\Domain\Ip\Mappings\MtrDotShMtrMapper;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy as IpDataDotCoAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoAuthStrategy;
@@ -18,7 +19,7 @@ use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy a
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy as IpDataDotCoRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoRetryStrategy;
 use XbNz\Resolver\Factories\Ip\GuzzleIpClientFactory;
-use XbNz\Resolver\Factories\Ip\NormalizedIpResultsDataFactory;
+use XbNz\Resolver\Factories\Ip\MappedResultFactory;
 
 
 class IpServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -50,6 +51,7 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             IpGeolocationDotIoMapper::class,
             IpDataDotCoMapper::class,
             AbuseIpDbDotComMapper::class,
+            MtrDotShMtrMapper::class
         ], 'mappers');
 
         $this->app->tag([
@@ -72,7 +74,7 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             ->needs('$drivers')
             ->giveTagged('drivers');
 
-        $this->app->when(NormalizedIpResultsDataFactory::class)
+        $this->app->when(MappedResultFactory::class)
             ->needs('$mappers')
             ->giveTagged('mappers');
 

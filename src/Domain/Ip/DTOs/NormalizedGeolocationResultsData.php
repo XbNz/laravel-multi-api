@@ -4,7 +4,7 @@ namespace XbNz\Resolver\Domain\Ip\DTOs;
 
 use XbNz\Resolver\Support\Drivers\Driver;
 
-class NormalizedGeolocationResultsData
+class NormalizedGeolocationResultsData implements MappableDTO
 {
     public function __construct(
         public readonly string $provider,
