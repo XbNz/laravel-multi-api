@@ -38,7 +38,9 @@ class MtrDotShMtrStrategy implements ResponseFormatterStrategy
                         $stream = new Stream(fopen('php://temp', 'r+'));
                         $stream->write($json);
 
+
                         $response = $response->withBody($stream);
+
                         return $response;
                     }
                 );

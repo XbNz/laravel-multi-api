@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace XbNz\Resolver\Tests\Feature\Factories;
+namespace XbNz\Resolver\Tests\Unit\Factories;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Factories\UniversalMiddlewaresFactory;
+use function app;
+use function invade;
 
 class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
 {

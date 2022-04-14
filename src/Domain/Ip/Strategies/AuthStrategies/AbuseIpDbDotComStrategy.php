@@ -22,7 +22,7 @@ class AbuseIpDbDotComStrategy implements AuthStrategy
                 $uri = $request->getUri();
 
                 $randomKey = $getRandomApiKey->execute(AbuseIpDbDotComDriver::class, 'ip-resolver.api-keys');
-                $request = $request->withAddedHeader('key', $randomKey);
+                $request = $request->withHeader('key', $randomKey);
 
                 return $handler($request, $options);
             };

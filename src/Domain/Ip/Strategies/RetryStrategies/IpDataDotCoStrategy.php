@@ -35,7 +35,7 @@ class IpDataDotCoStrategy implements RetryStrategy
                 $randomKey = $this->getRandomApiKey->execute(IpDataDotCoDriver::class, 'ip-resolver.api-keys');
 
                 $newUri = Uri::withQueryValue($uri, 'api-key', $randomKey);
-                $request->withUri($newUri);
+                $request = $request->withUri($newUri);
             }
         );
     }

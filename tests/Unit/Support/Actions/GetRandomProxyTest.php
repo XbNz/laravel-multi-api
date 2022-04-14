@@ -40,6 +40,8 @@ class GetRandomProxyTest extends \XbNz\Resolver\Tests\TestCase
         $randomProxy = app(GetRandomProxyAction::class)
             ->execute();
 
+        // TODO: Ensure randomness
+
         $this->assertContains($randomProxy, $proxies);
     }
 

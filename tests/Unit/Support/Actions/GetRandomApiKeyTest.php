@@ -31,6 +31,8 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
         $this->assertTrue(
             $key->contains('::api-key-1::') || $key->contains('::api-key-2::')
         );
+
+        // TODO: This test doesnt ensure randomness.
     }
 
     /** @test */

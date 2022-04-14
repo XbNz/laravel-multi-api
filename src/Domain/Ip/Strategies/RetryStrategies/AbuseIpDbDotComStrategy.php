@@ -31,8 +31,7 @@ class AbuseIpDbDotComStrategy implements RetryStrategy
                 ?ResponseInterface $response
             ) {
                 $randomKey = $this->getRandomApiKey->execute(AbuseIpDbDotComDriver::class, 'ip-resolver.api-keys');
-                $uri = $request->getUri();
-                $request->withAddedHeader('key', $randomKey);
+                $request = $request->withHeader('key', $randomKey);
             }
         );
     }
