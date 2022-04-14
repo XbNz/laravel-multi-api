@@ -33,7 +33,7 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             ]));
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"success": true}'),
+            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
         ]);
 
         $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
@@ -53,7 +53,7 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 
         // Assert
 
-        $this->assertSame(true, $rawResponses[0]->data['success']);
+        $this->assertSame(true, $rawResponses[0]->data['::success::']);
 
     }
 

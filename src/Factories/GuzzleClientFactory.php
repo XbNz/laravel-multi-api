@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\Strategies\SoloIpAddressStrategies\SoloIpStrategy;
-use XbNz\Resolver\Support\Actions\UniversalMiddlewaresAction;
 use XbNz\Resolver\Support\DTOs\GuzzleConfigData;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 use XbNz\Resolver\Support\Strategies\AuthStrategy;
@@ -24,10 +23,10 @@ class GuzzleClientFactory
      * @param array<ResponseFormatterStrategy> $responseFormatters
      */
     public function __construct(
-        private UniversalMiddlewaresAction $universalMiddlewares,
-        private array $authStrategies,
-        private array $retryStrategies,
-        private array $responseFormatters
+        private UniversalMiddlewaresFactory $universalMiddlewares,
+        private array                       $authStrategies,
+        private array                       $retryStrategies,
+        private array                       $responseFormatters
     )
     {}
 
@@ -59,7 +58,7 @@ class GuzzleClientFactory
 
         $data = array_merge([
             'middlewares' => [
-                ...$this->universalMiddlewares->execute(),
+                ...$this->universalMiddlewares->guzzleMiddlewares(),
                 ...$contextualMiddlewares->filter(),
             ]
         ], $overrides);

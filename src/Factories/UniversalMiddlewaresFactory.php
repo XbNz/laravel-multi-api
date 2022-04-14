@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace XbNz\Resolver\Support\Actions;
+namespace XbNz\Resolver\Factories;
 
-use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\LaravelCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
+use XbNz\Resolver\Support\Actions\GetRandomProxyAction;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithProxy;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithTimeout;
 
-class UniversalMiddlewaresAction
+class UniversalMiddlewaresFactory
 {
     private array $middlewares;
 
@@ -24,7 +24,7 @@ class UniversalMiddlewaresAction
     /**
      * @return array<callable>
      */
-    public function execute(): array
+    public function guzzleMiddlewares(): array
     {
         $this->addCache();
 
