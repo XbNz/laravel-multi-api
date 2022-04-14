@@ -41,13 +41,6 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
         ], 'retry-strategies');
 
         $this->app->tag([
-            IpGeolocationDotIoDriver::class,
-            IpDataDotCoDriver::class,
-            AbuseIpDbDotComDriver::class,
-            MtrDotShMtrDriver::class,
-        ], 'drivers');
-
-        $this->app->tag([
             IpGeolocationDotIoMapper::class,
             IpDataDotCoMapper::class,
             AbuseIpDbDotComMapper::class,
@@ -70,14 +63,9 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             ->needs('$responseFormatters')
             ->giveTagged('response-formatters');
 
-        $this->app->when(FetchRawDataForIpsAction::class)
-            ->needs('$drivers')
-            ->giveTagged('drivers');
-
         $this->app->when(MappedResultFactory::class)
             ->needs('$mappers')
             ->giveTagged('mappers');
-
     }
 
     public function boot()

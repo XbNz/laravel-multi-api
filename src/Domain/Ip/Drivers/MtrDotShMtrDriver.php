@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\Actions\MtrProbeSearchAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
+use XbNz\Resolver\Domain\Ip\Exceptions\MtrProbeNotFoundException;
 use XbNz\Resolver\Support\Drivers\Driver;
 
 class MtrDotShMtrDriver implements Driver
@@ -41,10 +42,17 @@ class MtrDotShMtrDriver implements Driver
 
                     $uri = (new Uri(self::API_URL))
                         ->withPath("/{$probe->probeId}/mtr/{$ipData->ip}");
+
                     yield new Request('GET', $uri);
                 }
             }
         };
+
+        $collectionOfRequests = new Collection(iterator_to_array($generator($ipDataObjects)));
+
+        if ($collectionOfRequests->isEmpty()) {
+            throw new MtrProbeNotFoundException('The MTR driver found no compatible probes, modify your search terms');
+        }
 
         return new Collection(iterator_to_array($generator($ipDataObjects)));
     }

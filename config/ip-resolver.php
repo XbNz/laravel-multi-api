@@ -28,6 +28,6 @@ return [
      * Visit https://mtr.sh/probes.json to retrieve the list of probe IDs
      */
     \XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver::class => [
-        'search' => ['london']
+        'search' => ['los angeles',]
     ],
 ];

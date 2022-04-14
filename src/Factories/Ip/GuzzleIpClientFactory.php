@@ -41,20 +41,21 @@ class GuzzleIpClientFactory
     {
         $contextualMiddlewares = Collection::make();
 
-        $contextualMiddlewares[] = Collection::make($this->authStrategies)
+        $contextualMiddlewares['auth_strategy'] = Collection::make($this->authStrategies)
             ->first(fn (AuthStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
             ->guzzleMiddleware();
 
-        $contextualMiddlewares[] = Collection::make($this->responseFormatters)
+        $contextualMiddlewares['response_formatter'] = Collection::make($this->responseFormatters)
             ->first(fn (ResponseFormatterStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
             ->guzzleMiddleware();
 
         if ((bool) Config::get('resolver.use_retries', false))
         {
-            $contextualMiddlewares[] = Collection::make($this->retryStrategies)
+            $contextualMiddlewares['retry_strategy'] = Collection::make($this->retryStrategies)
                 ->first(fn (RetryStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
                 ->guzzleMiddleware();
         }
+
 
         $data = array_merge([
             'middlewares' => [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Factories\Ip;
 
 use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbeData;
@@ -10,7 +12,7 @@ class MtrDotShProbeFactory
     {
         return new MtrDotShProbeData(
             $probeId,
-            $raw['asnumber'],
+            (int) $raw['asnumber'],
             $raw['city'],
             $raw['country'],
             $raw['group'],
