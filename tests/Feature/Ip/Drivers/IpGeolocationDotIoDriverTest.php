@@ -4,7 +4,7 @@ namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
+use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;

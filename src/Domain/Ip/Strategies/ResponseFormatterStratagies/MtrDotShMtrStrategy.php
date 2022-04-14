@@ -2,14 +2,13 @@
 
 namespace XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies;
 
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Stream;
-use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use XbNz\Resolver\Domain\Ip\Actions\ConvertMtrPlainToJsonAction;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
 use XbNz\Resolver\Factories\Ip\RekindledMtrDotShFactory;
+use XbNz\Resolver\Support\Strategies\ResponseFormatterStrategy;
 
 class MtrDotShMtrStrategy implements ResponseFormatterStrategy
 {

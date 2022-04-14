@@ -4,7 +4,7 @@ return [
     'use_proxy' => false,
     'proxies' => [],
 
-    'timeout' => 30,
+    'timeout' => 15,
     'cache_period' => 3600,
 
     'async_concurrent_requests' => 100,

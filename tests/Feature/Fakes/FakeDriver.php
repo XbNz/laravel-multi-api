@@ -8,7 +8,7 @@ use XbNz\Resolver\Support\Drivers\Driver;
 class FakeDriver implements Driver
 {
 
-    public function getRequests(array $ipDataObjects): Collection
+    public function getRequests(array $dataObjects): Collection
     {
         // TODO: Implement getRequests() method.
     }

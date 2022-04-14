@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
 
 use GuzzleHttp\Psr7\Uri;
-use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
+use XbNz\Resolver\Support\Strategies\AuthStrategy;
 
 class IpGeolocationDotIoStrategy implements AuthStrategy
 {

@@ -6,7 +6,6 @@ namespace XbNz\Resolver\Domain\Ip\DTOs;
 
 
 use Webmozart\Assert\Assert;
-use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
 
 class IpData
 {

@@ -23,9 +23,9 @@ class MtrDotShMtrDriver implements Driver
     {}
 
 
-    public function getRequests(array $ipDataObjects): Collection
+    public function getRequests(array $dataObjects): Collection
     {
-        Assert::allIsInstanceOf($ipDataObjects, IpData::class, '$ipDataObjects must be an array of IpData objects');
+        Assert::allIsInstanceOf($dataObjects, IpData::class, '$dataObjects must be an array of IpData objects');
         $self = __CLASS__;
 
         $probes = Collection::make(Config::get("ip-resolver.{$self}.search"))
@@ -48,13 +48,13 @@ class MtrDotShMtrDriver implements Driver
             }
         };
 
-        $collectionOfRequests = new Collection(iterator_to_array($generator($ipDataObjects)));
+        $collectionOfRequests = new Collection(iterator_to_array($generator($dataObjects)));
 
         if ($collectionOfRequests->isEmpty()) {
             throw new MtrProbeNotFoundException('The MTR driver found no compatible probes, modify your search terms');
         }
 
-        return new Collection(iterator_to_array($generator($ipDataObjects)));
+        return new Collection(iterator_to_array($generator($dataObjects)));
     }
 
     public function supports(string $driver): bool

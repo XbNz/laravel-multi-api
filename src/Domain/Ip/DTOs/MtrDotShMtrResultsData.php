@@ -4,6 +4,7 @@ namespace XbNz\Resolver\Domain\Ip\DTOs;
 
 use Illuminate\Support\Collection;
 use Webmozart\Assert\Assert;
+use XbNz\Resolver\Support\DTOs\MappableDTO;
 
 class MtrDotShMtrResultsData implements MappableDTO
 {

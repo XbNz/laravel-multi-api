@@ -15,6 +15,6 @@ interface Driver
     /**
      * @return Collection<RequestInterface>
      */
-    public function getRequests(array $ipDataObjects): Collection;
+    public function getRequests(array $dataObjects): Collection;
     public function supports(string $driver): bool;
 }

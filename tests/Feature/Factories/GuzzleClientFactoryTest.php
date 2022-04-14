@@ -1,18 +1,19 @@
 <?php
 
-namespace XbNz\Resolver\Tests\Feature\Factories\Ip;
+namespace XbNz\Resolver\Tests\Feature\Factories;
 
-use GuzzleHttp\Exception\InvalidArgumentException;
-use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Factories\Ip\GuzzleIpClientFactory;
-use XbNz\Resolver\Support\Actions\UniversalMiddlewaresAction;
+use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
+use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Factories\GuzzleClientFactory;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeDriver;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeGuzzleAuthStrategy;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeGuzzleFormatterStrategy;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeGuzzleRetryStrategy;
+use function app;
+use function invade;
 
-class GuzzleIpClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
+class GuzzleClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
 {
 
     protected function setUp(): void
@@ -40,7 +41,7 @@ class GuzzleIpClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
 
 
         // Act
-        $client = app(GuzzleIpClientFactory::class)
+        $client = app(GuzzleClientFactory::class)
             ->for('::doesnt-matter-this-should-be-provider-agnostic::');
 
 
@@ -56,9 +57,9 @@ class GuzzleIpClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
     public function contextual_middlewares_are_applied_on_a_driver_by_driver_basis_depending_on_what_is_available(): void
     {
         // Arrange
-        $client = app(GuzzleIpClientFactory::class)
+        $client = app(GuzzleClientFactory::class)
             ->for(FakeDriver::class);
-        $clientB = app(GuzzleIpClientFactory::class)
+        $clientB = app(GuzzleClientFactory::class)
             ->for('::something-that-does-not-exist::');
 
         // Act
@@ -99,7 +100,7 @@ class GuzzleIpClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
         // Arrange
         Config::set('resolver.use_retries', false);
 
-        $client = app(GuzzleIpClientFactory::class)
+        $client = app(GuzzleClientFactory::class)
             ->for(FakeDriver::class);
 
         // Act
@@ -119,6 +120,4 @@ class GuzzleIpClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
 
         $this->fail('Should have thrown an exception');
     }
-
-
 }

@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Feature\Fakes;
 
 use GuzzleHttp\Middleware;
-use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\RetryStrategy;
+use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
 class FakeGuzzleRetryStrategy implements RetryStrategy
 {

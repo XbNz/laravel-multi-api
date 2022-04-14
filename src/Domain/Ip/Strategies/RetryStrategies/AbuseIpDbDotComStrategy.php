@@ -2,14 +2,13 @@
 
 namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
-use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
+use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
 class AbuseIpDbDotComStrategy implements RetryStrategy
 {

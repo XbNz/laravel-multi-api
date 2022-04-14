@@ -2,7 +2,7 @@
 
 namespace XbNz\Resolver\Domain\Ip\DTOs;
 
-use XbNz\Resolver\Support\Drivers\Driver;
+use XbNz\Resolver\Support\DTOs\MappableDTO;
 
 class NormalizedGeolocationResultsData implements MappableDTO
 {

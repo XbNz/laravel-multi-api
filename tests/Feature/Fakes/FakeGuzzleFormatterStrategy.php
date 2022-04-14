@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Feature\Fakes;
 
 use GuzzleHttp\Middleware;
-use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\ResponseFormatterStrategy;
+use XbNz\Resolver\Support\Strategies\ResponseFormatterStrategy;
 
 class FakeGuzzleFormatterStrategy implements ResponseFormatterStrategy
 {

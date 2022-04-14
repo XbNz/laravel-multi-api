@@ -1,8 +1,8 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies;
+namespace XbNz\Resolver\Support\Strategies;
 
-interface ResponseFormatterStrategy
+interface RetryStrategy
 {
     public function guzzleMiddleware(): callable;
     public function supports(string $driver): bool;

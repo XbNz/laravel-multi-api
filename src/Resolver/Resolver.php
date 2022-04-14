@@ -2,18 +2,17 @@
 
 namespace XbNz\Resolver\Resolver;
 
-use XbNz\Resolver\Domain\Ip\Actions\VerifyIpIntegrityAction;
-use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
+use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
 
 class Resolver
 {
     public function __construct(
-        private DriverBuilder $driverBuilder
+        private IpBuilder $ipBuilder
     )
     {}
 
-    public function ip(): DriverBuilder
+    public function ip(): IpBuilder
     {
-        return $this->driverBuilder;
+        return $this->ipBuilder;
     }
 }

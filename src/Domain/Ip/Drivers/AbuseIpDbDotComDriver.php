@@ -15,9 +15,9 @@ class AbuseIpDbDotComDriver implements Driver
 
     const API_URL = 'https://api.abuseipdb.com/api/v2/check/';
 
-    public function getRequests(array $ipDataObjects): Collection
+    public function getRequests(array $dataObjects): Collection
     {
-        Assert::allIsInstanceOf($ipDataObjects, IpData::class, '$ipDataObjects must be an array of IpData objects');
+        Assert::allIsInstanceOf($dataObjects, IpData::class, '$dataObjects must be an array of IpData objects');
 
         $generator = static function (array $ipDataObjects) {
             foreach ($ipDataObjects as $ipData) {
@@ -29,7 +29,7 @@ class AbuseIpDbDotComDriver implements Driver
             }
         };
 
-        return new Collection(iterator_to_array($generator($ipDataObjects)));
+        return new Collection(iterator_to_array($generator($dataObjects)));
     }
 
     public function supports(string $driver): bool

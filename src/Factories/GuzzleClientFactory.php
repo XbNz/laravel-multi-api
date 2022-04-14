@@ -1,22 +1,22 @@
 <?php
 
-namespace XbNz\Resolver\Factories\Ip;
+namespace XbNz\Resolver\Factories;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;
-use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AuthStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\NullStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\ResponseFormatterStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\RetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\SoloIpAddressStrategies\SoloIpStrategy;
 use XbNz\Resolver\Support\Actions\UniversalMiddlewaresAction;
 use XbNz\Resolver\Support\DTOs\GuzzleConfigData;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
+use XbNz\Resolver\Support\Strategies\AuthStrategy;
+use XbNz\Resolver\Support\Strategies\NullStrategy;
+use XbNz\Resolver\Support\Strategies\ResponseFormatterStrategy;
+use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
-class GuzzleIpClientFactory
+class GuzzleClientFactory
 {
     /**
      * @param array<AuthStrategy> $authStrategies
@@ -32,7 +32,7 @@ class GuzzleIpClientFactory
     {}
 
     /**
-     * @param string $driver Driver FQN e.g. IpGeolocationDotIoDriver::class. Refer to config file for all supported drivers.
+     * @param string $driver Driver FQN e.g. IpGeolocationDotIoDriver::class. Refer to readme file for all supported drivers.
      * @throws \XbNz\Resolver\Support\Exceptions\MissingApiKeyException
      * @throws \XbNz\Resolver\Domain\Ip\Exceptions\InvalidIpAddressException
      * @throws ConfigNotFoundException

@@ -4,6 +4,7 @@ namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
@@ -43,5 +44,19 @@ class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
             ->ipApiDotCom()
             ->withIp('1.1.1.1')
             ->normalize();
+    }
+
+
+    /** @test **/
+    public function example(): void
+    {
+        $builder = app(IpBuilder::class);
+
+        $r = $builder->withIps(['1.1.1.1'])
+            ->mtrDotShMtr()
+            ->raw();
+
+        dd($r);
+
     }
 }

@@ -3,10 +3,10 @@
 namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
 
 use GuzzleHttp\Psr7\Uri;
-use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
+use XbNz\Resolver\Support\Strategies\AuthStrategy;
 
 class IpDataDotCoStrategy implements AuthStrategy
 {

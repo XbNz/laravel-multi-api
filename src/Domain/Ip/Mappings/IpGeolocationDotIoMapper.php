@@ -2,15 +2,15 @@
 
 namespace XbNz\Resolver\Domain\Ip\Mappings;
 
-use Illuminate\Support\Str;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
-use XbNz\Resolver\Domain\Ip\DTOs\RawIpResultsData;
+use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\Mappings\Mapper;
 
 class IpGeolocationDotIoMapper implements Mapper
 {
 
-    public function map(RawIpResultsData $rawIpResults): NormalizedGeolocationResultsData
+    public function map(RawResultsData $rawIpResults): NormalizedGeolocationResultsData
     {
         return new NormalizedGeolocationResultsData(
             $rawIpResults->provider,

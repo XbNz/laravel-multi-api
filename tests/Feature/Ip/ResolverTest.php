@@ -2,7 +2,7 @@
 
 namespace XbNz\Resolver\Tests\Feature\Ip;
 
-use XbNz\Resolver\Domain\Ip\Builders\DriverBuilder;
+use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
 use XbNz\Resolver\Resolver\Resolver;
 use function app;
 
@@ -14,6 +14,6 @@ class ResolverTest extends \XbNz\Resolver\Tests\TestCase
         $builder = app(Resolver::class)
             ->ip();
 
-        $this->assertInstanceOf(DriverBuilder::class, $builder);
+        $this->assertInstanceOf(IpBuilder::class, $builder);
     }
 }

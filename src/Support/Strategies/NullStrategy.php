@@ -1,6 +1,6 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Strategies;
+namespace XbNz\Resolver\Support\Strategies;
 
 class NullStrategy
 {

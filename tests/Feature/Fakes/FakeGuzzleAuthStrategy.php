@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Feature\Fakes;
 
 use GuzzleHttp\Middleware;
-use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AuthStrategy;
+use XbNz\Resolver\Support\Strategies\AuthStrategy;
 
 class FakeGuzzleAuthStrategy implements AuthStrategy
 {

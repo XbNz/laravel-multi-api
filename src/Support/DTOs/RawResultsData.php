@@ -1,8 +1,8 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\DTOs;
+namespace XbNz\Resolver\Support\DTOs;
 
-class RawIpResultsData
+class RawResultsData
 {
     public function __construct(
         public readonly string $provider,

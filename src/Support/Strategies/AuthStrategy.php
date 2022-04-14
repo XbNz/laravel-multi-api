@@ -1,6 +1,6 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
+namespace XbNz\Resolver\Support\Strategies;
 
 interface AuthStrategy
 {

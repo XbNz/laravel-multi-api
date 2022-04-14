@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
 
 class ApiProviderException extends \Exception
@@ -14,14 +15,13 @@ class ApiProviderException extends \Exception
     public const FORBIDDEN = 'Try accessing the url with a browser, maybe you are being blocked by a CDN or firewall';
     public const TIMEOUT = 'Increase your timeout value in the config file';
     public const RATELIMIT = 'You might be getting rate limited. Try configuring proxies or multiple API tokens in the config file';
-    public const UNKNOWN = 'Check your connection, if you have set proxies, ensure they are alive. Previous exception may be access through this class';
+    public const UNKNOWN = 'Check your connection or increase timeout. If you have set proxies, ensure they are alive';
 
 
-    public static function fromRequestException(RequestException $e): self
+    public static function fromTransferException(TransferException $e): self
     {
         if ($e instanceof BadResponseException) {
             throw match ($e->getResponse()->getStatusCode()) {
-                // TODO: Why is EA warning of null pointer
                 401 => new self(
                     "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. " . self::UNAUTHORIZED,
                     previous: $e
@@ -50,7 +50,7 @@ class ApiProviderException extends \Exception
         }
 
         throw new self(
-            "{$e->getRequest()->getUri()} threw an exception. " . self::FORBIDDEN,
+            "{$e->getRequest()->getUri()} threw an exception. " . self::UNKNOWN,
             previous: $e
         );
 
