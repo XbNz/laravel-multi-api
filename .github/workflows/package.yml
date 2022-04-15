@@ -21,7 +21,6 @@ jobs:
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,7 +39,7 @@ jobs:
             composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: ./vendor/bin/phpunit
         env:
           IP_API_DOT_COM_API_KEY: ${{ secrets.IP_API_DOT_COM_API_KEY }}
           IP_GEOLOCATION_DOT_IO_API_KEY: ${{ secrets.IP_GEOLOCATION_DOT_IO_API_KEY }}
@@ -48,14 +47,21 @@ jobs:
           IP_DATA_DOT_CO_API_KEY: ${{ secrets.IP_DATA_DOT_CO_API_KEY }}
 
       - name: Execute infection
-        run: cp .env.test .env && ./vendor/bin/infection
+        run: XDEBUG_MODE=coverage ./vendor/bin/infection
         env:
           IP_API_DOT_COM_API_KEY: ${{ secrets.IP_API_DOT_COM_API_KEY }}
           IP_GEOLOCATION_DOT_IO_API_KEY: ${{ secrets.IP_GEOLOCATION_DOT_IO_API_KEY }}
           IP_INFO_DOT_IO_API_KEY: ${{ secrets.IP_INFO_DOT_IO_API_KEY }}
           IP_DATA_DOT_CO_API_KEY: ${{ secrets.IP_DATA_DOT_CO_API_KEY }}
 
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan --error-format=github
 
+      - name: Run ECS
+        run: ./vendor/bin/ecs check
+
+      - name: Run PHPMD
+        run: ./vendor/bin/phpmd ./src text phpmd.xml
 
       - name: Discord notification
         env:
