@@ -11,11 +11,14 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpApiDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShMtrStrategy;
 
 class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -81,6 +84,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             AbuseIpDbDotComStrategy::class,
             IpDataDotCoStrategy::class,
             IpGeolocationDotIoStrategy::class,
+            MtrDotShMtrStrategy::class
         ];
 
 
@@ -199,6 +203,50 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
         $mockHandler = new MockHandler($mockQueue);
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(IpGeolocationDotIoStrategy::class)->guzzleMiddleware());
+        $client = new Client(['handler' => $stack]);
+
+        // Act
+
+        $client->request('GET', '/', [
+            'query' => [
+                'Shall-not-be-removed' => 'test-key',
+            ],
+        ]);
+
+        // Assert
+
+        $this->assertStringContainsString(
+            'should-be-this',
+            $mockHandler->getLastRequest()->getUri()->getQuery()
+        );
+
+        $this->assertStringContainsString(
+            'Shall-not-be-removed',
+            $mockHandler->getLastRequest()->getUri()->getQuery()
+        );
+    }
+
+    /** @test **/
+    public function the_token_is_refreshed_for_ip_api_on_retry(): void
+    {
+        // Arrange
+        $driver = IpApiDotComDriver::class;
+        Config::set([
+            'resolver.use_retries' => true,
+            'resolver.tries' => 2,
+            'resolver.retry_sleep' => .0001,
+            "ip-resolver.api-keys.{$driver}" => 'should-be-this'
+        ]);
+
+        $mockQueue = [
+            new Response(400),
+            new ConnectException('Test', new Request('GET', '/')),
+            new Response(200),
+        ];
+
+        $mockHandler = new MockHandler($mockQueue);
+        $stack = HandlerStack::create($mockHandler);
+        $stack->push(app(IpApiDotComStrategy::class)->guzzleMiddleware());
         $client = new Client(['handler' => $stack]);
 
         // Act

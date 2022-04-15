@@ -3,7 +3,7 @@
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
 use XbNz\Resolver\Support\Actions\GetRandomProxyAction;
-use XbNz\Resolver\Support\Exceptions\ProxyNotValidException;
+use XbNz\Resolver\Support\Exceptions\ProxyException;
 
 class GetRandomProxyTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -17,8 +17,8 @@ class GetRandomProxyTest extends \XbNz\Resolver\Tests\TestCase
         try {
             app(GetRandomProxyAction::class)
                 ->execute();
-        } catch (ProxyNotValidException $e){
-            $this->assertInstanceOf(ProxyNotValidException::class, $e);
+        } catch (ProxyException $e){
+            $this->assertInstanceOf(ProxyException::class, $e);
             return;
         }
 
@@ -40,14 +40,18 @@ class GetRandomProxyTest extends \XbNz\Resolver\Tests\TestCase
         $randomProxy = app(GetRandomProxyAction::class)
             ->execute();
 
-        // TODO: Ensure randomness
-
         $this->assertContains($randomProxy, $proxies);
     }
 
     /** @test **/
     public function if_the_client_has_chosen_to_use_proxies_but_hasnt_provided_any_it_throws_an_exception(): void
     {
-        // TODO: This
+        $proxies = [];
+
+        \Config::set('resolver.use_proxy', true);
+        \Config::set('resolver.proxies', $proxies);
+
+        $this->expectException(ProxyException::class);
+        $randomProxy = app(GetRandomProxyAction::class)->execute();
     }
 }

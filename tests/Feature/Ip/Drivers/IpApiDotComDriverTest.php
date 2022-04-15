@@ -53,8 +53,8 @@ class IpApiDotComDriverTest extends \XbNz\Resolver\Tests\TestCase
         $builder = app(IpBuilder::class);
 
         $r = $builder->withIps(['1.1.1.1'])
-            ->mtrDotShMtr()
-            ->raw();
+            ->ipApiDotCom()
+            ->normalize();
 
         dd($r);
 

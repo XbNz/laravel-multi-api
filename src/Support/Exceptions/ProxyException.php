@@ -2,7 +2,7 @@
 
 namespace XbNz\Resolver\Support\Exceptions;
 
-class ProxyNotValidException extends \Exception
+class ProxyException extends \Exception
 {
 
 }

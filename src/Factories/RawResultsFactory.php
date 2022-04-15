@@ -15,7 +15,7 @@ class RawResultsFactory
     {
         return new RawResultsData(
             $driver,
-            Utils::jsonDecode($response->getBody()->getContents(), true, options: JSON_THROW_ON_ERROR)
+            json_decode((string) $response->getBody(), true, flags: JSON_THROW_ON_ERROR)
         );
     }
 }

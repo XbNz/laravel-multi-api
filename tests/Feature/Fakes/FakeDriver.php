@@ -10,7 +10,7 @@ class FakeDriver implements Driver
 
     public function getRequests(array $dataObjects): Collection
     {
-        // TODO: Implement getRequests() method.
+        //
     }
 
     public function supports(string $driver): bool

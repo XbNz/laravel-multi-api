@@ -3,9 +3,11 @@
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\IpApiDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShMtrStrategy;
 use XbNz\Resolver\Factories\Ip\RekindledMtrDotShFactory;
 use XbNz\Resolver\Tests\TestCase;
@@ -33,12 +35,34 @@ class ResponseFormatterTest extends TestCase
 
         $this->assertSame('application/json', $response->getHeader('Content-Type')[0]);
 
-        dd(
-            $response->getBody()-
+        json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+    }
 
-            //TODO: Why is this giving an empty response back when the real endpoint works?
-        );
 
-        json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+    /** @test **/
+    public function ip_api_throws_a_200_for_failed_authentication_lets_fix_that_for_them_haha(): void
+    {
+        // Arrange
+
+        $mockHandler = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '{ "success": false }'),
+        ]);
+
+        $stack = HandlerStack::create($mockHandler);
+        $stack->push(app(IpApiDotComStrategy::class)->guzzleMiddleware());
+        $client = new Client(['handler' => $stack]);
+
+        // Act
+
+        try {
+            $response = $client->request('GET', '/');
+        } catch (ClientException $e) {
+            $this->assertSame(403, $e->getCode());
+            return;
+        }
+
+        // Assert
+
+        $this->fail('Expected exception');
     }
 }

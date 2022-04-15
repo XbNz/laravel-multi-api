@@ -12,14 +12,12 @@ class RekindledMtrDotShFactory
     public static function fromResponseAndRequest(
         ResponseInterface $response,
         RequestInterface $request
-    ): RekindledMtrDotShData
-    {
+    ): RekindledMtrDotShData {
+
         [, $probeId, , $ip] = explode('/', $request->getUri()->getPath());
 
-        // TODO: Find a less fragile way to explode the path into parts.
-
         return new RekindledMtrDotShData(
-            $response->getBody()->getContents(),
+            (string) $response->getBody(),
             $probeId,
             $ip
         );

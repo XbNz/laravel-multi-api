@@ -3,6 +3,7 @@
 namespace XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies;
 
 use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use XbNz\Resolver\Domain\Ip\Actions\ConvertMtrPlainToJsonAction;
@@ -35,13 +36,7 @@ class MtrDotShMtrStrategy implements ResponseFormatterStrategy
 
                         $response = $response->withHeader('Content-Type', 'application/json');
 
-                        $stream = new Stream(fopen('php://temp', 'r+'));
-                        $stream->write($json);
-
-
-                        $response = $response->withBody($stream);
-
-                        return $response;
+                        return $response->withBody(Utils::streamFor($json));
                     }
                 );
             };
