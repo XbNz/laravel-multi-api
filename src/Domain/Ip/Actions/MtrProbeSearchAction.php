@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Collection;
@@ -16,12 +18,11 @@ class MtrProbeSearchAction
      * @return Collection<MtrDotShProbeData>
      */
     public function execute(
-        ?bool $v4 = null,
-        ?bool $v6 = null,
-        ?bool $isOnline = null,
+        ?bool  $ipv4 = null,
+        ?bool  $ipv6 = null,
+        ?bool  $isOnline = null,
         string $searchTerm = '*'
-    ): Collection
-    {
+    ): Collection {
         $allProbesRaw = Cache::remember(
             'mtr_probes',
             now()->addseconds(Config::get('resolver.cache_period')),
@@ -44,24 +45,23 @@ class MtrProbeSearchAction
             ->map(fn ($rawProbe, $probeId) => MtrDotShProbeFactory::fromRaw($probeId, $rawProbe))
             ->values();
 
-
         return $collection
             ->when(
-                ! is_null($v4),
+                $ipv4 !== null,
                 fn (Collection $collection) => $collection->filter(
-                    fn (MtrDotShProbeData $probe) => $probe->supportsVersion4 === $v4
+                    fn (MtrDotShProbeData $probe) => $probe->supportsVersion4 === $ipv4
                 )
             )
 
             ->when(
-                ! is_null($v6),
+                $ipv6 !== null,
                 fn (Collection $collection) => $collection->filter(
-                    fn (MtrDotShProbeData $probe) => $probe->supportsVersion6 === $v6
+                    fn (MtrDotShProbeData $probe) => $probe->supportsVersion6 === $ipv6
                 )
             )
 
             ->when(
-                ! is_null($isOnline),
+                $isOnline !== null,
                 fn (Collection $collection) => $collection->filter(
                     fn (MtrDotShProbeData $probe) => $probe->isOnline === $isOnline
                 )
@@ -79,4 +79,3 @@ class MtrProbeSearchAction
             ->values();
     }
 }
-

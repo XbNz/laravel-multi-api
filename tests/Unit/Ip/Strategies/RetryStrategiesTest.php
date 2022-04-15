@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
 use GuzzleHttp\Client;
@@ -56,12 +58,14 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             $mockHandler = new MockHandler($mockQueue);
             $stack = HandlerStack::create($mockHandler);
             $stack->push(app($strategy)->guzzleMiddleware());
-            $client = new Client(['handler' => $stack]);
+            $client = new Client([
+                'handler' => $stack,
+            ]);
             $client->request('GET', '/');
         }
 
         // Assert
-        $this->expectNotToPerformAssertions(true);
+        $this->expectNotToPerformAssertions();
     }
 
     /** @test **/
@@ -84,16 +88,17 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             AbuseIpDbDotComStrategy::class,
             IpDataDotCoStrategy::class,
             IpGeolocationDotIoStrategy::class,
-            MtrDotShMtrStrategy::class
+            MtrDotShMtrStrategy::class,
         ];
-
 
         foreach ($testedStrategies as $strategy) {
             try {
                 $mockHandler = new MockHandler($mockQueue);
                 $stack = HandlerStack::create($mockHandler);
                 $stack->push(app($strategy)->guzzleMiddleware());
-                $client = new Client(['handler' => $stack]);
+                $client = new Client([
+                    'handler' => $stack,
+                ]);
                 $client->request('GET', '/');
             } catch (TransferException $e) {
                 $this->assertInstanceOf(TransferException::class, $e);
@@ -114,7 +119,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this'
+            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
         ]);
 
         $mockQueue = [
@@ -126,16 +131,21 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
         $mockHandler = new MockHandler($mockQueue);
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(AbuseIpDbDotComStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 
-        $client->request('GET', '/', ['headers' => ['key' => 'should-not-be-this']]);
-
+        $client->request('GET', '/', [
+            'headers' => [
+                'key' => 'should-not-be-this',
+                
+            ], ]);
 
         // Assert
 
-        $this->assertSame('should-be-this', $mockHandler->getLastRequest()->getHeader('key')[0]);
+        $this->assertSame('should-be-this', $mockHandler->getLastRequest()?->getHeader('key')[0] ?? 'not-found');
     }
 
     /** @test **/
@@ -147,7 +157,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this'
+            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
         ]);
 
         $mockQueue = [
@@ -159,7 +169,9 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
         $mockHandler = new MockHandler($mockQueue);
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(IpDataDotCoStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 
@@ -191,7 +203,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this'
+            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
         ]);
 
         $mockQueue = [
@@ -203,7 +215,9 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
         $mockHandler = new MockHandler($mockQueue);
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(IpGeolocationDotIoStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 
@@ -235,7 +249,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this'
+            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
         ]);
 
         $mockQueue = [
@@ -247,7 +261,9 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
         $mockHandler = new MockHandler($mockQueue);
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(IpApiDotComStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 

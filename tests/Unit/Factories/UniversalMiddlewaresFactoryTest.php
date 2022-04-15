@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Unit\Factories;
 
+use function app;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -11,9 +12,8 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Factories\UniversalMiddlewaresFactory;
-use function app;
 use function invade;
+use XbNz\Resolver\Factories\UniversalMiddlewaresFactory;
 
 class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -21,12 +21,15 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
     public function the_content_is_cached_for_the_amount_specified_in_the_config(): void
     {
         // Arrange
-        Config::set(['resolver.cache_period' => 3600]);
-
-        $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
+        Config::set([
+            'resolver.cache_period' => 3600,
         ]);
 
+        $mockHandler = new MockHandler([
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
+        ]);
 
         $stack = HandlerStack::create($mockHandler);
         $middlewares = app(UniversalMiddlewaresFactory::class)->guzzleMiddlewares();
@@ -35,7 +38,9 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
             $stack->push($middleware);
         }
 
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 
@@ -63,12 +68,15 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
     public function timeout_is_set_to_config_timeout(): void
     {
         // Arrange
-        Config::set(['resolver.timeout' => 5]);
-
-        $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
+        Config::set([
+            'resolver.timeout' => 5,
         ]);
 
+        $mockHandler = new MockHandler([
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
+        ]);
 
         $stack = HandlerStack::create($mockHandler);
         $middlewares = app(UniversalMiddlewaresFactory::class)->guzzleMiddlewares();
@@ -77,7 +85,9 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
             $stack->push($middleware, $name);
         }
 
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         $handler = invade(invade($client)->config['handler']);
 
@@ -90,12 +100,10 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
 
         // Act
 
-
         // Assert
 
         $this->assertSame(5.0, $variables['timeout']);
     }
-
 
     /** @test **/
     public function proxy_is_set_to_config_proxies(): void
@@ -109,11 +117,13 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
 
         Config::set([
             'resolver.use_proxy' => true,
-            'resolver.proxies' => $proxies
+            'resolver.proxies' => $proxies,
         ]);
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
         ]);
 
         $stack = HandlerStack::create($mockHandler);
@@ -123,7 +133,9 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
             $stack->push($middleware, $name);
         }
 
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         $handler = invade(invade($client)->config['handler']);
 
@@ -131,12 +143,10 @@ class UniversalMiddlewaresFactoryTest extends \XbNz\Resolver\Tests\TestCase
 
         $callable = $handler->stack[$proxiesPositionInStack][0];
 
-
         $reflection = new \ReflectionFunction($callable);
         $variables = $reflection->getStaticVariables();
 
         // Act
-
 
         // Assert
         $this->assertcontains($variables['proxy'], $proxies);

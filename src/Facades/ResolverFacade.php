@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Facades;
 
 class ResolverFacade extends \Illuminate\Support\Facades\Facade

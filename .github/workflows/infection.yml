@@ -1,0 +1,25 @@
+name: Mutation testing
+
+on:
+  push:
+    paths:
+      - '**.php'
+      - 'infection.json'
+
+jobs:
+  infection:
+    name: infection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: xdebug
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v1
+
+      - name: Run infection
+        run: cp .env.test .env && ./vendor/bin/infection

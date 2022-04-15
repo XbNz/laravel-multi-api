@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Factories\Ip;
 
 use Illuminate\Support\Str;
@@ -13,7 +15,6 @@ class RekindledMtrDotShFactory
         ResponseInterface $response,
         RequestInterface $request
     ): RekindledMtrDotShData {
-
         [, $probeId, , $ip] = explode('/', $request->getUri()->getPath());
 
         return new RekindledMtrDotShData(
@@ -33,7 +34,6 @@ class RekindledMtrDotShFactory
   4.|-- e2-2.cr01.iad01.us.misaka.io (23.143.176.44)    0.0%    0    10    10   0.5   0.5   0.6   0.7   0.0   0.6  0.1  0.1  0.1  0.4
   5.|-- equinix-ashburn.woodynet.net (206.126.236.111)  0.0%    0    10    10   0.9   0.9   2.3   9.3   2.7   1.6  0.4  2.6  8.3 18.4
   6.|-- dns9.quad9.net (9.9.9.9)                        0.0%    0    10    10   0.6   0.6   0.7   0.7   0.0   0.7  0.0  0.0  0.1  0.3',
-
 
             'probe_id' => Str::random(5),
             'ip' => '1.1.1.1',

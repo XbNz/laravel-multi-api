@@ -1,9 +1,9 @@
 name: Run tests
-on: 
+on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    paths:
+      - '**.php'
+      - 'infection.json'
  
 jobs: 
 
@@ -11,13 +11,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        php: [8.0]
-        laravel: [8.*]
+        php: [8.1]
+        laravel: [9.*]
         dependency-version: [prefer-stable]
         os: [ubuntu-latest]
         include:
-          - laravel: 8.*
-          - testbench: 6.*
+          - laravel: 9.*
+          - testbench: 7.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
@@ -30,8 +30,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
-          coverage: none
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, xdebug
+          coverage: xdebug
 
       - name: Install dependencies
         run: |
@@ -46,6 +46,16 @@ jobs:
           IP_GEOLOCATION_DOT_IO_API_KEY: ${{ secrets.IP_GEOLOCATION_DOT_IO_API_KEY }}
           IP_INFO_DOT_IO_API_KEY: ${{ secrets.IP_INFO_DOT_IO_API_KEY }}
           IP_DATA_DOT_CO_API_KEY: ${{ secrets.IP_DATA_DOT_CO_API_KEY }}
+
+      - name: Execute infection
+        run: cp .env.test .env && ./vendor/bin/infection
+        env:
+          IP_API_DOT_COM_API_KEY: ${{ secrets.IP_API_DOT_COM_API_KEY }}
+          IP_GEOLOCATION_DOT_IO_API_KEY: ${{ secrets.IP_GEOLOCATION_DOT_IO_API_KEY }}
+          IP_INFO_DOT_IO_API_KEY: ${{ secrets.IP_INFO_DOT_IO_API_KEY }}
+          IP_DATA_DOT_CO_API_KEY: ${{ secrets.IP_DATA_DOT_CO_API_KEY }}
+
+
 
       - name: Discord notification
         env:

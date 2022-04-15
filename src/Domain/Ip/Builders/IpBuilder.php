@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Builders;
 
 use Illuminate\Support\Collection;
-use XbNz\Resolver\Domain\Ip\Actions\CollectEligibleDriversAction;
-use XbNz\Resolver\Domain\Ip\Actions\CreateCollectionFromQueriedIpDataAction;
-use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
@@ -13,7 +12,6 @@ use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Factories\MappedResultFactory;
 use XbNz\Resolver\Support\Actions\FetchRawDataAction;
@@ -24,19 +22,20 @@ use XbNz\Resolver\Support\DTOs\RawResultsData;
 class IpBuilder
 {
     /**
-     * @var Collection<string> $chosenDrivers
-     * @var Collection<IpData> $chosenIps
-     * @var Collection<Driver> $drivers
+     * @var Collection<string>
+     * @var Collection<IpData>
+     * @var Collection<Driver>
      */
     private Collection $chosenDrivers;
+
     private Collection $chosenIps;
+
     private Collection $drivers;
 
-
     public function __construct(
-        private FetchRawDataAction      $fetchRawData,
-        private MappedResultFactory     $mapperResultFactory,
-        array                           $drivers,
+        private readonly FetchRawDataAction $fetchRawData,
+        private readonly MappedResultFactory $mapperResultFactory,
+        array $drivers,
     ) {
         $this->chosenDrivers = collect();
         $this->chosenIps = collect();
@@ -45,7 +44,8 @@ class IpBuilder
 
     public function ipInfoDotIo(): static
     {
-        $this->chosenDrivers[] = $this->drivers->sole(fn (Driver $driver)
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
             => $driver->supports(IpInfoDotIoDriver::class)
         );
         return $this;
@@ -53,7 +53,8 @@ class IpBuilder
 
     public function ipGeolocationDotIo(): static
     {
-        $this->chosenDrivers[] = $this->drivers->sole(fn (Driver $driver)
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
             => $driver->supports(IpGeolocationDotIoDriver::class)
         );
         return $this;
@@ -61,7 +62,8 @@ class IpBuilder
 
     public function ipApiDotCom(): static
     {
-        $this->chosenDrivers[] = $this->drivers->sole(fn (Driver $driver)
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
             => $driver->supports(IpApiDotComDriver::class)
         );
         return $this;
@@ -69,7 +71,8 @@ class IpBuilder
 
     public function ipDataDotCo(): static
     {
-        $this->chosenDrivers[] = $this->drivers->sole(fn (Driver $driver)
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
             => $driver->supports(IpDataDotCoDriver::class)
         );
         return $this;
@@ -77,7 +80,8 @@ class IpBuilder
 
     public function abuseIpDbDotCom(): static
     {
-        $this->chosenDrivers[] = $this->drivers->sole(fn (Driver $driver)
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
             => $driver->supports(AbuseIpDbDotComDriver::class)
         );
         return $this;
@@ -85,7 +89,8 @@ class IpBuilder
 
     public function mtrDotShMtr(): static
     {
-        $this->chosenDrivers[] = $this->drivers->sole(fn (Driver $driver)
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
             => $driver->supports(MtrDotShMtrDriver::class)
         );
         return $this;
@@ -97,14 +102,14 @@ class IpBuilder
     public function withDrivers(array $drivers): static
     {
         foreach ($drivers as $driver) {
-            $this->chosenDrivers[] = $this->drivers->sole(fn (Driver $iocDriver)
+            $this->chosenDrivers[] = $this->drivers->sole(
+                fn (Driver $iocDriver)
                 => $iocDriver->supports($driver)
             );
         }
 
         return $this;
     }
-
 
     /**
      * @return array<MappableDTO>
@@ -122,9 +127,9 @@ class IpBuilder
     public function raw(): array
     {
         return $this->fetchRawData->execute(
-                $this->chosenIps->toArray(),
-                $this->chosenDrivers->toArray()
-            );
+            $this->chosenIps->toArray(),
+            $this->chosenDrivers->toArray()
+        );
     }
 
     /**
@@ -138,5 +143,4 @@ class IpBuilder
 
         return $this;
     }
-
 }

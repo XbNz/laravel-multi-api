@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Support\Guzzle\Middlewares;
 
 use GuzzleRetry\GuzzleRetryMiddleware;
-use Illuminate\Support\Facades\Config;
-use Mockery\Matcher\Closure;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class WithRetry
 {

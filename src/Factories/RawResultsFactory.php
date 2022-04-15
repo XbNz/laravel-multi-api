@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Factories;
 
-use GuzzleHttp\Utils;
 use Psr\Http\Message\ResponseInterface;
 use XbNz\Resolver\Support\DTOs\RawResultsData;
 

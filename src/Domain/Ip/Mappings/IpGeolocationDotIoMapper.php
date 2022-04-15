@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Mappings;
 
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
@@ -9,7 +11,6 @@ use XbNz\Resolver\Support\Mappings\Mapper;
 
 class IpGeolocationDotIoMapper implements Mapper
 {
-
     public function map(RawResultsData $rawIpResults): NormalizedGeolocationResultsData
     {
         return new NormalizedGeolocationResultsData(

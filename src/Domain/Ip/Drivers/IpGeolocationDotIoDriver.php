@@ -7,14 +7,13 @@ namespace XbNz\Resolver\Domain\Ip\Drivers;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Drivers\Driver;
 
 class IpGeolocationDotIoDriver implements Driver
 {
-    const API_URL = 'https://api.ipgeolocation.io/ipgeo/';
+    public const API_URL = 'https://api.ipgeolocation.io/ipgeo/';
 
     public function getRequests(array $dataObjects): Collection
     {

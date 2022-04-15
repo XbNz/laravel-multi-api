@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies;
 
 use Psr\Http\Message\RequestInterface;
@@ -28,9 +30,7 @@ class IpApiDotComStrategy implements ResponseFormatterStrategy
                 );
             };
         };
-
     }
-
 
     public function supports(string $driver): bool
     {

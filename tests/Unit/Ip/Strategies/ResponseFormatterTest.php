@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
 use GuzzleHttp\Client;
@@ -21,12 +23,16 @@ class ResponseFormatterTest extends TestCase
         $plainText = RekindledMtrDotShFactory::generateTestData()->plainTextBody;
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'text/plain'], $plainText),
+            new Response(200, [
+                'Content-Type' => 'text/plain',
+            ], $plainText),
         ]);
 
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(MtrDotShMtrStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
         $response = $client->request('GET', '/ss2d3/mtr/1.1.1.1');
@@ -38,19 +44,22 @@ class ResponseFormatterTest extends TestCase
         json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
 
-
     /** @test **/
     public function ip_api_throws_a_200_for_failed_authentication_lets_fix_that_for_them_haha(): void
     {
         // Arrange
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{ "success": false }'),
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{ "success": false }'),
         ]);
 
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(IpApiDotComStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 

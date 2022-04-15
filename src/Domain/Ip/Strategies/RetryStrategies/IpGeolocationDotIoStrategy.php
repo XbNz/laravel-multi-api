@@ -17,12 +17,12 @@ class IpGeolocationDotIoStrategy implements RetryStrategy
 {
     public function __construct(
         private GetRandomApiKeyAction $getRandomApiKey,
-    )
-    {}
+    ) {
+    }
 
     public function guzzleMiddleware(): callable
     {
-        return (new WithRetry)(
+        return (new WithRetry())(
             Config::get('resolver.tries', 5),
             Config::get('resolver.retry_sleep', 2),
             Config::get('retry_sleep_multiplier', 1.5),

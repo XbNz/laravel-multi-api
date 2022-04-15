@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Factories\Ip;
 
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
@@ -20,10 +22,9 @@ class IpDataFactory
             FILTER_FLAG_IPV6
         );
 
-        return match (true){
+        return match (true) {
             is_string($v4) => new IpData(ip: $ip, version: 4),
             is_string($v6) => new IpData(ip: $ip, version: 6),
         };
     }
-
 }

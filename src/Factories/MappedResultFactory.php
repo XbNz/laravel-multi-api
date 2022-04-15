@@ -1,7 +1,8 @@
 <?php
 
-namespace XbNz\Resolver\Factories;
+declare(strict_types=1);
 
+namespace XbNz\Resolver\Factories;
 
 use Illuminate\Support\Collection;
 use XbNz\Resolver\Support\DTOs\MappableDTO;
@@ -15,8 +16,8 @@ class MappedResultFactory
      */
     public function __construct(
         private array $mappers
-    )
-    {}
+    ) {
+    }
 
     public function fromRaw(RawResultsData $rawDataDto): MappableDTO
     {
@@ -24,5 +25,4 @@ class MappedResultFactory
             ->sole(fn (Mapper $mapper) => $mapper->supports($rawDataDto->provider))
             ->map($rawDataDto);
     }
-
 }

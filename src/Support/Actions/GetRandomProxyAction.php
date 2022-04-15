@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\Actions;
 
 use Illuminate\Support\Arr;
@@ -18,8 +20,7 @@ class GetRandomProxyAction
 
         $validated = [];
         foreach ($proxies as $proxy) {
-
-            if (! filter_var($proxy, FILTER_VALIDATE_URL)){
+            if (! filter_var($proxy, FILTER_VALIDATE_URL)) {
                 throw new ProxyException("The provided proxy: '{$proxy}' is not a valid structure");
             }
 

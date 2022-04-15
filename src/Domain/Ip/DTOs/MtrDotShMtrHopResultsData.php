@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\DTOs;
 
 class MtrDotShMtrHopResultsData
@@ -21,5 +23,6 @@ class MtrDotShMtrHopResultsData
         public readonly float $averageJitter,
         public readonly float $maximumJitter,
         public readonly float $interarrivalJitter,
-    ) {}
+    ) {
+    }
 }

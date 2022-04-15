@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\Actions;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -21,15 +21,13 @@ use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class FetchRawDataAction
 {
-
     public function __construct(
         private GuzzleClientFactory $guzzleClientFactory
-    )
-    {}
+    ) {
+    }
 
     /**
      * @param array<IpData> $dataObjects
-     * @param array $drivers
      * @return array<RawResultsData>
      */
     public function execute(array $dataObjects, array $drivers): array
@@ -55,7 +53,6 @@ class FetchRawDataAction
                 },
             ]));
         }
-
 
         $pools->map(fn (Pool $pool) => $pool->promise())
             ->each(fn (PromiseInterface $promise) => $promise->wait());

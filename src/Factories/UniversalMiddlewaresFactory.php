@@ -19,7 +19,8 @@ class UniversalMiddlewaresFactory
 
     public function __construct(
         private GetRandomProxyAction $randomProxy,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<callable>
@@ -46,12 +47,12 @@ class UniversalMiddlewaresFactory
     {
         $timeout = (float) Config::get('resolver.timeout', 5);
 
-        $this->middlewares['timeout'] = (new WithTimeout)($timeout);
+        $this->middlewares['timeout'] = (new WithTimeout())($timeout);
     }
 
     private function addRandomProxy(): void
     {
-        $this->middlewares['proxy'] = (new WithProxy)($this->randomProxy->execute());
+        $this->middlewares['proxy'] = (new WithProxy())($this->randomProxy->execute());
     }
 
     private function addCache(): void
@@ -60,7 +61,8 @@ class UniversalMiddlewaresFactory
             new GreedyCacheStrategy(
                 new LaravelCacheStorage(
                     Cache::store()
-                ), Config::get('resolver.cache_period', 3600)
+                ),
+                Config::get('resolver.cache_period', 3600)
             )
         );
     }

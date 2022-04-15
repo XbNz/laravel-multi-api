@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies;
 
 use GuzzleHttp\Psr7\Uri;
@@ -12,8 +14,8 @@ class IpDataDotCoStrategy implements AuthStrategy
 {
     public function __construct(
         private GetRandomApiKeyAction $getRandomApiKey,
-    )
-    {}
+    ) {
+    }
 
     public function guzzleMiddleware(): callable
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Feature\Fakes;
 
 use GuzzleHttp\Middleware;

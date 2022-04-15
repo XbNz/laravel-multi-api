@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
-use GuzzleHttp\Psr7\Uri;
+use function app;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 use XbNz\Resolver\Support\Exceptions\MissingApiKeyException;
-use function app;
 
 class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -31,7 +32,6 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
         $this->assertTrue(
             $key->contains('::api-key-1::') || $key->contains('::api-key-2::')
         );
-
     }
 
     /** @test */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Feature\Fakes;
 
 use GuzzleHttp\Middleware;
@@ -7,7 +9,6 @@ use XbNz\Resolver\Support\Strategies\ResponseFormatterStrategy;
 
 class FakeGuzzleFormatterStrategy implements ResponseFormatterStrategy
 {
-
     public function guzzleMiddleware(...$gibberish): callable
     {
         return Middleware::mapResponse(static function (\Psr\Http\Message\ResponseInterface $response) {

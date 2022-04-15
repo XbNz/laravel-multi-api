@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
+use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ConnectException;
@@ -15,7 +18,6 @@ use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Support\Actions\FetchRawDataAction;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
-use function app;
 
 class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -33,11 +35,14 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             ]));
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
         ]);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
-
+        $client = new Client([
+            'handler' => HandlerStack::create($mockHandler),
+        ]);
 
         $factoryMock = $this->mock(GuzzleClientFactory::class);
         $factoryMock->shouldReceive('for')
@@ -47,14 +52,13 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 
         // Act
 
-        $action =  app(FetchRawDataAction::class);
+        $action = app(FetchRawDataAction::class);
 
         $rawResponses = $action->execute([IpDataFactory::fromIp('1.1.1.1')], [$driverMock->getMock()]);
 
         // Assert
 
-        $this->assertSame(true, $rawResponses[0]->data['::success::']);
-
+        $this->assertTrue($rawResponses[0]->data['::success::']);
     }
 
     /** @test **/
@@ -74,7 +78,9 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             new Response(401),
         ]);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $client = new Client([
+            'handler' => HandlerStack::create($mockHandler),
+        ]);
 
         $factoryMock = $this->mock(GuzzleClientFactory::class);
         $factoryMock->shouldReceive('for')
@@ -84,7 +90,6 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 
         // Act
         $action = app(FetchRawDataAction::class);
-
 
         // Assert
         try {
@@ -114,7 +119,9 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             new Response(403),
         ]);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $client = new Client([
+            'handler' => HandlerStack::create($mockHandler),
+        ]);
 
         $factoryMock = $this->mock(GuzzleClientFactory::class);
         $factoryMock->shouldReceive('for')
@@ -153,7 +160,9 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             new Response(408),
         ]);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $client = new Client([
+            'handler' => HandlerStack::create($mockHandler),
+        ]);
 
         $factoryMock = $this->mock(GuzzleClientFactory::class);
         $factoryMock->shouldReceive('for')
@@ -163,7 +172,6 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 
         // Act
         $action = app(FetchRawDataAction::class);
-
 
         // Assert
         try {
@@ -193,7 +201,9 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             new Response(429),
         ]);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $client = new Client([
+            'handler' => HandlerStack::create($mockHandler),
+        ]);
 
         $factoryMock = $this->mock(GuzzleClientFactory::class);
         $factoryMock->shouldReceive('for')
@@ -203,7 +213,6 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 
         // Act
         $action = app(FetchRawDataAction::class);
-
 
         // Assert
         try {
@@ -234,7 +243,9 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             new Response($error),
         ]);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $client = new Client([
+            'handler' => HandlerStack::create($mockHandler),
+        ]);
 
         $factoryMock = $this->mock(GuzzleClientFactory::class);
         $factoryMock->shouldReceive('for')
@@ -245,12 +256,11 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
         // Act
         $action = app(FetchRawDataAction::class);
 
-
         // Assert
         try {
             $action->execute([IpDataFactory::fromIp('1.1.1.1')], [$driverMock->getMock()]);
         } catch (ApiProviderException $e) {
-            $this->assertStringContainsString($error, $e->getMessage());
+            $this->assertStringContainsString((string) $error, $e->getMessage());
             return;
         }
 
@@ -275,7 +285,9 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
             new ConnectException('Test', new Request('GET', '/')),
         ]);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $client = new Client([
+            'handler' => HandlerStack::create($mockHandler),
+        ]);
 
         $factoryMock = $this->mock(GuzzleClientFactory::class);
         $factoryMock->shouldReceive('for')
@@ -285,7 +297,6 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 
         // Act
         $action = app(FetchRawDataAction::class);
-
 
         // Assert
         try {

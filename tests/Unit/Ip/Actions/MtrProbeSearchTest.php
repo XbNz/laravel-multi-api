@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 
 use Illuminate\Support\Facades\Cache;
@@ -18,32 +20,31 @@ class MtrProbeSearchTest extends TestCase
             [
                 'https://mtr.sh/probes.json' => Http::response(
                     [
-                        "kswof" => [
-                            "asnumber" => 42473,
-                            "caps" => [
-                                "trace" => true,
-                                "mtr" => true,
-                                "dnsr" => true,
-                                "dnst" => true,
-                                "ping" => true,
+                        'kswof' => [
+                            'asnumber' => 42473,
+                            'caps' => [
+                                'trace' => true,
+                                'mtr' => true,
+                                'dnsr' => true,
+                                'dnst' => true,
+                                'ping' => true,
                             ],
-                            "city" => "Copenhagen",
-                            "country" => "Denmark",
-                            "group" => "Europe",
-                            "provider" => "Anexia",
-                            "providerurl" => "https://anexia.com/",
-                            "residential" => false,
-                            "status" => true,
-                            "status4" => true,
-                            "status6" => true,
-                            "unlocode" => "dkcph",
-                        ]
+                            'city' => 'Copenhagen',
+                            'country' => 'Denmark',
+                            'group' => 'Europe',
+                            'provider' => 'Anexia',
+                            'providerurl' => 'https://anexia.com/',
+                            'residential' => false,
+                            'status' => true,
+                            'status4' => true,
+                            'status6' => true,
+                            'unlocode' => 'dkcph',
+                        ],
                     ]
                 ),
             ]
         );
     }
-
 
     /** @test **/
     public function it_caches_the_mtr_probes_for_the_appropriate_amount_of_Time(): void
@@ -52,7 +53,7 @@ class MtrProbeSearchTest extends TestCase
         $action = app(MtrProbeSearchAction::class);
 
         // Act
-        $collection = $action->execute('*');
+        $collection = $action->execute(searchTerm: '*');
 
         // Assert
         $this->assertContainsOnlyInstancesOf(MtrDotShProbeData::class, $collection);
@@ -87,8 +88,6 @@ class MtrProbeSearchTest extends TestCase
         $collectionB = $action->execute(true);
         $collectionC = $action->execute(null);
 
-
-
         // Assert
         $this->assertCount(0, $collection);
         $this->assertCount(1, $collectionB);
@@ -102,10 +101,9 @@ class MtrProbeSearchTest extends TestCase
         $action = app(MtrProbeSearchAction::class);
 
         // Act
-        $collection = $action->execute(v6: false);
-        $collectionB = $action->execute(v6: true);
-        $collectionC = $action->execute(v6: null);
-
+        $collection = $action->execute(ipv6: false);
+        $collectionB = $action->execute(ipv6: true);
+        $collectionC = $action->execute(ipv6: null);
 
         // Assert
         $this->assertCount(0, $collection);

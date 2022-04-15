@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Collection;
@@ -13,26 +15,25 @@ class ConvertMtrPlainToJsonAction
         $exploded = collect(explode(PHP_EOL, $rekindledData->plainTextBody));
 
         $headers = collect(explode(' ', $exploded[0]))
-            ->reject(fn($headerLine) => strlen($headerLine) < 1)
+            ->reject(fn ($headerLine) => strlen($headerLine) < 1)
             ->values();
 
         unset($exploded[0]);
 
         $hops = $exploded
-            ->reject(fn($row) => strlen($row) < 1)
+            ->reject(fn ($row) => strlen($row) < 1)
             ->map(function ($row) use ($headers) {
-
                 $targetInfo = [];
 
                 $statistics = collect(explode(' ', $row))
-                    ->reject(fn($rowValue) => strlen($rowValue) < 1)
+                    ->reject(fn ($rowValue) => strlen($rowValue) < 1)
                     ->values()
                     ->slice(1)
                     ->tap(function ($rowWithoutMtrStepIndex) use (&$targetInfo) {
                         $targetInfo = $rowWithoutMtrStepIndex
-                            ->reject(fn($rowValue) => is_numeric($rowValue) || Str::contains($rowValue, '%'));
+                            ->reject(fn ($rowValue) => is_numeric($rowValue) || Str::contains($rowValue, '%'));
                     })
-                    ->filter(fn($rowValue) => is_numeric($rowValue) || Str::contains($rowValue, '%'))
+                    ->filter(fn ($rowValue) => is_numeric($rowValue) || Str::contains($rowValue, '%'))
                     ->zip($headers)
                     ->reduce(function ($assoc, $keyValuePair) {
                         [$value, $key] = $keyValuePair;

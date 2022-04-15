@@ -1,22 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\Exceptions;
 
 use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
-use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
 
 class ApiProviderException extends \Exception
 {
     public const UNAUTHORIZED = 'Please check your credentials for this service in the corresponding config file';
-    public const FORBIDDEN = 'Try accessing the url with a browser, maybe you are being blocked by a CDN or firewall';
-    public const TIMEOUT = 'Increase your timeout value in the config file';
-    public const RATELIMIT = 'You might be getting rate limited. Try configuring proxies or multiple API tokens in the config file';
-    public const UNKNOWN = 'Check your connection or increase timeout. If you have set proxies, ensure they are alive';
 
+    public const FORBIDDEN = 'Try accessing the url with a browser, maybe you are being blocked by a CDN or firewall';
+
+    public const TIMEOUT = 'Increase your timeout value in the config file';
+
+    public const RATELIMIT = 'You might be getting rate limited. Try configuring proxies or multiple API tokens in the config file';
+
+    public const UNKNOWN = 'Check your connection or increase timeout. If you have set proxies, ensure they are alive';
 
     public static function fromTransferException(TransferException $e): self
     {
@@ -53,6 +54,5 @@ class ApiProviderException extends \Exception
             "{$e->getRequest()->getUri()} threw an exception. " . self::UNKNOWN,
             previous: $e
         );
-
     }
 }

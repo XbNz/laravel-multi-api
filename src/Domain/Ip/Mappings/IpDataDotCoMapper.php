@@ -11,7 +11,6 @@ use XbNz\Resolver\Support\Mappings\Mapper;
 
 class IpDataDotCoMapper implements Mapper
 {
-
     public function map(RawResultsData $rawIpResults): NormalizedGeolocationResultsData
     {
         return new NormalizedGeolocationResultsData(

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Factories;
 
 use GuzzleHttp\Client;
@@ -7,8 +9,6 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;
-use XbNz\Resolver\Domain\Ip\Strategies\SoloIpAddressStrategies\SoloIpStrategy;
-use XbNz\Resolver\Support\DTOs\GuzzleConfigData;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 use XbNz\Resolver\Support\Strategies\AuthStrategy;
 use XbNz\Resolver\Support\Strategies\NullStrategy;
@@ -23,12 +23,12 @@ class GuzzleClientFactory
      * @param array<ResponseFormatterStrategy> $responseFormatters
      */
     public function __construct(
-        private UniversalMiddlewaresFactory $universalMiddlewares,
-        private array                       $authStrategies,
-        private array                       $retryStrategies,
-        private array                       $responseFormatters
-    )
-    {}
+        private readonly UniversalMiddlewaresFactory $universalMiddlewares,
+        private readonly array $authStrategies,
+        private readonly array $retryStrategies,
+        private readonly array $responseFormatters
+    ) {
+    }
 
     /**
      * @param string $driver Driver FQN e.g. IpGeolocationDotIoDriver::class. Refer to readme file for all supported drivers.
@@ -48,19 +48,17 @@ class GuzzleClientFactory
             ->first(fn (ResponseFormatterStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
             ->guzzleMiddleware();
 
-        if ((bool) Config::get('resolver.use_retries', false))
-        {
+        if ((bool) Config::get('resolver.use_retries', false)) {
             $contextualMiddlewares['retry_strategy'] = Collection::make($this->retryStrategies)
                 ->first(fn (RetryStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
                 ->guzzleMiddleware();
         }
 
-
         $data = array_merge([
             'middlewares' => [
                 ...$this->universalMiddlewares->guzzleMiddlewares(),
                 ...$contextualMiddlewares->filter(),
-            ]
+            ],
         ], $overrides);
 
         $stack = HandlerStack::create();
@@ -75,5 +73,4 @@ class GuzzleClientFactory
             'handler' => $stack,
         ]);
     }
-
 }

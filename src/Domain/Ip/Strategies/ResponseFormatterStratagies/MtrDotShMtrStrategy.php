@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies;
 
-use GuzzleHttp\Psr7\Stream;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -15,9 +16,8 @@ class MtrDotShMtrStrategy implements ResponseFormatterStrategy
 {
     public function __construct(
         private ConvertMtrPlainToJsonAction $plainToJsonAction
-    )
-    {}
-
+    ) {
+    }
 
     public function guzzleMiddleware(): callable
     {
@@ -41,9 +41,7 @@ class MtrDotShMtrStrategy implements ResponseFormatterStrategy
                 );
             };
         };
-
     }
-
 
     public function supports(string $driver): bool
     {

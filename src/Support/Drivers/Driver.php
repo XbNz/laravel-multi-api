@@ -1,14 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\Drivers;
 
-use Generator;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
-use Prophecy\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
-use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 
 interface Driver
 {
@@ -16,5 +13,6 @@ interface Driver
      * @return Collection<RequestInterface>
      */
     public function getRequests(array $dataObjects): Collection;
+
     public function supports(string $driver): bool;
 }

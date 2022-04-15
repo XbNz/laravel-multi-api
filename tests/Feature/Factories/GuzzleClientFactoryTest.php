@@ -1,21 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Feature\Factories;
 
+use function app;
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
-use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use function invade;
 use XbNz\Resolver\Factories\GuzzleClientFactory;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeDriver;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeGuzzleAuthStrategy;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeGuzzleFormatterStrategy;
 use XbNz\Resolver\Tests\Feature\Fakes\FakeGuzzleRetryStrategy;
-use function app;
-use function invade;
 
 class GuzzleClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -28,7 +27,6 @@ class GuzzleClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
         Config::set('resolver.use_proxy', true);
         Config::set('resolver.proxies', ['https://1.1.1.1:8080']);
 
-
         $this->app->tag([FakeGuzzleAuthStrategy::class], 'auth-strategies');
         $this->app->tag([FakeGuzzleRetryStrategy::class], 'retry-strategies');
         $this->app->tag([FakeGuzzleFormatterStrategy::class], 'response-formatters');
@@ -39,11 +37,9 @@ class GuzzleClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
     {
         // Arrange
 
-
         // Act
         $client = app(GuzzleClientFactory::class)
             ->for('::doesnt-matter-this-should-be-provider-agnostic::');
-
 
         // Assert
         $handler = invade(invade($client)->config['handler']);
@@ -65,7 +61,6 @@ class GuzzleClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
         // Act
         $handler = invade(invade($client)->config['handler']);
         $handlerB = invade(invade($clientB)->config['handler']);
-
 
         // Assert
         $this->assertIsInt($handler->findByName('auth_strategy'));
@@ -105,7 +100,6 @@ class GuzzleClientFactoryTest extends \XbNz\Resolver\Tests\TestCase
 
         // Act
         $handler = invade(invade($client)->config['handler']);
-
 
         // Assert
         $this->assertIsInt($handler->findByName('auth_strategy'));

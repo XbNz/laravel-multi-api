@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
+use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -13,7 +16,6 @@ use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy;
-use function app;
 
 class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -22,25 +24,28 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
     {
         $driverFQCN = AbuseIpDbDotComDriver::class;
         Config::set([
-            "ip-resolver.api-keys.{$driverFQCN}" => 'this-should-be-the-key-below'
+            "ip-resolver.api-keys.{$driverFQCN}" => 'this-should-be-the-key-below',
         ]);
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
         ]);
 
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(AbuseIpDbDotComStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 
-         $client->request('GET', '/', [
+        $client->request('GET', '/', [
             'headers' => [
                 'Shall-not-be-removed' => 'test-key',
             ],
         ]);
-
 
         // Assert
 
@@ -53,16 +58,20 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
     {
         $driverFQCN = IpDataDotCoDriver::class;
         Config::set([
-            "ip-resolver.api-keys.{$driverFQCN}" => 'this-should-be-the-key-below'
+            "ip-resolver.api-keys.{$driverFQCN}" => 'this-should-be-the-key-below',
         ]);
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
         ]);
 
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(IpDataDotCoStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 
@@ -72,9 +81,7 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             ],
         ]);
 
-
         // Assert
-
 
         $this->assertStringContainsString(
             'this-should-be-the-key-below',
@@ -92,16 +99,20 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
     {
         $driverFQCN = IpGeolocationDotIoDriver::class;
         Config::set([
-            "ip-resolver.api-keys.{$driverFQCN}" => 'this-should-be-the-key-below'
+            "ip-resolver.api-keys.{$driverFQCN}" => 'this-should-be-the-key-below',
         ]);
 
         $mockHandler = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], '{"::success::": true}'),
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
         ]);
 
         $stack = HandlerStack::create($mockHandler);
         $stack->push(app(IpGeolocationDotIoStrategy::class)->guzzleMiddleware());
-        $client = new Client(['handler' => $stack]);
+        $client = new Client([
+            'handler' => $stack,
+        ]);
 
         // Act
 
@@ -111,9 +122,7 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             ],
         ]);
 
-
         // Assert
-
 
         $this->assertStringContainsString(
             'this-should-be-the-key-below',
@@ -125,5 +134,4 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             $mockHandler->getLastRequest()->getUri()->getQuery()
         );
     }
-
 }

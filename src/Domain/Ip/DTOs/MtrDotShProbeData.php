@@ -17,7 +17,6 @@ class MtrDotShProbeData
         public readonly ?string $provider,
         public readonly ?string $providerUrl,
         public readonly ?string $unLoCode,
-
         public readonly bool $canPerformMtr = false,
         public readonly bool $canPerformDnsTrace = false,
         public readonly bool $canPerformTraceroute = false,

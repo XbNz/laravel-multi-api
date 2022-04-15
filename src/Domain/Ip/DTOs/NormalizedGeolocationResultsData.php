@@ -16,5 +16,6 @@ class NormalizedGeolocationResultsData implements MappableDTO
         public readonly ?float $latitude = null,
         public readonly ?float $longitude = null,
         public readonly ?string $organization = null,
-    ) {}
+    ) {
+    }
 }

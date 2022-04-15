@@ -1,27 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\ServiceProviders;
 
 use XbNz\Resolver\Domain\Ip\Mappings\AbuseIpDbDotComMapper;
+use XbNz\Resolver\Domain\Ip\Mappings\IpApiDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpDataDotCoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpGeolocationDotIoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\MtrDotShMtrMapper;
-use XbNz\Resolver\Domain\Ip\Mappings\IpApiDotComMapper;
 
 
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComAuthStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy as IpApiDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy as IpDataDotCoAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoAuthStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy as IpApiDotComAuthStrategy;
 
-use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShMtrStrategy as MtrDotShMtrFormatterStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\IpApiDotComStrategy as IpApiDotComFormatterStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShMtrStrategy as MtrDotShMtrFormatterStrategy;
 
 
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComRetryStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpApiDotComStrategy as IpApiDotComRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy as IpDataDotCoRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoRetryStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpApiDotComStrategy as IpApiDotComRetryStrategy;
 
 
 use XbNz\Resolver\Factories\GuzzleClientFactory;
@@ -31,8 +33,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../../config/resolver.php', 'resolver');
-
+        $this->mergeConfigFrom(__DIR__ . '/../../config/resolver.php', 'resolver');
 
         $this->app->tag([
             IpGeolocationDotIoAuthStrategy::class,
@@ -58,7 +59,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             IpDataDotCoMapper::class,
             AbuseIpDbDotComMapper::class,
             MtrDotShMtrMapper::class,
-            IpApiDotComMapper::class
+            IpApiDotComMapper::class,
         ], 'mappers');
 
         $this->app->when(GuzzleClientFactory::class)
@@ -73,19 +74,17 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             ->needs('$responseFormatters')
             ->giveTagged('response-formatters');
 
-
         $this->app->when(MappedResultFactory::class)
             ->needs('$mappers')
             ->giveTagged('mappers');
-
     }
 
     public function boot()
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../../config/resolver.php' =>
-                    config_path('resolver.php')
+                __DIR__ . '/../../config/resolver.php' =>
+                    config_path('resolver.php'),
             ], 'resolver');
         }
     }

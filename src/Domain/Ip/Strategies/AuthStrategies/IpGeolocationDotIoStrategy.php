@@ -14,9 +14,8 @@ class IpGeolocationDotIoStrategy implements AuthStrategy
 {
     public function __construct(
         private GetRandomApiKeyAction $getRandomApiKey,
-    )
-    {}
-
+    ) {
+    }
 
     public function guzzleMiddleware(): callable
     {

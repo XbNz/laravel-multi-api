@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
 use GuzzleHttp\Psr7\Uri;
@@ -13,15 +15,14 @@ use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
 class IpApiDotComStrategy implements RetryStrategy
 {
-
     public function __construct(
         private GetRandomApiKeyAction $getRandomApiKey,
-    )
-    {}
+    ) {
+    }
 
     public function guzzleMiddleware(): callable
     {
-        return (new WithRetry)(
+        return (new WithRetry())(
             Config::get('resolver.tries', 5),
             Config::get('resolver.retry_sleep', 2),
             Config::get('retry_sleep_multiplier', 1.5),

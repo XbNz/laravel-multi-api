@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\Actions\MtrProbeSearchAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
@@ -15,13 +16,12 @@ use XbNz\Resolver\Support\Drivers\Driver;
 
 class MtrDotShMtrDriver implements Driver
 {
-    const API_URL = 'https://mtr.sh/';
+    public const API_URL = 'https://mtr.sh/';
 
     public function __construct(
         private MtrProbeSearchAction $probeSearchAction
-    )
-    {}
-
+    ) {
+    }
 
     public function getRequests(array $dataObjects): Collection
     {
@@ -36,7 +36,7 @@ class MtrDotShMtrDriver implements Driver
             foreach ($ipDataObjects as $ipData) {
                 foreach ($probes as $probe) {
                     $supports = "supportsVersion{$ipData->version}";
-                    if (! $probe->$supports) {
+                    if (! $probe->{$supports}) {
                         continue;
                     }
 

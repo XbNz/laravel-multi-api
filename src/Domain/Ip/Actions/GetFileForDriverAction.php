@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
-use Illuminate\Filesystem\Filesystem;
-use phpDocumentor\Reflection\File;
+use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
 use XbNz\Resolver\Support\Exceptions\FileNotFoundException;
@@ -13,10 +14,10 @@ class GetFileForDriverAction
     public function execute(Driver $driver)
     {
         if (
-            ! \Config::has("ip-resolver.files.{$driver->supports()}")
+            ! Config::has("ip-resolver.files.{$driver->supports()}")
             ||
             ! is_string(config("ip-resolver.files.{$driver->supports()}"))
-        ){
+        ) {
             throw new ConfigNotFoundException(
                 "files.{$driver->supports()} not found in config or not compatible"
             );

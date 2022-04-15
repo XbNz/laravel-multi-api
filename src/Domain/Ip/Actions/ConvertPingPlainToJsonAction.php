@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Str;
@@ -26,7 +28,6 @@ class ConvertPingPlainToJsonAction
                 ];
             });
 
-
         $packetsTransmittedLine = $exploded->sole(fn (string $line) => Str::of($line)->contains('packets transmitted'));
 
         $packetsTransmitted = (int) trim(Str::of($packetsTransmittedLine)
@@ -34,8 +35,7 @@ class ConvertPingPlainToJsonAction
 
         $packetLoss = 100 - (count($sequences) / $packetsTransmitted * 100);
 
-        if ($sequences->isNotEmpty()){
-
+        if ($sequences->isNotEmpty()) {
             $rttValues = $sequences->pluck('rtt');
 
             $rttStatistics = [
@@ -45,10 +45,9 @@ class ConvertPingPlainToJsonAction
                 'jitter' => $rttValues
                     ->filter(fn ($item, int $index) => $rttValues->has($index + 1))
                     ->map(fn (float $item, int $index) => abs($item - $rttValues[$index + 1]))
-                    ->avg()
+                    ->avg(),
             ];
         }
-
 
         // TODO: Upgrade to L9 & Test this
         return json_encode([

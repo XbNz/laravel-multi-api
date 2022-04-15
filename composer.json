@@ -10,16 +10,29 @@
         }
     ],
     "require": {
-        "spatie/data-transfer-object": "^3.7",
         "guzzlehttp/guzzle": "^7.4",
         "ext-intl": "*",
+
         "caseyamcl/guzzle_retry_middleware": "^2.7",
-        "kevinrob/guzzle-cache-middleware": "^4.0"
+        "kevinrob/guzzle-cache-middleware": "^4.0",
+        "illuminate/config": "^9.0",
+        "illuminate/cache": "^9.0",
+        "illuminate/collections": "^9.0",
+        "illuminate/http": "^9.0",
+        "illuminate/support": "^9.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
+        "orchestra/testbench": "^7.4",
         "phpunit/phpunit": "^9.5",
-        "spatie/invade": "^1.0"
+        "spatie/invade": "^1.0",
+        "symplify/easy-coding-standard": "^10.2",
+        "infection/infection": "^0.26.6",
+        "nunomaduro/larastan": "^2.1",
+        "phpstan/phpstan-mockery": "^1.0",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpstan/phpstan-webmozart-assert": "^1.1",
+        "phpmd/phpmd": "^2.12"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +53,12 @@
             "aliases": {
                 "Resolver": "XbNz\\Resolver\\Facades\\ResolverFacade"
             }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "phpstan/extension-installer": true
         }
     }
 }

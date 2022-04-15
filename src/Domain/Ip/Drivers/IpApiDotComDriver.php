@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
 use GuzzleHttp\Psr7\Request;
@@ -11,8 +13,7 @@ use XbNz\Resolver\Support\Drivers\Driver;
 
 class IpApiDotComDriver implements Driver
 {
-
-    const API_URL = 'http://api.ipapi.com/api/';
+    public const API_URL = 'http://api.ipapi.com/api/';
 
     public function getRequests(array $dataObjects): Collection
     {

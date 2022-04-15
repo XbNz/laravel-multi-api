@@ -17,8 +17,8 @@ class MtrDotShMtrMapper implements Mapper
 {
     public function __construct(
         private MtrProbeSearchAction $searchAction,
-    )
-    {}
+    ) {
+    }
 
     public function map(RawResultsData $rawIpResults): MtrDotShMtrResultsData
     {
