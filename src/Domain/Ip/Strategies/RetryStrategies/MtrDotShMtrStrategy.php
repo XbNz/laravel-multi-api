@@ -6,6 +6,7 @@ namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
+use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
 class MtrDotShMtrStrategy implements RetryStrategy

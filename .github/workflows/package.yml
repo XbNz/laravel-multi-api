@@ -45,6 +45,8 @@ jobs:
           IP_GEOLOCATION_DOT_IO_API_KEY: ${{ secrets.IP_GEOLOCATION_DOT_IO_API_KEY }}
           IP_INFO_DOT_IO_API_KEY: ${{ secrets.IP_INFO_DOT_IO_API_KEY }}
           IP_DATA_DOT_CO_API_KEY: ${{ secrets.IP_DATA_DOT_CO_API_KEY }}
+          ABUSE_IP_DB_DOT_COM_API_KEY: ${{ secrets.ABUSE_IP_DB_DOT_COM_API_KEY }}
+
 
       - name: Execute infection
         run: XDEBUG_MODE=coverage ./vendor/bin/infection
@@ -53,6 +55,7 @@ jobs:
           IP_GEOLOCATION_DOT_IO_API_KEY: ${{ secrets.IP_GEOLOCATION_DOT_IO_API_KEY }}
           IP_INFO_DOT_IO_API_KEY: ${{ secrets.IP_INFO_DOT_IO_API_KEY }}
           IP_DATA_DOT_CO_API_KEY: ${{ secrets.IP_DATA_DOT_CO_API_KEY }}
+          ABUSE_IP_DB_DOT_COM_API_KEY: ${{ secrets.ABUSE_IP_DB_DOT_COM_API_KEY }}
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github

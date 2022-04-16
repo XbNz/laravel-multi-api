@@ -17,7 +17,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $parameters->set(Option::PARALLEL, true);
-    
+
 
     $containerConfigurator->import(SetList::PSR_12);
     $containerConfigurator->import(SetList::COMMON);

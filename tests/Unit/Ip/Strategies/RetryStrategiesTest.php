@@ -25,7 +25,7 @@ use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShMtrStrategy;
 class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
     /** @test **/
-    public function the_number_of_retries_in_the_config_equates_to_the_number_of_failed_response_meaning_it_retries_on_all_of_them_as_intended(): void
+    public function the_number_of_retries_in_the_config_equates_to_the_number_of_failed_responses_meaning_it_retries_on_all_of_them_as_intended(): void
     {
         // Arrange
         Config::set([
@@ -50,8 +50,10 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 
         $testedStrategies = [
             AbuseIpDbDotComStrategy::class,
+            IpApiDotComStrategy::class,
             IpDataDotCoStrategy::class,
             IpGeolocationDotIoStrategy::class,
+            MtrDotShMtrStrategy::class,
         ];
 
         foreach ($testedStrategies as $strategy) {
@@ -86,6 +88,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 
         $testedStrategies = [
             AbuseIpDbDotComStrategy::class,
+            IpApiDotComStrategy::class,
             IpDataDotCoStrategy::class,
             IpGeolocationDotIoStrategy::class,
             MtrDotShMtrStrategy::class,
@@ -119,7 +122,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
+            "ip-resolver.api-keys.{$driver}" => ['should-be-this'],
         ]);
 
         $mockQueue = [
@@ -157,7 +160,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
+            "ip-resolver.api-keys.{$driver}" => ['should-be-this'],
         ]);
 
         $mockQueue = [
@@ -203,7 +206,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
+            "ip-resolver.api-keys.{$driver}" => ['should-be-this'],
         ]);
 
         $mockQueue = [
@@ -249,7 +252,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
             'resolver.retry_sleep' => .0001,
-            "ip-resolver.api-keys.{$driver}" => 'should-be-this',
+            "ip-resolver.api-keys.{$driver}" => ['should-be-this'],
         ]);
 
         $mockQueue = [
