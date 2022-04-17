@@ -11,6 +11,7 @@ use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Factories\MappedResultFactory;
@@ -21,25 +22,34 @@ use XbNz\Resolver\Support\DTOs\RawResultsData;
 
 class IpBuilder
 {
+
     /**
      * @var Collection<string>
-     * @var Collection<IpData>
-     * @var Collection<Driver>
      */
     private Collection $chosenDrivers;
 
+    /**
+     * @var Collection<IpData>
+     */
     private Collection $chosenIps;
 
+    /**
+     * @var Collection<Driver>
+     */
     private Collection $drivers;
 
+
+    /**
+     * @param array<Driver> $drivers
+     */
     public function __construct(
         private readonly FetchRawDataAction $fetchRawData,
         private readonly MappedResultFactory $mapperResultFactory,
         array $drivers,
     ) {
-        $this->chosenDrivers = collect();
-        $this->chosenIps = collect();
-        $this->drivers = collect($drivers);
+        $this->chosenDrivers = Collection::make();
+        $this->chosenIps = Collection::make();
+        $this->drivers = Collection::make($drivers);
     }
 
     public function ipInfoDotIo(): static
@@ -92,6 +102,15 @@ class IpBuilder
         $this->chosenDrivers[] = $this->drivers->sole(
             fn (Driver $driver)
             => $driver->supports(MtrDotShMtrDriver::class)
+        );
+        return $this;
+    }
+
+    public function mtrDotShPing(): static
+    {
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
+            => $driver->supports(MtrDotShPingDriver::class)
         );
         return $this;
     }

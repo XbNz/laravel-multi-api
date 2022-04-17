@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Domain\Ip\DTOs;
 
 use Webmozart\Assert\Assert;
+use XbNz\Resolver\Support\DTOs\DriverConsumableDTO;
 
-class IpData
+class IpData implements DriverConsumableDTO
 {
     public function __construct(
         public readonly string $ip,

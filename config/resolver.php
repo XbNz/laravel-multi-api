@@ -2,15 +2,19 @@
 
 return [
     'use_proxy' => false,
-    'proxies' => [],
+    'proxies' => [
 
-    'timeout' => 15,
+    ],
+
+
+
+    'timeout' => 30,
     'cache_period' => 3600,
 
-    'async_concurrent_requests' => 100,
+    'async_concurrent_requests' => 200,
 
-    'use_retries' => true,
-    'tries' => 5,
+    'use_retries' => false,
+    'tries' => 2,
     'retry_sleep' => 2,
     'retry_sleep_multiplier' => 1.5,
 ];

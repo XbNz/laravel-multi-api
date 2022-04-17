@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Factories\Ip;
 
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbeData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShProbeData;
 
 class MtrDotShProbeFactory
 {
+    /**
+     * @param array<mixed> $raw
+     */
     public static function fromRaw(string $probeId, array $raw): MtrDotShProbeData
     {
         return new MtrDotShProbeData(

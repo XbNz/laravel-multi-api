@@ -8,22 +8,29 @@ use XbNz\Resolver\Domain\Ip\Mappings\AbuseIpDbDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpApiDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpDataDotCoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpGeolocationDotIoMapper;
+use XbNz\Resolver\Domain\Ip\Mappings\IpInfoDotIoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\MtrDotShMtrMapper;
 
 
+use XbNz\Resolver\Domain\Ip\Mappings\MtrDotShPingMapper;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy as IpApiDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy as IpDataDotCoAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoAuthStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpInfoDotIoStrategy as IpInfoDotIoAuthStrategy;
 
 use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\IpApiDotComStrategy as IpApiDotComFormatterStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShMtrStrategy as MtrDotShMtrFormatterStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShPingStrategy as MtrDotShPingFormatterStrategy;
 
 
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpApiDotComStrategy as IpApiDotComRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy as IpDataDotCoRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoRetryStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShMtrStrategy as MtrDotShMtrRetryStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShPingStrategy as MtrDotShPingRetryStrategy;
+
 
 
 use XbNz\Resolver\Factories\GuzzleClientFactory;
@@ -31,7 +38,7 @@ use XbNz\Resolver\Factories\MappedResultFactory;
 
 class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/resolver.php', 'resolver');
 
@@ -40,6 +47,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             IpDataDotCoAuthStrategy::class,
             AbuseIpDbDotComAuthStrategy::class,
             IpApiDotComAuthStrategy::class,
+            IpInfoDotIoAuthStrategy::class
         ], 'auth-strategies');
 
         $this->app->tag([
@@ -47,11 +55,14 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             IpDataDotCoRetryStrategy::class,
             AbuseIpDbDotComRetryStrategy::class,
             IpApiDotComRetryStrategy::class,
+            MtrDotShMtrRetryStrategy::class,
+            MtrDotShPingRetryStrategy::class,
         ], 'retry-strategies');
 
         $this->app->tag([
             MtrDotShMtrFormatterStrategy::class,
             IpApiDotComFormatterStrategy::class,
+            MtrDotShPingFormatterStrategy::class,
         ], 'response-formatters');
 
         $this->app->tag([
@@ -60,6 +71,8 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             AbuseIpDbDotComMapper::class,
             MtrDotShMtrMapper::class,
             IpApiDotComMapper::class,
+            MtrDotShPingMapper::class,
+            IpInfoDotIoMapper::class
         ], 'mappers');
 
         $this->app->when(GuzzleClientFactory::class)
@@ -79,7 +92,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             ->giveTagged('mappers');
     }
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([

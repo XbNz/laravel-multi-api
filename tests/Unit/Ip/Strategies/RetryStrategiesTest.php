@@ -16,11 +16,14 @@ use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpApiDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpInfoDotIoStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShMtrStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShPingStrategy;
 
 class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -54,6 +57,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             IpDataDotCoStrategy::class,
             IpGeolocationDotIoStrategy::class,
             MtrDotShMtrStrategy::class,
+            MtrDotShPingStrategy::class
         ];
 
         foreach ($testedStrategies as $strategy) {
@@ -287,5 +291,42 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'Shall-not-be-removed',
             $mockHandler->getLastRequest()->getUri()->getQuery()
         );
+    }
+
+    /** @test **/
+    public function the_token_is_refreshed_for_ip_info_on_retry(): void
+    {
+        // Arrange
+        $driver = IpInfoDotIoDriver::class;
+        Config::set([
+            'resolver.use_retries' => true,
+            'resolver.tries' => 2,
+            'resolver.retry_sleep' => .0001,
+            "ip-resolver.api-keys.{$driver}" => ['should-be-this'],
+        ]);
+
+        $mockQueue = [
+            new Response(400),
+            new ConnectException('Test', new Request('GET', '/')),
+            new Response(200),
+        ];
+
+        $mockHandler = new MockHandler($mockQueue);
+        $stack = HandlerStack::create($mockHandler);
+        $stack->push(app(IpInfoDotIoStrategy::class)->guzzleMiddleware());
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        // Act
+
+        $client->request('GET', '/', [
+            'headers' => [
+                'Authorization' => 'Bearer should-not-be-this',
+            ], ]);
+
+        // Assert
+
+        $this->assertSame('Bearer should-be-this', $mockHandler->getLastRequest()?->getHeader('Authorization')[0] ?? 'not-found');
     }
 }

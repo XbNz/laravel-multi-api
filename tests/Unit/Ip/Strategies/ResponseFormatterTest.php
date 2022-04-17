@@ -66,7 +66,7 @@ class ResponseFormatterTest extends TestCase
         try {
             $response = $client->request('GET', '/');
         } catch (ClientException $e) {
-            $this->assertSame(403, $e->getCode());
+            $this->assertSame(401, $e->getCode());
             return;
         }
 

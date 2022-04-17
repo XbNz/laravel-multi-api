@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace XbNz\Resolver\Domain\Ip\DTOs;
+namespace XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh;
 
 use Webmozart\Assert\Assert;
 

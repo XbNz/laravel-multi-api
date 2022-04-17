@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Factories\Ip;
 
+use InvalidArgumentException;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 
 class IpDataFactory
@@ -25,6 +26,7 @@ class IpDataFactory
         return match (true) {
             is_string($v4) => new IpData(ip: $ip, version: 4),
             is_string($v6) => new IpData(ip: $ip, version: 6),
+            default => throw new InvalidArgumentException('Invalid IP address'),
         };
     }
 }

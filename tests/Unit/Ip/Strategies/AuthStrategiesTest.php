@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpInfoDotIoStrategy;
 use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -176,5 +178,39 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             'Shall-not-be-removed',
             $mockHandler->getLastRequest()->getUri()->getQuery()
         );
+    }
+
+    /** @test **/
+    public function it_retrieves_a_random_key_for_ip_info_and_applies_it_to_the_bearer_header_without_removing_previous_values(): void
+    {
+        $driverFQCN = IpInfoDotIoDriver::class;
+        Config::set([
+            "ip-resolver.api-keys.{$driverFQCN}" => ['this-should-be-the-key-below'],
+        ]);
+
+        $mockHandler = new MockHandler([
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
+        ]);
+
+        $stack = HandlerStack::create($mockHandler);
+        $stack->push(app(IpInfoDotIoStrategy::class)->guzzleMiddleware());
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        // Act
+
+        $client->request('GET', '/', [
+            'headers' => [
+                'Shall-not-be-removed' => 'test-key',
+            ],
+        ]);
+
+        // Assert
+
+        $this->assertTrue($mockHandler->getLastRequest()->hasHeader('Shall-not-be-removed'));
+        $this->assertSame('Bearer this-should-be-the-key-below', $mockHandler->getLastRequest()->getHeader('Authorization')[0]);
     }
 }

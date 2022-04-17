@@ -9,7 +9,7 @@ use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
 class Resolver
 {
     public function __construct(
-        private IpBuilder $ipBuilderw
+        private readonly IpBuilder $ipBuilder
     ) {
     }
 

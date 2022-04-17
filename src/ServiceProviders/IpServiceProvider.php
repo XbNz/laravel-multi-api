@@ -9,11 +9,13 @@ use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver;
 
 class IpServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/ip-resolver.php', 'ip-resolver');
 
@@ -23,12 +25,14 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             MtrDotShMtrDriver::class,
             AbuseIpDbDotComDriver::class,
             IpApiDotComDriver::class,
+            MtrDotShPingDriver::class,
+            IpInfoDotIoDriver::class
         ], 'ip-drivers');
 
         $this->app->when(IpBuilder::class)->needs('$drivers')->giveTagged('ip-drivers');
     }
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([

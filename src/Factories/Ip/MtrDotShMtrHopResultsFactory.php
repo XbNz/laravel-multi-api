@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Factories\Ip;
 
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShMtrHopResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShMtrHopResultsData;
 
 class MtrDotShMtrHopResultsFactory
 {
+    /**
+     * @param array<mixed> $hop
+     */
     public static function fromRawHop(array $hop, int $positionKey): MtrDotShMtrHopResultsData
     {
         return new MtrDotShMtrHopResultsData(

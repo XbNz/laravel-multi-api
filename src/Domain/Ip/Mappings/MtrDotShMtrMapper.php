@@ -7,7 +7,7 @@ namespace XbNz\Resolver\Domain\Ip\Mappings;
 use Illuminate\Support\Collection;
 use XbNz\Resolver\Domain\Ip\Actions\MtrProbeSearchAction;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShMtrResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShMtrResultsData;
 use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Factories\Ip\MtrDotShMtrHopResultsFactory;
 use XbNz\Resolver\Support\DTOs\RawResultsData;

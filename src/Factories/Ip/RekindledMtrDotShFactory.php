@@ -7,7 +7,7 @@ namespace XbNz\Resolver\Factories\Ip;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use XbNz\Resolver\Domain\Ip\DTOs\RekindledMtrDotShData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrDotShData;
 
 class RekindledMtrDotShFactory
 {
@@ -24,7 +24,10 @@ class RekindledMtrDotShFactory
         );
     }
 
-    public static function generateTestData($overrides = []): RekindledMtrDotShData
+    /**
+     * @param array<string> $overrides
+     */
+    public static function generateTestData(array $overrides = []): RekindledMtrDotShData
     {
         $data = array_merge([
             'plain_text' => '                                                       Loss% Drop   Rcv   Snt  Last  Best   Avg  Wrst StDev Gmean Jttr Javg Jmax Jint

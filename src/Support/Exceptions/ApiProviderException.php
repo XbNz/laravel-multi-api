@@ -51,7 +51,7 @@ class ApiProviderException extends \Exception
         }
 
         throw new self(
-            "{$e->getRequest()->getUri()} threw an exception. " . self::UNKNOWN,
+            $e->getMessage() . self::UNKNOWN,
             previous: $e
         );
     }

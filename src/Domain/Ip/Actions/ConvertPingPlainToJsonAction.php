@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Str;
-use XbNz\Resolver\Domain\Ip\DTOs\RekindledMtrDotShData;
+use JsonException;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrDotShData;
 
 class ConvertPingPlainToJsonAction
 {
-    public function execute(RekindledMtrDotShData $rekindledData)
+
+    /**
+     * @throws JsonException
+     */
+    public function execute(RekindledMtrDotShData $rekindledData): string
     {
         $plain = $rekindledData->plainTextBody;
 
@@ -28,10 +33,12 @@ class ConvertPingPlainToJsonAction
                 ];
             });
 
+
         $packetsTransmittedLine = $exploded->sole(fn (string $line) => Str::of($line)->contains('packets transmitted'));
 
-        $packetsTransmitted = (int) trim(Str::of($packetsTransmittedLine)
-            ->before('packets transmitted'));
+        $packetsTransmitted = (int) Str::of($packetsTransmittedLine)
+            ->before('packets transmitted')
+            ->value();
 
         $packetLoss = 100 - (count($sequences) / $packetsTransmitted * 100);
 
@@ -49,11 +56,13 @@ class ConvertPingPlainToJsonAction
             ];
         }
 
-        // TODO: Upgrade to L9 & Test this
+
         return json_encode([
-            'sequences' => $sequences->toArray(),
+            'probe_id' => $rekindledData->probeId,
+            'target_ip' => $rekindledData->ip,
+            'sequences' => $sequences->isEmpty() ? null : $sequences->toArray(),
             'packet_loss' => $packetLoss,
-            'statistics' => $rttStatistics ?? [],
+            'statistics' => $rttStatistics ?? null,
         ], JSON_THROW_ON_ERROR);
     }
 }

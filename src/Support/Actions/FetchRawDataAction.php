@@ -28,6 +28,7 @@ class FetchRawDataAction
 
     /**
      * @param array<IpData> $dataObjects
+     * @param array<Driver> $drivers
      * @return array<RawResultsData>
      */
     public function execute(array $dataObjects, array $drivers): array
@@ -48,11 +49,16 @@ class FetchRawDataAction
                 'fulfilled' => static function (Response $response, $index) use ($rawResultsData, $driver) {
                     $rawResultsData->push(RawResultsFactory::fromResponse($response, $driver::class));
                 },
-                'rejected' => static function (TransferException $e, $index) {
-                    ApiProviderException::fromTransferException($e);
+                'rejected' => static function (\Exception $e, $index) {
+                    if ($e instanceof TransferException) {
+                        ApiProviderException::fromTransferException($e);
+                    }
+
+                    throw $e;
                 },
             ]));
         }
+
 
         $pools->map(fn (Pool $pool) => $pool->promise())
             ->each(fn (PromiseInterface $promise) => $promise->wait());

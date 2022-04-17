@@ -2,7 +2,7 @@
   "$schema": "vendor/infection/infection/resources/schema.json",
   "source": {
     "directories": [
-      "src"
+      "src/Domain"
     ]
   },
   "logs": {
@@ -13,5 +13,6 @@
   "minCoveredMsi": 80,
   "mutators": {
     "@default": true
-  }
+  },
+  "timeout": 50
 }

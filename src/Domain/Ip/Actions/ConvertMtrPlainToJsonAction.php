@@ -6,21 +6,24 @@ namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use XbNz\Resolver\Domain\Ip\DTOs\RekindledMtrDotShData;
+use Webmozart\Assert\Assert;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrDotShData;
 
 class ConvertMtrPlainToJsonAction
 {
-    public function execute(RekindledMtrDotShData $rekindledData)
+    public function execute(RekindledMtrDotShData $rekindledData): string
     {
-        $exploded = collect(explode(PHP_EOL, $rekindledData->plainTextBody));
+        $exploded = explode(PHP_EOL, $rekindledData->plainTextBody);
 
-        $headers = collect(explode(' ', $exploded[0]))
+        Assert::keyExists($exploded, 0);
+
+        $headers = Collection::make(explode(' ', $exploded[0]))
             ->reject(fn ($headerLine) => strlen($headerLine) < 1)
             ->values();
 
         unset($exploded[0]);
 
-        $hops = $exploded
+        $hops = Collection::make($exploded)
             ->reject(fn ($row) => strlen($row) < 1)
             ->map(function ($row) use ($headers) {
                 $targetInfo = [];

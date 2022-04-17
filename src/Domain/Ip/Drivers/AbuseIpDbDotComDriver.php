@@ -25,7 +25,7 @@ class AbuseIpDbDotComDriver implements Driver
                     'ipAddress' => $ipData->ip,
                     'maxAgeInDays' => '365',
                 ]);
-                yield new Request('GET', $uri);
+                yield (new Request('GET', $uri))->withHeader('Accept', 'application/json');
             }
         };
 

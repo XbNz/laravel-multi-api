@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Domain\Ip\DTOs;
 
+use Webmozart\Assert\Assert;
 use XbNz\Resolver\Support\DTOs\MappableDTO;
 
 class NormalizedGeolocationResultsData implements MappableDTO
@@ -17,5 +18,6 @@ class NormalizedGeolocationResultsData implements MappableDTO
         public readonly ?float $longitude = null,
         public readonly ?string $organization = null,
     ) {
+        Assert::ip($ip);
     }
 }

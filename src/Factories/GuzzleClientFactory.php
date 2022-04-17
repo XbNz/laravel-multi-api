@@ -6,6 +6,7 @@ namespace XbNz\Resolver\Factories;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;
@@ -35,10 +36,11 @@ class GuzzleClientFactory
      * @throws \XbNz\Resolver\Support\Exceptions\MissingApiKeyException
      * @throws \XbNz\Resolver\Domain\Ip\Exceptions\InvalidIpAddressException
      * @throws ConfigNotFoundException
+     * @param array<array<callable>> $overrides
      */
-    public function for(string $driver, $overrides = []): Client
+    public function for(string $driver, array $overrides = []): Client
     {
-        $contextualMiddlewares = Collection::make();
+        $contextualMiddlewares = [];
 
         $contextualMiddlewares['auth_strategy'] = Collection::make($this->authStrategies)
             ->first(fn (AuthStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
@@ -57,7 +59,7 @@ class GuzzleClientFactory
         $data = array_merge([
             'middlewares' => [
                 ...$this->universalMiddlewares->guzzleMiddlewares(),
-                ...$contextualMiddlewares->filter(),
+                ...array_filter($contextualMiddlewares),
             ],
         ], $overrides);
 

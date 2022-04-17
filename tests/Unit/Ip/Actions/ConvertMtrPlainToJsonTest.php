@@ -103,4 +103,6 @@ class ConvertMtrPlainToJsonTest extends \XbNz\Resolver\Tests\TestCase
         $this->assertSame('2.2.2.2', $collection->get('target_ip'));
         $this->assertSame('ddddd', $collection->get('probe_id'));
     }
+
+
 }

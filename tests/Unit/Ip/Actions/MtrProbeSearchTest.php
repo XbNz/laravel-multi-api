@@ -7,7 +7,7 @@ namespace XbNz\Resolver\Tests\Unit\Ip\Actions;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use XbNz\Resolver\Domain\Ip\Actions\MtrProbeSearchAction;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbeData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShProbeData;
 use XbNz\Resolver\Tests\TestCase;
 
 class MtrProbeSearchTest extends TestCase
@@ -37,8 +37,29 @@ class MtrProbeSearchTest extends TestCase
                             'residential' => false,
                             'status' => true,
                             'status4' => true,
-                            'status6' => true,
+                            'status6' => false,
                             'unlocode' => 'dkcph',
+                        ],
+
+                        '1-s283' => [
+                            'asnumber' => 38753,
+                            'caps' => [
+                                'trace' => true,
+                                'mtr' => true,
+                                'dnsr' => true,
+                                'dnst' => true,
+                                'ping' => true,
+                            ],
+                            'city' => 'Randomsville',
+                            'country' => 'Fakemenistan',
+                            'group' => 'Europe',
+                            'provider' => 'Whatever',
+                            'providerurl' => 'https://blah.com',
+                            'residential' => false,
+                            'status' => true,
+                            'status4' => true,
+                            'status6' => true,
+                            'unlocode' => 'cczzz',
                         ],
                     ]
                 ),
@@ -90,8 +111,8 @@ class MtrProbeSearchTest extends TestCase
 
         // Assert
         $this->assertCount(0, $collection);
-        $this->assertCount(1, $collectionB);
-        $this->assertCount(1, $collectionC);
+        $this->assertCount(2, $collectionB);
+        $this->assertCount(2, $collectionC);
     }
 
     /** @test **/
@@ -106,9 +127,9 @@ class MtrProbeSearchTest extends TestCase
         $collectionC = $action->execute(ipv6: null);
 
         // Assert
-        $this->assertCount(0, $collection);
+        $this->assertCount(1, $collection);
         $this->assertCount(1, $collectionB);
-        $this->assertCount(1, $collectionC);
+        $this->assertCount(2, $collectionC);
     }
 
     /** @test **/
@@ -124,7 +145,21 @@ class MtrProbeSearchTest extends TestCase
 
         // Assert
         $this->assertCount(0, $collection);
-        $this->assertCount(1, $collectionB);
-        $this->assertCount(1, $collectionC);
+        $this->assertCount(2, $collectionB);
+        $this->assertCount(2, $collectionC);
+    }
+
+
+    /** @test **/
+    public function it_ignores_boolean_values(): void
+    {
+        // Arrange
+        $action = app(MtrProbeSearchAction::class);
+
+        // Act
+        $collection = $action->execute(searchTerm: '1');
+
+        // Assert
+        $this->assertCount(0, $collection);
     }
 }

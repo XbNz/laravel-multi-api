@@ -6,11 +6,11 @@ namespace XbNz\Resolver\Support\Strategies;
 
 class NullStrategy
 {
-    public function guzzleMiddleware(...$gibberish): void
+    public function guzzleMiddleware(mixed ...$gibberish): void
     {
     }
 
-    public function supports(...$gibberish): bool
+    public function supports(mixed ...$gibberish): bool
     {
         return true;
     }

@@ -27,10 +27,10 @@ class GetRandomApiKeyAction
             throw new ConfigNotFoundException("The given driver '{$driver}' is not configured in the config file.");
         }
 
-        $keys = Collection::make($targetKeys);
+        $keys = Collection::make($targetKeys)->reject(fn (string $apiKey) => is_string($apiKey) === false);
 
         if ($keys->isEmpty()) {
-            throw new MissingApiKeyException("{$driver} does not have any API keys configured in the config file.");
+            throw new MissingApiKeyException("{$driver} does not have any API keys configured in the config file. Keys must be in string format.");
         }
 
         return $keys->random();

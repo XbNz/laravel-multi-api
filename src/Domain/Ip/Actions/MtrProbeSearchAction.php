@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotShProbeData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShProbeData;
 use XbNz\Resolver\Factories\Ip\MtrDotShProbeFactory;
 
 class MtrProbeSearchAction
@@ -23,9 +24,10 @@ class MtrProbeSearchAction
         ?bool  $isOnline = null,
         string $searchTerm = '*'
     ): Collection {
+
         $allProbesRaw = Cache::remember(
             'mtr_probes',
-            now()->addseconds(Config::get('resolver.cache_period')),
+            Carbon::now()->addseconds(Config::get('resolver.cache_period')),
             static function () {
                 $client = Config::get('resolver.use_retries')
                     ? Http::retry(Config::get('resolver.tries'), Config::get('resolver.retry_sleep'))
@@ -40,6 +42,7 @@ class MtrProbeSearchAction
                     ->json();
             }
         );
+
 
         $collection = Collection::make($allProbesRaw)
             ->map(fn ($rawProbe, $probeId) => MtrDotShProbeFactory::fromRaw($probeId, $rawProbe))
@@ -69,11 +72,17 @@ class MtrProbeSearchAction
 
             ->when(
                 $searchTerm !== '*',
-                fn (Collection $collection) => $collection->reject(
-                    fn (MtrDotShProbeData $probe) => Collection::make($probe)->filter(
-                        fn ($value) => Str::of($searchTerm)->lower()->contains(Str::of($value)->lower())
-                    )->isEmpty()
-                )
+                function (Collection $collection) use ($searchTerm) {
+                    return $collection->reject(function (MtrDotShProbeData $probe) use ($searchTerm) {
+                        return Collection::make($probe)->filter(function ($value) use ($searchTerm) {
+                            if (is_bool($value)) {
+                                return false;
+                            }
+
+                            return Str::of($searchTerm)->lower()->contains(Str::of($value)->lower()->value());
+                        })->isEmpty();
+                    });
+                }
             )
 
             ->values();

@@ -8,6 +8,9 @@ use GuzzleRetry\GuzzleRetryMiddleware;
 
 class WithRetry
 {
+    /**
+     * @param array<int> $retryStatusCodes
+     */
     public function __invoke(
         int $tries,
         float $retrySleep,

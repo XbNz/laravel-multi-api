@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
+use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Config;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
@@ -60,6 +67,70 @@ class FetchRawDataTest extends \XbNz\Resolver\Tests\TestCase
 
         $this->assertTrue($rawResponses[0]->data['::success::']);
     }
+
+//    /** @test **/
+//    public function http_calls_are_executed_asynchronously(): void
+//    {
+//        // Arrange
+//        Config::set([
+//            'async_concurrent_requests' => 100,
+//        ]);
+//
+//        $driverMock = $this->mock(Driver::class);
+//        $driverMock = $driverMock
+//            ->shouldReceive('getRequests')
+//            ->once()
+//            ->withAnyArgs()
+//            ->andreturn(Collection::make([
+//                new Request('GET', '/'),
+//                new Request('GET', '/'),
+//                new Request('GET', '/'),
+//                new Request('GET', '/'),
+//                new Request('GET', '/'),
+//                new Request('GET', '/'),
+//            ]));
+//
+//        $queue = [
+//            new Response(200, body: '{"::success::": true}'),
+//            new Response(200, body: '{"::success::": true}'),
+//            new Response(200, body: '{"::success::": true}'),
+//            new Response(200, body: '{"::success::": true}'),
+//            new Response(200, body: '{"::success::": true}'),
+//            new Response(200, body: '{"::success::": true}'),
+//        ];
+//
+//        $stack = MockHandler::createWithMiddleware($queue);
+//
+//        $stack->push(
+//            Middleware::tap(static fn ($request, $options) => [
+//                sleep(5),
+//                dump($request->getUri()->getPath()),
+//            ]
+//        ));
+//
+//        $client = new Client([
+//            'handler' => $stack,
+//        ]);
+//
+//        $factoryMock = $this->mock(GuzzleClientFactory::class);
+//        $factoryMock->shouldReceive('for')
+//            ->once()
+//            ->with($driverMock->getMock()::class)
+//            ->andReturn($client);
+//
+//        // Act
+//
+//        $action = app(FetchRawDataAction::class);
+//
+//        $before = now();
+//        $action->execute([IpDataFactory::fromIp('1.1.1.1')], [$driverMock->getMock()]);
+//        $after = now();
+//
+//        dd($after->diffInMilliseconds($before));
+//        // Assert
+//
+//
+//    }
 
     /** @test **/
     public function api_exception_401(): void
