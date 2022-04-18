@@ -14,11 +14,12 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpApiDotComStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDashApiDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpInfoDotIoStrategy;
@@ -57,7 +58,8 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
             IpDataDotCoStrategy::class,
             IpGeolocationDotIoStrategy::class,
             MtrDotShMtrStrategy::class,
-            MtrDotShPingStrategy::class
+            MtrDotShPingStrategy::class,
+            IpDashApiDotComStrategy::class
         ];
 
         foreach ($testedStrategies as $strategy) {
@@ -147,8 +149,9 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
         $client->request('GET', '/', [
             'headers' => [
                 'key' => 'should-not-be-this',
-                
-            ], ]);
+
+            ],
+        ]);
 
         // Assert
 
@@ -159,7 +162,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
     public function the_token_is_refreshed_for_ip_data_on_retry(): void
     {
         // Arrange
-        $driver = IpDataDotCoDriver::class;
+        $driver = IpDashApiDotComDriver::class;
         Config::set([
             'resolver.use_retries' => true,
             'resolver.tries' => 2,
@@ -323,7 +326,8 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
         $client->request('GET', '/', [
             'headers' => [
                 'Authorization' => 'Bearer should-not-be-this',
-            ], ]);
+            ],
+        ]);
 
         // Assert
 

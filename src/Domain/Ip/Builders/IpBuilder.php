@@ -7,6 +7,7 @@ namespace XbNz\Resolver\Domain\Ip\Builders;
 use Illuminate\Support\Collection;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
@@ -22,7 +23,6 @@ use XbNz\Resolver\Support\DTOs\RawResultsData;
 
 class IpBuilder
 {
-
     /**
      * @var Collection<string>
      */
@@ -37,7 +37,6 @@ class IpBuilder
      * @var Collection<Driver>
      */
     private Collection $drivers;
-
 
     /**
      * @param array<Driver> $drivers
@@ -111,6 +110,15 @@ class IpBuilder
         $this->chosenDrivers[] = $this->drivers->sole(
             fn (Driver $driver)
             => $driver->supports(MtrDotShPingDriver::class)
+        );
+        return $this;
+    }
+
+    public function ipDashApiDotCom(): static
+    {
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
+            => $driver->supports(IpDashApiDotComDriver::class)
         );
         return $this;
     }

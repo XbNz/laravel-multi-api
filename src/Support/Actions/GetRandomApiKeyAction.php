@@ -22,7 +22,6 @@ class GetRandomApiKeyAction
         try {
             $targetKeys = Collection::make(Config::get($dotNotatedRootConfigPath))
                 ->sole(fn (array $providerKeys, string $providerName) => $driver === $providerName);
-
         } catch (ItemNotFoundException $e) {
             throw new ConfigNotFoundException("The given driver '{$driver}' is not configured in the config file.");
         }

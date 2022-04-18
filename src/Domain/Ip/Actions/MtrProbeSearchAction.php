@@ -19,12 +19,11 @@ class MtrProbeSearchAction
      * @return Collection<MtrDotShProbeData>
      */
     public function execute(
-        ?bool  $ipv4 = null,
-        ?bool  $ipv6 = null,
-        ?bool  $isOnline = null,
+        ?bool $ipv4 = null,
+        ?bool $ipv6 = null,
+        ?bool $isOnline = null,
         string $searchTerm = '*'
     ): Collection {
-
         $allProbesRaw = Cache::remember(
             'mtr_probes',
             Carbon::now()->addseconds(Config::get('resolver.cache_period')),
@@ -42,7 +41,6 @@ class MtrProbeSearchAction
                     ->json();
             }
         );
-
 
         $collection = Collection::make($allProbesRaw)
             ->map(fn ($rawProbe, $probeId) => MtrDotShProbeFactory::fromRaw($probeId, $rawProbe))

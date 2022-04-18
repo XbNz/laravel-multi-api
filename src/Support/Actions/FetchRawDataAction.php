@@ -60,7 +60,6 @@ class FetchRawDataAction
             ]));
         }
 
-
         $pools->map(fn (Pool $pool) => $pool->promise())
             ->each(fn (PromiseInterface $promise) => $promise->wait());
 

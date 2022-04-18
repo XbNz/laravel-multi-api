@@ -7,6 +7,7 @@ namespace XbNz\Resolver\ServiceProviders;
 use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
@@ -26,7 +27,8 @@ class IpServiceProvider extends \Illuminate\Support\ServiceProvider
             AbuseIpDbDotComDriver::class,
             IpApiDotComDriver::class,
             MtrDotShPingDriver::class,
-            IpInfoDotIoDriver::class
+            IpInfoDotIoDriver::class,
+            IpDashApiDotComDriver::class,
         ], 'ip-drivers');
 
         $this->app->when(IpBuilder::class)->needs('$drivers')->giveTagged('ip-drivers');

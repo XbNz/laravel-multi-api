@@ -16,7 +16,7 @@ use XbNz\Resolver\Support\Guzzle\Middlewares\WithTimeout;
 class UniversalMiddlewaresFactory
 {
     /**
-     * @var array<callable> $middlewares
+     * @var array<callable>
      */
     private array $middlewares;
 

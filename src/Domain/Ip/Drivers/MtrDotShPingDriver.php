@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
 use GuzzleHttp\Psr7\Request;
@@ -31,11 +33,9 @@ class MtrDotShPingDriver implements Driver
         Assert::allIsInstanceOf($dataObjects, IpData::class, '$dataObjects must be an array of IpData objects');
         $self = __CLASS__;
 
-
         $probes = Collection::make(Config::get("ip-resolver.{$self}.search"))
             ->map(fn (mixed $searchTerm) => $this->probeSearchAction->execute(isOnline: true, searchTerm: $searchTerm))
             ->flatten();
-
 
         $generator = static function (array $ipDataObjects) use ($probes) {
             foreach ($ipDataObjects as $ipData) {

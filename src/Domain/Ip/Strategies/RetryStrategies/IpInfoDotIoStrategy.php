@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
 use Illuminate\Support\Facades\Config;
@@ -13,13 +15,14 @@ use XbNz\Resolver\Support\Strategies\RetryStrategy;
 class IpInfoDotIoStrategy implements RetryStrategy
 {
     public function __construct(
-        private GetRandomApiKeyAction $getRandomApiKey,
+        private readonly GetRandomApiKeyAction $getRandomApiKey,
+        private readonly WithRetry $withRetry
     ) {
     }
 
     public function guzzleMiddleware(): callable
     {
-        return (new WithRetry())(
+        return ($this->withRetry)(
             Config::get('resolver.tries', 5),
             Config::get('resolver.retry_sleep', 2),
             Config::get('retry_sleep_multiplier', 1.5),

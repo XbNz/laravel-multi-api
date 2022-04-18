@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
-use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
-use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpInfoDotIoStrategy;
 use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -15,11 +11,15 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpInfoDotIoStrategy;
 
 class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
@@ -60,7 +60,7 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
     /** @test **/
     public function it_retrieves_a_random_key_for_ip_data_and_applies_it_to_the_key_path_without_removing_previous_paths(): void
     {
-        $driverFQCN = IpDataDotCoDriver::class;
+        $driverFQCN = IpDashApiDotComDriver::class;
         Config::set([
             "ip-resolver.api-keys.{$driverFQCN}" => ['this-should-be-the-key-below'],
         ]);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace XbNz\Resolver\Domain\Ip\Drivers;
 
 use GuzzleHttp\Psr7\Request;
@@ -11,9 +9,9 @@ use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Drivers\Driver;
 
-class IpInfoDotIoDriver implements Driver
+class IpDetailsDotIoDriver implements Driver
 {
-    public const API_URL = 'https://ipinfo.io/json/';
+    public const API_URL = 'https://free.ipdetails.io/';
 
     public function getRequests(array $dataObjects): Collection
     {
@@ -22,7 +20,7 @@ class IpInfoDotIoDriver implements Driver
         $generator = static function (array $ipDataObjects) {
             foreach ($ipDataObjects as $ipData) {
                 $uri = (new Uri(self::API_URL))->withPath('/' . $ipData->ip);
-                yield (new Request('GET', $uri))->withHeader('Accept', 'application/json');
+                yield new Request('GET', $uri);
             }
         };
 

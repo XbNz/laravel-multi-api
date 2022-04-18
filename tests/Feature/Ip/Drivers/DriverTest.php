@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Domain\Ip\Actions\MtrProbeSearchAction;
-use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
-use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
@@ -21,7 +18,6 @@ use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class DriverTest extends \XbNz\Resolver\Tests\TestCase
 {
-
     /** @test
      * @group Online
      */
@@ -31,34 +27,35 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
             'resolver.async_concurrent_requests' => 10,
             'resolver.cache_period' => 200,
             'resolver.use_retries' => true,
-            'resolver.tries' => 3,
-            'resolver.retry_sleep' => 2,
+            'resolver.tries' => 10,
+            'resolver.retry_sleep' => 10000,
             'resolver.timeout' => 50,
             'ip-resolver.XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver.search' => 'vienna',
-            'ip-resolver.XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver.search' => 'vienna'
+            'ip-resolver.XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver.search' => 'vienna',
         ]);
 
         app(Resolver::class)->ip()
             ->abuseIpDbDotCom()
-            ->ipApiDotCom()
+//            ->ipApiDotCom()
             ->ipDataDotCo()
             ->ipGeolocationDotIo()
             ->ipInfoDotIo()
             ->mtrDotShMtr()
             ->mtrDotShPing()
-            ->withIps(['1.1.1.1'])
+            ->ipDashApiDotCom()
+            ->withIps(['1.1.1.1', '2.2.2.2'])
             ->normalize();
 
-        sleep(3);
         $before = now();
         app(Resolver::class)->ip()->withDrivers([
             AbuseIpDbDotComDriver::class,
-            IpApiDotComDriver::class,
+//            IpApiDotComDriver::class,
             IpDataDotCoDriver::class,
             IpGeolocationDotIoDriver::class,
             IpInfoDotIoDriver::class,
             MtrDotShMtrDriver::class,
             MtrDotShPingDriver::class,
+            IpDashApiDotComDriver::class
         ])->withIps(['1.1.1.1'])->normalize();
         $after = now();
 
@@ -77,11 +74,13 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
         ];
 
         foreach ($testedDrivers as $driver) {
-            Config::set(["ip-resolver.api-keys.{$driver}" => ['incorrect-api-key']]);
+            Config::set([
+                "ip-resolver.api-keys.{$driver}" => ['incorrect-api-key'],
+            ]);
 
             try {
                 app(Resolver::class)->ip()->withDrivers([
-                    $driver
+                    $driver,
                 ])->withIps(['1.1.1.1'])->normalize();
             } catch (ApiProviderException $e) {
                 $this->assertTrue(true);
@@ -91,5 +90,4 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
             $this->fail('Expected exception not thrown');
         }
     }
-
 }

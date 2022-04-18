@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Mappings;
 
 use Locale;

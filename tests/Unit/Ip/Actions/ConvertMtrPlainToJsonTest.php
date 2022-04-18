@@ -66,7 +66,8 @@ class ConvertMtrPlainToJsonTest extends \XbNz\Resolver\Tests\TestCase
   8.|-- 195.22.214.79                                   0.0%    0    10    10 109.3 106.9 115.2 162.1  16.8 114.3  4.5 13.6 54.0 107.7
   9.|-- 89.221.39.113                                   0.0%    0    10    10 111.1 111.1 111.3 112.3   0.4 111.3  0.3  0.4  1.2  3.0
  10.|-- ???                                            100.0   10     0    10   0.0   0.0   0.0   0.0   0.0   0.0  0.0  0.0  0.0  0.0
- 11.|-- ???                                            100.0   10     0    10   0.0   0.0   0.0   0.0   0.0   0.0  0.0  0.0  0.0  0.0', ]
+ 11.|-- ???                                            100.0   10     0    10   0.0   0.0   0.0   0.0   0.0   0.0  0.0  0.0  0.0  0.0',
+                ]
             )
         );
 
@@ -103,6 +104,4 @@ class ConvertMtrPlainToJsonTest extends \XbNz\Resolver\Tests\TestCase
         $this->assertSame('2.2.2.2', $collection->get('target_ip'));
         $this->assertSame('ddddd', $collection->get('probe_id'));
     }
-
-
 }

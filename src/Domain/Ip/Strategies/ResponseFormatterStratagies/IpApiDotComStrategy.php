@@ -24,7 +24,7 @@ class IpApiDotComStrategy implements ResponseFormatterStrategy
                         $json = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
                         if (array_key_exists('success', $json) && $json['success'] === false) {
-                            $response = $response->withStatus(401);
+                            $response = $response->withStatus(401, $json['error']['type'] ?? '');
                         }
 
                         return $response;

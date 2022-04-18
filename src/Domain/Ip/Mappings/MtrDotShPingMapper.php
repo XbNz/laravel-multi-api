@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Mappings;
 
 use Illuminate\Support\Collection;
@@ -25,7 +27,7 @@ class MtrDotShPingMapper implements Mapper
             ->map(fn (array $sequence, string $sequencePosition) => MtrDotShPingSequenceResultsFactory::fromRawSequence($sequence, (int) $sequencePosition))
             ->values();
 
-        if ($rawIpResults->data['statistics'] !== null){
+        if ($rawIpResults->data['statistics'] !== null) {
             $statistics = new MtrDotShPingStatisticsResultsData(
                 (float) $rawIpResults->data['statistics']['minimum_rtt'],
                 (float) $rawIpResults->data['statistics']['average_rtt'],

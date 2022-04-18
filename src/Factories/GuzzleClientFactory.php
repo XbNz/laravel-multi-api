@@ -6,7 +6,6 @@ namespace XbNz\Resolver\Factories;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;

@@ -24,27 +24,27 @@ class ApiProviderException extends \Exception
         if ($e instanceof BadResponseException) {
             throw match ($e->getResponse()->getStatusCode()) {
                 401 => new self(
-                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. " . self::UNAUTHORIZED,
+                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. Reason phrase: {$e->getResponse()->getReasonPhrase()}. " . self::UNAUTHORIZED,
                     previous: $e
                 ),
 
                 403 => new self(
-                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. " . self::FORBIDDEN,
+                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. Reason phrase: {$e->getResponse()->getReasonPhrase()}. " . self::FORBIDDEN,
                     previous: $e
                 ),
 
                 408 => new self(
-                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. " . self::TIMEOUT,
+                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. Reason phrase: {$e->getResponse()->getReasonPhrase()}. " . self::TIMEOUT,
                     previous: $e
                 ),
 
                 429 => new self(
-                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. " . self::RATELIMIT,
+                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. Reason phrase: {$e->getResponse()->getReasonPhrase()}. " . self::RATELIMIT,
                     previous: $e
                 ),
 
                 default => new self(
-                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error",
+                    "{$e->getRequest()->getUri()} threw a {$e->getResponse()->getStatusCode()} error. Reason phrase: {$e->getResponse()->getReasonPhrase()}. ",
                     previous: $e
                 ),
             };

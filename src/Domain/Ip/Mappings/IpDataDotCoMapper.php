@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Domain\Ip\Mappings;
 
+use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
 use XbNz\Resolver\Support\DTOs\RawResultsData;

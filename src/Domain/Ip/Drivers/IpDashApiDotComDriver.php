@@ -11,9 +11,9 @@ use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Drivers\Driver;
 
-class IpInfoDotIoDriver implements Driver
+class IpDashApiDotComDriver implements Driver
 {
-    public const API_URL = 'https://ipinfo.io/json/';
+    public const API_URL = 'http://ip-api.com/json/';
 
     public function getRequests(array $dataObjects): Collection
     {
@@ -21,7 +21,8 @@ class IpInfoDotIoDriver implements Driver
 
         $generator = static function (array $ipDataObjects) {
             foreach ($ipDataObjects as $ipData) {
-                $uri = (new Uri(self::API_URL))->withPath('/' . $ipData->ip);
+                $uri = Uri::withQueryValue(new Uri(self::API_URL), 'fields', '66846719');
+                $uri = $uri->withPath((string) $uri->getPath() . $ipData->ip);
                 yield (new Request('GET', $uri))->withHeader('Accept', 'application/json');
             }
         };

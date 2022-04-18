@@ -6,6 +6,7 @@ namespace XbNz\Resolver\ServiceProviders;
 
 use XbNz\Resolver\Domain\Ip\Mappings\AbuseIpDbDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpApiDotComMapper;
+use XbNz\Resolver\Domain\Ip\Mappings\IpDashApiDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpDataDotCoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpGeolocationDotIoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpInfoDotIoMapper;
@@ -30,7 +31,7 @@ use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDataDotCoStrategy as Ip
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShMtrStrategy as MtrDotShMtrRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShPingStrategy as MtrDotShPingRetryStrategy;
-
+use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpDashApiDotComStrategy as IpDashApiDotComRetryStrategy;
 
 
 use XbNz\Resolver\Factories\GuzzleClientFactory;
@@ -47,7 +48,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             IpDataDotCoAuthStrategy::class,
             AbuseIpDbDotComAuthStrategy::class,
             IpApiDotComAuthStrategy::class,
-            IpInfoDotIoAuthStrategy::class
+            IpInfoDotIoAuthStrategy::class,
         ], 'auth-strategies');
 
         $this->app->tag([
@@ -57,6 +58,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             IpApiDotComRetryStrategy::class,
             MtrDotShMtrRetryStrategy::class,
             MtrDotShPingRetryStrategy::class,
+            IpDashApiDotComRetryStrategy::class,
         ], 'retry-strategies');
 
         $this->app->tag([
@@ -72,7 +74,8 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
             MtrDotShMtrMapper::class,
             IpApiDotComMapper::class,
             MtrDotShPingMapper::class,
-            IpInfoDotIoMapper::class
+            IpInfoDotIoMapper::class,
+            IpDashApiDotComMapper::class,
         ], 'mappers');
 
         $this->app->when(GuzzleClientFactory::class)

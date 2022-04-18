@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Mappings;
 
 use XbNz\Resolver\Domain\Ip\Mappings\AbuseIpDbDotComMapper;

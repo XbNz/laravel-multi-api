@@ -149,7 +149,6 @@ class MtrProbeSearchTest extends TestCase
         $this->assertCount(2, $collectionC);
     }
 
-
     /** @test **/
     public function it_ignores_boolean_values(): void
     {

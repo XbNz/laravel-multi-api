@@ -10,7 +10,6 @@ use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrDotShData;
 
 class ConvertPingPlainToJsonAction
 {
-
     /**
      * @throws JsonException
      */
@@ -33,7 +32,6 @@ class ConvertPingPlainToJsonAction
                 ];
             });
 
-
         $packetsTransmittedLine = $exploded->sole(fn (string $line) => Str::of($line)->contains('packets transmitted'));
 
         $packetsTransmitted = (int) Str::of($packetsTransmittedLine)
@@ -55,7 +53,6 @@ class ConvertPingPlainToJsonAction
                     ->avg(),
             ];
         }
-
 
         return json_encode([
             'probe_id' => $rekindledData->probeId,

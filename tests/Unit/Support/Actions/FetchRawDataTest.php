@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Unit\Support\Actions;
 
-use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Promise\Promise;
-use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Facades\Config;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Factories\GuzzleClientFactory;
 use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Support\Actions\FetchRawDataAction;

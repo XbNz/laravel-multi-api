@@ -30,7 +30,8 @@ class ConvertPingPlainToJsonTest extends \XbNz\Resolver\Tests\TestCase
 
 --- 93.177.73.35 ping statistics ---
 10 packets transmitted, 5 received, 50% packet loss, time 807ms
-rtt min/avg/max/mdev = 242.022/242.562/244.487/0.907 ms', ]
+rtt min/avg/max/mdev = 242.022/242.562/244.487/0.907 ms',
+                ]
             )
         );
 
@@ -40,7 +41,6 @@ rtt min/avg/max/mdev = 242.022/242.562/244.487/0.907 ms', ]
 
         $this->assertCount(5, $collection->get('sequences'));
         $this->assertSame(50, $collection->get('packet_loss'));
-
 
         $this->assertIsNumeric($collection->get('statistics')['minimum_rtt']);
         $this->assertIsNumeric($collection->get('statistics')['average_rtt']);
@@ -65,10 +65,11 @@ rtt min/avg/max/mdev = 242.022/242.562/244.487/0.907 ms', ]
         // Act
         $json = $action->execute(
             RekindledMtrDotShFactory::generateTestData(
-                ['plain_text' => 'PING 1.33.22.11 (1.33.22.11) 56(84) bytes of data.
+                [
+                    'plain_text' => 'PING 1.33.22.11 (1.33.22.11) 56(84) bytes of data.
 
 --- 1.33.22.11 ping statistics ---
-10 packets transmitted, 0 received, 100% packet loss, time 1832ms']
+10 packets transmitted, 0 received, 100% packet loss, time 1832ms', ]
             )
         );
 
@@ -95,7 +96,7 @@ rtt min/avg/max/mdev = 242.022/242.562/244.487/0.907 ms', ]
                 'plain_text' => 'PING 1.33.22.11 (1.33.22.11) 56(84) bytes of data.
 
 --- 1.33.22.11 ping statistics ---
-10 packets transmitted, 0 received, 100% packet loss, time 1832ms'
+10 packets transmitted, 0 received, 100% packet loss, time 1832ms',
             ])
         );
 
