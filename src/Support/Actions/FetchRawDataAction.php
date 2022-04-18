@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Support\Actions;
 
+use Exception;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -49,7 +50,7 @@ class FetchRawDataAction
                 'fulfilled' => static function (Response $response, $index) use ($rawResultsData, $driver) {
                     $rawResultsData->push(RawResultsFactory::fromResponse($response, $driver::class));
                 },
-                'rejected' => static function (\Exception $e, $index) {
+                'rejected' => static function (Exception $e, $index) {
                     if ($e instanceof TransferException) {
                         ApiProviderException::fromTransferException($e);
                     }

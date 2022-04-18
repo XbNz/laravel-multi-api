@@ -11,6 +11,7 @@ use XbNz\Resolver\Domain\Ip\Builders\IpBuilder;
 use XbNz\Resolver\Domain\Ip\Collections\IpCollection;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
@@ -48,10 +49,12 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
             ->withIps(['1.1.1.1'])
             ->normalize();
 
+        sleep(3);
         $before = now();
         app(Resolver::class)->ip()->withDrivers([
             AbuseIpDbDotComDriver::class,
             IpApiDotComDriver::class,
+            IpDataDotCoDriver::class,
             IpGeolocationDotIoDriver::class,
             IpInfoDotIoDriver::class,
             MtrDotShMtrDriver::class,
@@ -59,7 +62,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
         ])->withIps(['1.1.1.1'])->normalize();
         $after = now();
 
-        $this->assertLessThanOrEqual(5000, $after->diffInMilliseconds($before));
+        $this->assertLessThanOrEqual(2000, $after->diffInMilliseconds($before));
     }
 
     /** @test
