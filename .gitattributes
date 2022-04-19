@@ -9,3 +9,4 @@
 /phpmd.xml export-ignore
 /ecs.php export-ignore
 /.idea export-ignore
+/.phpunit.result.cache export-ignore
