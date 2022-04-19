@@ -2,11 +2,7 @@
 
 return [
     'use_proxy' => false,
-    'proxies' => [
-
-    ],
-
-
+    'proxies' => [],
 
     'timeout' => 30,
     'cache_period' => 3600,
