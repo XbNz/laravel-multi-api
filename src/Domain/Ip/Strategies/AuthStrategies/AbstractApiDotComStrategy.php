@@ -35,6 +35,6 @@ class AbstractApiDotComStrategy implements AuthStrategy
 
     public function supports(string $driver): bool
     {
-        return $driver === AbuseIpDbDotComDriver::class;
+        return $driver === AbstractApiDotComDriver::class;
     }
 }

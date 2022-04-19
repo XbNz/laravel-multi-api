@@ -24,6 +24,21 @@ class AbstractApiDotComMapper implements Mapper
         );
     }
 
+//    /**
+//     * @template T
+//     *
+//     * @param T $driver
+//     * @return T|null
+//     */
+//    private function getValue(mixed $value)
+//    {
+//        if (blank($value)) {
+//            return null;
+//        }
+//
+//        return $value;
+//    }
+
     public function supports(string $driver): bool
     {
         return $driver === AbstractApiDotComDriver::class;

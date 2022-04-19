@@ -16,6 +16,7 @@ use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbstractApiDotComStrategy;
@@ -167,7 +168,7 @@ class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
     public function the_token_is_refreshed_for_ip_data_on_retry(): void
     {
         // Arrange
-        $driver = IpDashApiDotComDriver::class;
+        $driver = IpDataDotCoDriver::class;
         Config::set([
             'resolver.use_retries' => true,
             'resolver.tries' => 2,

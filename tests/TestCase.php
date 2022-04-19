@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Facades\ResolverFacade;
@@ -57,7 +57,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
                 env('IP_INFO_DOT_IO_API_KEY'),
             ],
 
-            IpDashApiDotComDriver::class => [
+            IpDataDotCoDriver::class => [
                 env('IP_DATA_DOT_CO_API_KEY'),
             ],
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
@@ -16,26 +17,31 @@ use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver;
 use XbNz\Resolver\Resolver\Resolver;
+use XbNz\Resolver\Support\DTOs\RawResultsData;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class DriverTest extends \XbNz\Resolver\Tests\TestCase
 {
-    /** @test
-     * @group Online
-     */
-    public function it_resolves_ip_information_and_caches_them_for_the_2nd_go()
+    protected function setUp(): void
     {
+        parent::setUp();
         Config::set([
             'resolver.async_concurrent_requests' => 20,
             'resolver.cache_period' => 200,
             'resolver.use_retries' => true,
-            'resolver.tries' => 10,
+            'resolver.tries' => 3,
             'resolver.retry_sleep' => 2,
             'resolver.timeout' => 50,
             'ip-resolver.XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver.search' => 'vienna',
             'ip-resolver.XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver.search' => 'vienna',
         ]);
+    }
 
+    /** @test
+     * @group Online
+     */
+    public function it_resolves_ip_information_and_caches_them_for_the_2nd_go()
+    {
         app(Resolver::class)->ip()
             ->abuseIpDbDotCom()
 //            ->ipApiDotCom()
@@ -53,7 +59,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
         $before = now();
         app(Resolver::class)->ip()->withDrivers([
             AbuseIpDbDotComDriver::class,
-            //            IpApiDotComDriver::class,
+            // IpApiDotComDriver::class,
             IpDataDotCoDriver::class,
             IpGeolocationDotIoDriver::class,
             IpInfoDotIoDriver::class,
@@ -75,7 +81,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
     {
         $testedDrivers = [
             AbuseIpDbDotComDriver::class,
-            IpApiDotComDriver::class,
+//            IpApiDotComDriver::class,
             IpGeolocationDotIoDriver::class,
             AbstractApiDotComDriver::class,
         ];
@@ -98,5 +104,91 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
         }
     }
 
-    // TODO: Test raw results of each provider and assert array structure
+    /** @test
+     * @group Online
+     */
+    public function required_fields()
+    {
+        $requiredFields = [
+            AbstractApiDotComDriver::class => [
+                'ip_address',
+                'country',
+                'city',
+                'latitude',
+                'longitude',
+                'connection.isp_name',
+            ],
+
+            AbuseIpDbDotComDriver::class => [
+                'data.ipAddress',
+                'data.countryCode',
+                'data.isp',
+            ],
+
+            IpApiDotCoDriver::class => [
+                'ip',
+                'country_name',
+                'city',
+                'latitude',
+                'longitude',
+                'org',
+            ],
+
+            //            IpApiDotComDriver::class => [
+            //                'ip',
+            //                'country_name',
+            //                'city',
+            //                'latitude',
+            //                'longitude',
+            //            ],
+
+            IpDashApiDotComDriver::class => [
+                'query',
+                'country',
+                'city',
+                'lat',
+                'lon',
+                'as',
+            ],
+
+            IpDataDotCoDriver::class => [
+                'ip',
+                'country_name',
+                'city',
+                'latitude',
+                'longitude',
+                'asn.name',
+            ],
+
+            IpGeolocationDotIoDriver::class => [
+                'ip',
+                'country_name',
+                'city',
+                'latitude',
+                'longitude',
+                'organization',
+            ],
+
+            IpInfoDotIoDriver::class => [
+                'ip',
+                'country',
+                'city',
+                'loc',
+                'org',
+            ],
+        ];
+
+        foreach ($requiredFields as $driver => $fields) {
+            $raw = app(Resolver::class)->ip()->withDrivers([
+                $driver,
+            ])->withIps(['1.1.1.1'])->raw();
+
+            $this->assertInstanceOf(RawResultsData::class, $raw[0]);
+            $dotNotatedResultSet = Arr::dot($raw[0]->data);
+
+            foreach ($fields as $field) {
+                $this->assertArrayHasKey($field, $dotNotatedResultSet);
+            }
+        }
+    }
 }

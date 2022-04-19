@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -62,7 +63,7 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
     /** @test **/
     public function it_retrieves_a_random_key_for_ip_data_and_applies_it_to_the_key_path_without_removing_previous_paths(): void
     {
-        $driverFQCN = IpDashApiDotComDriver::class;
+        $driverFQCN = IpDataDotCoDriver::class;
         Config::set([
             "ip-resolver.api-keys.{$driverFQCN}" => ['this-should-be-the-key-below'],
         ]);

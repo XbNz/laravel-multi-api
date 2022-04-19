@@ -15,7 +15,7 @@ return [
             '', '', ''
         ],
 
-        \XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver::class => [
+        \XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver::class => [
             '', '', ''
         ],
 
