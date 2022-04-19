@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies;
 
-use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use function app;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -14,7 +13,7 @@ use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
-use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbstractApiDotComStrategy;

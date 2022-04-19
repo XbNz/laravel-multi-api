@@ -1,4 +1,4 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xbnz/laravel-multi-ip/Run%20tests?label=Tests&style=for-the-badge&logo=appveyor)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xbnz/laravel-multi-api/Run%20tests?label=Tests&style=for-the-badge&logo=appveyor)
 
 # Laravel Multi API
 
