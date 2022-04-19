@@ -14,8 +14,8 @@
 | Ipdata.co        | ✅            | NormalizedGeolocationResultsData::class |
 | Ipgeolocation.io | ✅            | NormalizedGeolocationResultsData::class |
 | Ipinfo.io        | ✅            | NormalizedGeolocationResultsData::class |
-| Mtr.sh: ping     | ❌            | MtrDotShMtrResultsData::class           |
-| Mtr.sh: mtr      | ❌            | MtrDotShPingResultsData::class          |
+| Mtr.sh: ping     | ❌            | MtrDotShPingResultsData::class          |
+| Mtr.sh: mtr      | ❌            | MtrDotShMtrResultsData::class           |
 
 
 ## Installation
