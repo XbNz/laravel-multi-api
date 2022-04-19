@@ -6,6 +6,7 @@ namespace XbNz\Resolver\Tests;
 
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Illuminate\Support\Facades\Config;
+use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
@@ -62,6 +63,10 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
             AbuseIpDbDotComDriver::class => [
                 env('ABUSE_IP_DB_DOT_COM_API_KEY'),
+            ],
+
+            AbstractApiDotComDriver::class => [
+                env('ABSTRACTAPI_DOT_COM_GEOLOCATION_API_KEY'),
             ],
         ]);
     }

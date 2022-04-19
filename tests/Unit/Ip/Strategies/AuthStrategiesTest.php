@@ -10,11 +10,13 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Config;
+use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
+use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbstractApiDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy;
@@ -212,5 +214,46 @@ class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 
         $this->assertTrue($mockHandler->getLastRequest()->hasHeader('Shall-not-be-removed'));
         $this->assertSame('Bearer this-should-be-the-key-below', $mockHandler->getLastRequest()->getHeader('Authorization')[0]);
+    }
+
+    /** @test **/
+    public function it_retrieves_a_random_key_for_abstract_api_and_applies_it_to_the_query_without_removing_previous_values(): void
+    {
+        $driverFQCN = AbstractApiDotComDriver::class;
+        Config::set([
+            "ip-resolver.api-keys.{$driverFQCN}" => ['this-should-be-the-key-below'],
+        ]);
+
+        $mockHandler = new MockHandler([
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], '{"::success::": true}'),
+        ]);
+
+        $stack = HandlerStack::create($mockHandler);
+        $stack->push(app(AbstractApiDotComStrategy::class)->guzzleMiddleware());
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        // Act
+
+        $client->request('GET', '/', [
+            'query' => [
+                'Shall-not-be-removed' => 'test-key',
+            ],
+        ]);
+
+        // Assert
+
+        $this->assertStringContainsString(
+            'this-should-be-the-key-below',
+            $mockHandler->getLastRequest()->getUri()->getQuery()
+        );
+
+        $this->assertStringContainsString(
+            'Shall-not-be-removed',
+            $mockHandler->getLastRequest()->getUri()->getQuery()
+        );
     }
 }

@@ -69,7 +69,8 @@ rtt min/avg/max/mdev = 242.022/242.562/244.487/0.907 ms',
                     'plain_text' => 'PING 1.33.22.11 (1.33.22.11) 56(84) bytes of data.
 
 --- 1.33.22.11 ping statistics ---
-10 packets transmitted, 0 received, 100% packet loss, time 1832ms', ]
+10 packets transmitted, 0 received, 100% packet loss, time 1832ms',
+                ]
             )
         );
 

@@ -11,9 +11,9 @@ use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Drivers\Driver;
 
-class IpDetailsDotIoDriver implements Driver
+class IpApiDotCoDriver implements Driver
 {
-    public const API_URL = 'https://free.ipdetails.io/';
+    public const API_URL = 'https://ipapi.co/';
 
     public function getRequests(array $dataObjects): Collection
     {
@@ -21,8 +21,8 @@ class IpDetailsDotIoDriver implements Driver
 
         $generator = static function (array $ipDataObjects) {
             foreach ($ipDataObjects as $ipData) {
-                $uri = (new Uri(self::API_URL))->withPath('/' . $ipData->ip);
-                yield new Request('GET', $uri);
+                $uri = (new Uri(self::API_URL))->withPath("/{$ipData->ip}/json/");
+                yield (new Request('GET', $uri))->withHeader('Accept', 'application/json');
             }
         };
 

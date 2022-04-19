@@ -22,6 +22,10 @@ return [
         \XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver::class => [
             '', '', ''
         ],
+
+        \XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver::class => [
+            '', '', ''
+        ],
     ],
 
     /**

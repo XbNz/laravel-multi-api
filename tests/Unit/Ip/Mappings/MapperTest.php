@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Tests\Unit\Ip\Mappings;
 
+use XbNz\Resolver\Domain\Ip\Mappings\AbstractApiDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\AbuseIpDbDotComMapper;
+use XbNz\Resolver\Domain\Ip\Mappings\IpApiDotCoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpApiDotComMapper;
+use XbNz\Resolver\Domain\Ip\Mappings\IpDashApiDotComMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpDataDotCoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpGeolocationDotIoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\IpInfoDotIoMapper;
@@ -29,6 +32,9 @@ class MapperTest extends TestCase
             IpInfoDotIoMapper::class => RawResultsFactory::ipInfoDotIoFake(),
             MtrDotShMtrMapper::class => RawResultsFactory::mtrDotShMtrFake(),
             MtrDotShPingMapper::class => RawResultsFactory::mtrDotShPingFake(),
+            IpDashApiDotComMapper::class => RawResultsFactory::ipDashApiDotComFake(),
+            IpApiDotCoMapper::class => RawResultsFactory::ipApiDotCoFake(),
+            AbstractApiDotComMapper::class => RawResultsFactory::abstractApiDotComFake(),
         ];
 
         // Act

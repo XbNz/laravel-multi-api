@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Tests\Feature\Ip\Drivers;
 
 use Illuminate\Support\Facades\Config;
+use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
@@ -24,11 +26,11 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
     public function it_resolves_ip_information_and_caches_them_for_the_2nd_go()
     {
         Config::set([
-            'resolver.async_concurrent_requests' => 10,
+            'resolver.async_concurrent_requests' => 20,
             'resolver.cache_period' => 200,
             'resolver.use_retries' => true,
             'resolver.tries' => 10,
-            'resolver.retry_sleep' => 10000,
+            'resolver.retry_sleep' => 2,
             'resolver.timeout' => 50,
             'ip-resolver.XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver.search' => 'vienna',
             'ip-resolver.XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver.search' => 'vienna',
@@ -43,20 +45,24 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
             ->mtrDotShMtr()
             ->mtrDotShPing()
             ->ipDashApiDotCom()
-            ->withIps(['1.1.1.1', '2.2.2.2'])
+            ->ipApiDotCo()
+            ->abstractApiDotCom()
+            ->withIps(['1.1.1.1', '2606:4700:4700::1111'])
             ->normalize();
 
         $before = now();
         app(Resolver::class)->ip()->withDrivers([
             AbuseIpDbDotComDriver::class,
-//            IpApiDotComDriver::class,
+            //            IpApiDotComDriver::class,
             IpDataDotCoDriver::class,
             IpGeolocationDotIoDriver::class,
             IpInfoDotIoDriver::class,
             MtrDotShMtrDriver::class,
             MtrDotShPingDriver::class,
-            IpDashApiDotComDriver::class
-        ])->withIps(['1.1.1.1'])->normalize();
+            IpDashApiDotComDriver::class,
+            IpApiDotCoDriver::class,
+            AbstractApiDotComDriver::class,
+        ])->withIps(['1.1.1.1', '2606:4700:4700::1111'])->normalize();
         $after = now();
 
         $this->assertLessThanOrEqual(2000, $after->diffInMilliseconds($before));
@@ -71,6 +77,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
             AbuseIpDbDotComDriver::class,
             IpApiDotComDriver::class,
             IpGeolocationDotIoDriver::class,
+            AbstractApiDotComDriver::class,
         ];
 
         foreach ($testedDrivers as $driver) {
@@ -90,4 +97,6 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
             $this->fail('Expected exception not thrown');
         }
     }
+
+    // TODO: Test raw results of each provider and assert array structure
 }

@@ -6,7 +6,9 @@ namespace XbNz\Resolver\Factories;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
+use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpGeolocationDotIoDriver;
@@ -305,6 +307,140 @@ class RawResultsFactory
                     'jitter' => 9.7,
                 ],
             ], $overrides)
+        );
+    }
+
+    /**
+     * @param array<mixed> $overrides
+     */
+    public static function ipDashApiDotComFake(array $overrides = []): RawResultsData
+    {
+        return new RawResultsData(
+            IpDashApiDotComDriver::class,
+            array_merge(json_decode('{
+                "status": "success",
+                "continent": "Oceania",
+                "continentCode": "OC",
+                "country": "Australia",
+                "countryCode": "AU",
+                "region": "QLD",
+                "regionName": "Queensland",
+                "city": "South Brisbane",
+                "district": "",
+                "zip": "4101",
+                "lat": -27.4766,
+                "lon": 153.0166,
+                "timezone": "Australia/Brisbane",
+                "offset": 36000,
+                "currency": "AUD",
+                "isp": "Cloudflare, Inc",
+                "org": "APNIC and Cloudflare DNS Resolver project",
+                "as": "AS13335 Cloudflare, Inc.",
+                "asname": "CLOUDFLARENET",
+                "reverse": "one.one.one.one",
+                "mobile": false,
+                "proxy": false,
+                "hosting": true,
+                "query": "1.1.1.1"
+            }', true, 512, JSON_THROW_ON_ERROR), $overrides)
+        );
+    }
+
+    /**
+     * @param array<mixed> $overrides
+     */
+    public static function ipApiDotCoFake(array $overrides = []): RawResultsData
+    {
+        return new RawResultsData(
+            IpApiDotCoDriver::class,
+            array_merge(json_decode('{
+                "ip": "8.8.8.8",
+                "version": "IPv4",
+                "city": "Mountain View",
+                "region": "California",
+                "region_code": "CA",
+                "country": "US",
+                "country_name": "United States",
+                "country_code": "US",
+                "country_code_iso3": "USA",
+                "country_capital": "Washington",
+                "country_tld": ".us",
+                "continent_code": "NA",
+                "in_eu": false,
+                "postal": "94043",
+                "latitude": 37.42301,
+                "longitude": -122.083352,
+                "timezone": "America/Los_Angeles",
+                "utc_offset": "-0700",
+                "country_calling_code": "+1",
+                "currency": "USD",
+                "currency_name": "Dollar",
+                "languages": "en-US,es-US,haw,fr",
+                "country_area": 9629091.0,
+                "country_population": 327167434,
+                "asn": "AS15169",
+                "org": "GOOGLE"
+            }', true, 512, JSON_THROW_ON_ERROR), $overrides)
+        );
+    }
+
+    /**
+     * @param array<mixed> $overrides
+     */
+    public static function abstractApiDotComFake(array $overrides = []): RawResultsData
+    {
+        return new RawResultsData(
+            AbstractApiDotComDriver::class,
+            array_merge(json_decode('{
+                "ip_address": "166.171.248.255",
+                "city": "Modesto",
+                "city_geoname_id": 5373900,
+                "region": "California",
+                "region_iso_code": "CA",
+                "region_geoname_id": 5332921,
+                "postal_code": "95353",
+                "country": "United States",
+                "country_code": "US",
+                "country_geoname_id": 6252001,
+                "country_is_eu": false,
+                "continent": "North America",
+                "continent_code": "NA",
+                "continent_geoname_id": 6255149,
+                "longitude": -120.997,
+                "latitude": 37.6393,
+                "security":
+                {
+                    "is_vpn": false
+                },
+                "timezone":
+                {
+                    "name": "America/Los_Angeles",
+                    "abbreviation": "PST",
+                    "gmt_offset": -8,
+                    "current_time": "07:10:37",
+                    "is_dst": false
+                },
+                "flag":
+                {
+                    "emoji": "🇺🇸",
+                    "unicode": "U+1F1FA U+1F1F8",
+                    "png": "https://static.abstractapi.com/country-flags/US_flag.png",
+                    "svg": "https://static.abstractapi.com/country-flags/US_flag.svg"
+                },
+                "currency":
+                {
+                    "currency_name": "USD",
+                    "currency_code": "USD"
+                },
+                "connection":
+                {
+                    "autonomous_system_number": 20057,
+                    "autonomous_system_organization": "AT&T Mobility LLC",
+                    "connection_type": "Cellular",
+                    "isp_name": "AT&T Mobility LLC",
+                    "organization_name": "Service Provider Corporation"
+                }
+            }', true, 512, JSON_THROW_ON_ERROR), $overrides)
         );
     }
 }

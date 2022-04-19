@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Mappings;
 
 use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
@@ -14,11 +16,11 @@ class IpDashApiDotComMapper implements Mapper
         return new NormalizedGeolocationResultsData(
             $rawIpResults->provider,
             $rawIpResults->data['query'],
-            $rawIpResults->data['country'],
-            $rawIpResults->data['city'],
-            $rawIpResults->data['lat'],
-            $rawIpResults->data['lon'],
-            $rawIpResults->data['as'],
+            optional($rawIpResults->data['country'], static fn (string $country) => blank($country) ? null : $country),
+            optional($rawIpResults->data['city'], static fn (string $city) => blank($city) ? null : $city),
+            optional($rawIpResults->data['lat'], static fn (mixed $latitude) => blank($latitude) ? null : (float) $latitude),
+            optional($rawIpResults->data['lon'], static fn (mixed $longitude) => blank($longitude) ? null : (float) $longitude),
+            optional($rawIpResults->data['as'], static fn (string $organization) => blank($organization) ? null : $organization),
         );
     }
 

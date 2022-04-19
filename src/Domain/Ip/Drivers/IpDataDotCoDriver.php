@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Support\Drivers\Driver;
-use XbNz\Resolver\Support\DTOs\DriverConsumableDTO;
 
 class IpDataDotCoDriver implements Driver
 {

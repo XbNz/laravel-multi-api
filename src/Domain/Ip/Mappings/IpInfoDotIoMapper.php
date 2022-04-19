@@ -14,17 +14,22 @@ class IpInfoDotIoMapper implements Mapper
 {
     public function map(RawResultsData $rawIpResults): NormalizedGeolocationResultsData
     {
-        $coordinates = explode(',', $rawIpResults->data['loc']);
-        $country = Locale::getDisplayRegion("-{$rawIpResults->data['country']}", 'en');
+        if ($rawIpResults->data['loc'] !== null) {
+            $coordinates = explode(',', $rawIpResults->data['loc']);
+        }
+
+        if ($rawIpResults->data['country'] !== null) {
+            $country = Locale::getDisplayRegion("-{$rawIpResults->data['country']}", 'en');
+        }
 
         return new NormalizedGeolocationResultsData(
             $rawIpResults->provider,
             $rawIpResults->data['ip'],
-            $country,
-            $rawIpResults->data['city'],
-            (float) $coordinates[0],
-            (float) $coordinates[1],
-            $rawIpResults->data['org']
+            $country ?? null,
+            optional($rawIpResults->data['city'], static fn (string $city) => blank($city) ? null : $city),
+            optional($coordinates[0], static fn ($latitude) => blank($latitude) ? null : (float) $latitude),
+            optional($coordinates[1], static fn ($longitude) => blank($longitude) ? null : (float) $longitude),
+            optional($rawIpResults->data['org'], static fn (string $organization) => blank($organization) ? null : $organization),
         );
     }
 

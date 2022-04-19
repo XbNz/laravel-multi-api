@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotCoDriver;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
-class IpDashApiDotComStrategy implements RetryStrategy
+class IpApiDotCoStrategy implements RetryStrategy
 {
     public function __construct(
         private readonly WithRetry $withRetry
@@ -27,6 +27,6 @@ class IpDashApiDotComStrategy implements RetryStrategy
 
     public function supports(string $driver): bool
     {
-        return $driver === IpDashApiDotComDriver::class;
+        return $driver === IpApiDotCoDriver::class;
     }
 }

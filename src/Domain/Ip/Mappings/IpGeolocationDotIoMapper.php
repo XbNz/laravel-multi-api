@@ -16,11 +16,11 @@ class IpGeolocationDotIoMapper implements Mapper
         return new NormalizedGeolocationResultsData(
             $rawIpResults->provider,
             $rawIpResults->data['ip'],
-            $rawIpResults->data['country_name'],
-            $rawIpResults->data['city'],
-            (float) $rawIpResults->data['latitude'],
-            (float) $rawIpResults->data['longitude'],
-            $rawIpResults->data['organization']
+            optional($rawIpResults->data['country_name'], static fn (string $country) => blank($country) ? null : $country),
+            optional($rawIpResults->data['city'], static fn (string $city) => blank($city) ? null : $city),
+            optional($rawIpResults->data['latitude'], static fn (mixed $latitude) => blank($latitude) ? null : (float) $latitude),
+            optional($rawIpResults->data['longitude'], static fn (mixed $longitude) => blank($longitude) ? null : (float) $longitude),
+            optional($rawIpResults->data['organization'], static fn (string $organization) => blank($organization) ? null : $organization),
         );
     }
 

@@ -14,14 +14,15 @@ class AbuseIpDbDotComMapper implements Mapper
 {
     public function map(RawResultsData $rawIpResults): NormalizedGeolocationResultsData
     {
+        if ($rawIpResults->data['data']['countryCode'] !== null) {
+            $country = Locale::getDisplayRegion("-{$rawIpResults->data['data']['countryCode']}", 'en');
+        }
+
         return new NormalizedGeolocationResultsData(
             $rawIpResults->provider,
             $rawIpResults->data['data']['ipAddress'],
-            Locale::getDisplayRegion("-{$rawIpResults->data['data']['countryCode']}", 'en'),
-            null,
-            null,
-            null,
-            $rawIpResults->data['data']['isp'],
+            $country ?? null,
+            organization: optional($rawIpResults->data['data']['isp'], static fn (string $organization) => blank($organization) ? null : $organization),
         );
     }
 

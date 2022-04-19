@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Domain\Ip\Builders;
 
 use Illuminate\Support\Collection;
+use XbNz\Resolver\Domain\Ip\Drivers\AbstractApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\AbuseIpDbDotComDriver;
+use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotCoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDashApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\IpDataDotCoDriver;
@@ -119,6 +121,24 @@ class IpBuilder
         $this->chosenDrivers[] = $this->drivers->sole(
             fn (Driver $driver)
             => $driver->supports(IpDashApiDotComDriver::class)
+        );
+        return $this;
+    }
+
+    public function ipApiDotCo(): static
+    {
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
+            => $driver->supports(IpApiDotCoDriver::class)
+        );
+        return $this;
+    }
+
+    public function abstractApiDotCom(): static
+    {
+        $this->chosenDrivers[] = $this->drivers->sole(
+            fn (Driver $driver)
+            => $driver->supports(AbstractApiDotComDriver::class)
         );
         return $this;
     }
