@@ -1,7 +1,5 @@
 composer.lock
 /vendor
-/phpunit.xml
 .env
 /.phpunit.result.cache
-/.gitignore
 .idea

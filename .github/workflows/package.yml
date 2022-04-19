@@ -4,6 +4,9 @@ on:
     paths:
       - '**.php'
       - 'infection.json'
+  schedule:
+    - cron: '0 0 * * 0'
+
  
 jobs: 
 
@@ -50,15 +53,23 @@ jobs:
 
       - name: Execute infection
         run: XDEBUG_MODE=coverage ./vendor/bin/infection --test-framework-options="--exclude-group=Online"
+        continue-on-error: true
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github
+        continue-on-error: true
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan --error-format=github
+        continue-on-error: true
+
 
       - name: Run ECS
         run: ./vendor/bin/ecs check
 
       - name: Run PHPMD
         run: ./vendor/bin/phpmd ./src text phpmd.xml
+        continue-on-error: true
 
       - name: Discord notification
         env:

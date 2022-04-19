@@ -81,7 +81,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
     {
         $testedDrivers = [
             AbuseIpDbDotComDriver::class,
-//            IpApiDotComDriver::class,
+            //            IpApiDotComDriver::class,
             IpGeolocationDotIoDriver::class,
             AbstractApiDotComDriver::class,
         ];

@@ -4,7 +4,8 @@
 /.gitattributes export-ignore
 /vendor export-ignore
 /composer.lock export-ignore
-/infection.json
-/phpstan.neon
-/phpmd.xml
-/ecs.php
+/infection.json export-ignore
+/phpstan.neon export-ignore
+/phpmd.xml export-ignore
+/ecs.php export-ignore
+/.idea export-ignore

@@ -1,6 +1,6 @@
 {
-    "name": "xbnz/laravel-multi-ip",
-    "description": "Wrapper for several IP resolver APIs",
+    "name": "xbnz/laravel-multi-api",
+    "description": "Asynchronous API wrapper with proxy and multiple key support for Laravel",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -49,10 +49,7 @@
             "providers": [
                 "XbNz\\Resolver\\ServiceProviders\\IpServiceProvider",
                 "XbNz\\Resolver\\ServiceProviders\\ResolverServiceProvider"
-            ],
-            "aliases": {
-                "Resolver": "XbNz\\Resolver\\Facades\\ResolverFacade"
-            }
+            ]
         }
     },
     "config": {
