@@ -9,7 +9,7 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;
-use XbNz\Resolver\Support\Exceptions\ConfigNotFoundException;
+use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Strategies\AuthStrategy;
 use XbNz\Resolver\Support\Strategies\NullStrategy;
 use XbNz\Resolver\Support\Strategies\ResponseFormatterStrategy;
@@ -31,10 +31,7 @@ class GuzzleClientFactory
     }
 
     /**
-     * @param string $driver Driver FQN e.g. IpGeolocationDotIoDriver::class. Refer to readme file for all supported drivers.
-     * @throws \XbNz\Resolver\Support\Exceptions\MissingApiKeyException
-     * @throws \XbNz\Resolver\Domain\Ip\Exceptions\InvalidIpAddressException
-     * @throws ConfigNotFoundException
+     * @param class-string<Driver> $driver Driver FQN e.g. IpGeolocationDotIoDriver::class. Refer to readme file for all supported drivers.
      * @param array<array<callable>> $overrides
      */
     public function for(string $driver, array $overrides = []): Client
