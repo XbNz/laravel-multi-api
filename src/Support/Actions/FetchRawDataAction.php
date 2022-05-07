@@ -13,10 +13,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Psr\Http\Message\RequestInterface;
 use Webmozart\Assert\Assert;
-use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Factories\GuzzleClientFactory;
 use XbNz\Resolver\Factories\RawResultsFactory;
 use XbNz\Resolver\Support\Drivers\Driver;
+use XbNz\Resolver\Support\DTOs\DriverConsumableDTO;
 use XbNz\Resolver\Support\DTOs\RawResultsData;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
@@ -28,7 +28,7 @@ class FetchRawDataAction
     }
 
     /**
-     * @param array<IpData> $dataObjects
+     * @param array<DriverConsumableDTO> $dataObjects
      * @param array<Driver> $drivers
      * @return array<RawResultsData>
      */
