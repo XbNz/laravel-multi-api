@@ -6,9 +6,13 @@ namespace XbNz\Resolver\Domain\Ip\DTOs;
 
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Support\DTOs\MappableDTO;
+use XbNz\Resolver\Support\Drivers\Driver;
 
 class NormalizedGeolocationResultsData implements MappableDTO
 {
+    /**
+     * @param class-string<Driver> $provider
+     */
     public function __construct(
         public readonly string $provider,
         public readonly string $ip,
