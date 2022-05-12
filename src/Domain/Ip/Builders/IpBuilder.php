@@ -144,7 +144,7 @@ class IpBuilder
     }
 
     /**
-     * @param array<string> $drivers Provider names in string format: e.g [IpGeolocationDotIoDriver::class, IpInfoDotIo::class]
+     * @param array<class-string> $drivers Provider names in string format: e.g [IpGeolocationDotIoDriver::class, IpInfoDotIo::class]
      */
     public function withDrivers(array $drivers): static
     {
