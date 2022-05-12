@@ -26,7 +26,7 @@ use XbNz\Resolver\Support\DTOs\RawResultsData;
 class IpBuilder
 {
     /**
-     * @var Collection<string>
+     * @var Collection<Driver>
      */
     private Collection $chosenDrivers;
 
@@ -144,7 +144,7 @@ class IpBuilder
     }
 
     /**
-     * @param array<class-string> $drivers Provider names in string format: e.g [IpGeolocationDotIoDriver::class, IpInfoDotIo::class]
+     * @param array<class-string<Driver>> $drivers Provider names in string format: e.g [IpGeolocationDotIoDriver::class, IpInfoDotIo::class]
      */
     public function withDrivers(array $drivers): static
     {
