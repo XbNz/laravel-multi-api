@@ -44,7 +44,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
     {
         app(Resolver::class)->ip()
             ->abuseIpDbDotCom()
-//            ->ipApiDotCom()
+            ->ipApiDotCom()
             ->ipDataDotCo()
             ->ipGeolocationDotIo()
             ->ipInfoDotIo()
@@ -59,7 +59,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
         $before = now();
         app(Resolver::class)->ip()->withDrivers([
             AbuseIpDbDotComDriver::class,
-            // IpApiDotComDriver::class,
+            IpApiDotComDriver::class,
             IpDataDotCoDriver::class,
             IpGeolocationDotIoDriver::class,
             IpInfoDotIoDriver::class,
@@ -81,7 +81,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
     {
         $testedDrivers = [
             AbuseIpDbDotComDriver::class,
-            //            IpApiDotComDriver::class,
+            IpApiDotComDriver::class,
             IpGeolocationDotIoDriver::class,
             AbstractApiDotComDriver::class,
         ];
@@ -134,13 +134,13 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
                 'org',
             ],
 
-            //            IpApiDotComDriver::class => [
-            //                'ip',
-            //                'country_name',
-            //                'city',
-            //                'latitude',
-            //                'longitude',
-            //            ],
+            IpApiDotComDriver::class => [
+                'ip',
+                'country_name',
+                'city',
+                'latitude',
+                'longitude',
+            ],
 
             IpDashApiDotComDriver::class => [
                 'query',
