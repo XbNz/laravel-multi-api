@@ -17,11 +17,11 @@ class IpApiDotCoMapper implements Mapper
         return new NormalizedGeolocationResultsData(
             $rawIpResults->provider,
             $rawIpResults->data['ip'],
-            optional($rawIpResults->data['country_name'], static fn (string $country) => blank($country) ? null : $country),
-            optional($rawIpResults->data['city'], static fn (string $city) => blank($city) ? null : $city),
-            optional($rawIpResults->data['latitude'], static fn (mixed $latitude) => blank($latitude) ? null : (float) $latitude),
-            optional($rawIpResults->data['longitude'], static fn (mixed $longitude) => blank($longitude) ? null : (float) $longitude),
-            optional($rawIpResults->data['org'], static fn (string $organization) => blank($organization) ? null : $organization),
+            optional($rawIpResults->data['country_name'] ?? null, static fn (string $country) => blank($country) ? null : $country),
+            optional($rawIpResults->data['city'] ?? null, static fn (string $city) => blank($city) ? null : $city),
+            optional($rawIpResults->data['latitude'] ?? null, static fn (mixed $latitude) => blank($latitude) ? null : (float) $latitude),
+            optional($rawIpResults->data['longitude'] ?? null, static fn (mixed $longitude) => blank($longitude) ? null : (float) $longitude),
+            optional($rawIpResults->data['org'] ?? null, static fn (string $organization) => blank($organization) ? null : $organization),
         );
     }
 

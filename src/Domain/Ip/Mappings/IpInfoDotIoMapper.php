@@ -26,10 +26,10 @@ class IpInfoDotIoMapper implements Mapper
             $rawIpResults->provider,
             $rawIpResults->data['ip'],
             $country ?? null,
-            optional($rawIpResults->data['city'], static fn (string $city) => blank($city) ? null : $city),
-            optional($coordinates[0], static fn ($latitude) => blank($latitude) ? null : (float) $latitude),
-            optional($coordinates[1], static fn ($longitude) => blank($longitude) ? null : (float) $longitude),
-            optional($rawIpResults->data['org'], static fn (string $organization) => blank($organization) ? null : $organization),
+            optional($rawIpResults->data['city'] ?? null, static fn (string $city) => blank($city) ? null : $city),
+            optional($coordinates[0] ?? null, static fn ($latitude) => blank($latitude) ? null : (float) $latitude),
+            optional($coordinates[1] ?? null, static fn ($longitude) => blank($longitude) ? null : (float) $longitude),
+            optional($rawIpResults->data['org'] ?? null, static fn (string $organization) => blank($organization) ? null : $organization),
         );
     }
 

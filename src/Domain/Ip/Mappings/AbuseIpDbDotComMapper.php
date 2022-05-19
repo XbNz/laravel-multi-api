@@ -22,7 +22,7 @@ class AbuseIpDbDotComMapper implements Mapper
             $rawIpResults->provider,
             $rawIpResults->data['data']['ipAddress'],
             $country ?? null,
-            organization: optional($rawIpResults->data['data']['isp'], static fn (string $organization) => blank($organization) ? null : $organization),
+            organization: optional($rawIpResults->data['data']['isp'] ?? null, static fn (string $organization) => blank($organization) ? null : $organization),
         );
     }
 
