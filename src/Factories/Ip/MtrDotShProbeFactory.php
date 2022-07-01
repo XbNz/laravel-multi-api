@@ -13,6 +13,7 @@ class MtrDotShProbeFactory
      */
     public static function fromRaw(string $probeId, array $raw): MtrDotShProbeData
     {
+
         return new MtrDotShProbeData(
             $probeId,
             (int) $raw['asnumber'],
