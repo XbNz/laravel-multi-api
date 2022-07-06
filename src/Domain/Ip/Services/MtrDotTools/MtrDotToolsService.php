@@ -22,17 +22,20 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\ListAllProbes\ListAllP
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformMtr\PerformMtrRequest;
 use XbNz\Resolver\Factories\MappedResultFactory;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
-use XbNz\Resolver\Support\Helpers\Async;
+use XbNz\Resolver\Support\Helpers\Send;
 use XbNz\Resolver\Support\Mappings\Mapper;
 
 class MtrDotToolsService
 {
 
-
     public function __construct(
         private readonly Client $client,
+
         private readonly ListAllProbesRequest $listAllProbesRequest,
+        private readonly ListAllProbesMapper $listAllProbesMapper,
+
         private readonly PerformMtrRequest $performMtrRequest,
+        private readonly PerformMtrMapper $performMtrMapper,
     ) {
     }
 
@@ -43,54 +46,43 @@ class MtrDotToolsService
      */
     public function listProbes(?callable $intercept = null): ProbesCollection
     {
-        try {
-            $response = $this->client->send(
-                ($this->listAllProbesRequest)()
-            );
-        } catch (GuzzleException $exception) {
-            if ($exception instanceof RequestException) {
-                MtrDotToolsException::fromRequestException($exception);
-            }
-
-            throw $exception;
-        }
+        $response = Send::sync(
+            $this->client,
+            ($this->listAllProbesRequest)()
+        );
 
         if ($intercept !== null) {
             $intercept($response);
         }
 
-        return ListAllProbesMapper::map(new RequestResponseWrapper(
-            ($this->listAllProbesRequest)(),
-            $response
-        ));
+        return $this->listAllProbesMapper->map($response);
     }
+
 
     /**
      * @param array<IpData> $ipData
-     * @param array<MtrDotToolsProbeData> $probes
+     * @param ProbesCollection<MtrDotToolsProbeData> $probes
      * @return MtrResultsCollection<MtrResultData>
      */
-    public function mtr(array $ipData, array $probes = []): MtrResultsCollection
+    public function mtr(array $ipData, ProbesCollection $probes = new ProbesCollection()): MtrResultsCollection
     {
         Assert::allIsInstanceOf($ipData, IpData::class);
         Assert::allIsInstanceOf($probes, MtrDotToolsProbeData::class);
 
 
         // TODO: Change config logic and fix this
-//        Collection::make(Config::get())
-//        $probes = $this->listProbes()
-//            ->fuzzySearch('');
+
 
         $requests = Collection::make($ipData)
             ->map(function (IpData $ipDataObject) use ($probes) {
                 return Collection::make($probes)
                     ->map(fn(MtrDotToolsProbeData $probe) => ($this->performMtrRequest)($probe, $ipDataObject));
-            });
+            })->flatten();
 
-        $responses = Async::withClient($this->client, $requests->toArray());
+        $responses = Send::async($this->client, $requests->toArray());
 
         return MtrResultsCollection::make($responses)
-            ->map(fn (RequestResponseWrapper $wrapper) => PerformMtrMapper::map($wrapper));
+            ->map(fn (RequestResponseWrapper $wrapper) => $this->performMtrMapper->map($wrapper, $probes));
     }
 
 }

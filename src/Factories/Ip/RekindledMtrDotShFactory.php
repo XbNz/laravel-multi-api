@@ -7,17 +7,17 @@ namespace XbNz\Resolver\Factories\Ip;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrDotShData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrData;
 
 class RekindledMtrDotShFactory
 {
     public static function fromResponseAndRequest(
         ResponseInterface $response,
         RequestInterface $request
-    ): RekindledMtrDotShData {
+    ): RekindledMtrData {
         [, $probeId, , $ip] = explode('/', $request->getUri()->getPath());
 
-        return new RekindledMtrDotShData(
+        return new RekindledMtrData(
             (string) $response->getBody(),
             $probeId,
             $ip
@@ -27,7 +27,7 @@ class RekindledMtrDotShFactory
     /**
      * @param array<string> $overrides
      */
-    public static function generateTestData(array $overrides = []): RekindledMtrDotShData
+    public static function generateTestData(array $overrides = []): RekindledMtrData
     {
         $data = array_merge([
             'plain_text' => '                                                       Loss% Drop   Rcv   Snt  Last  Best   Avg  Wrst StDev Gmean Jttr Javg Jmax Jint
@@ -42,7 +42,7 @@ class RekindledMtrDotShFactory
             'ip' => '1.1.1.1',
         ], $overrides);
 
-        return new RekindledMtrDotShData(
+        return new RekindledMtrData(
             $data['plain_text'],
             $data['probe_id'],
             $data['ip']

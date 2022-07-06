@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\ServiceProviders;
 
+use Illuminate\Foundation\Application;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\ListAllProbesMapper;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\PerformMtrMapper;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\MtrDotToolsService;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbstractApiDotComStrategy as AbstractApiDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy as IpApiDotComAuthStrategy;
@@ -72,6 +75,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
 //            IpApiDotCoMapper::class,
 //            AbstractApiDotComMapper::class,
             ListAllProbesMapper::class,
+            PerformMtrMapper::class,
         ], 'mappers');
 
         $this->app->when(GuzzleClientFactory::class)

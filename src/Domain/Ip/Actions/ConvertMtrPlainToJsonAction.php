@@ -7,11 +7,11 @@ namespace XbNz\Resolver\Domain\Ip\Actions;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrDotShData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrData;
 
 class ConvertMtrPlainToJsonAction
 {
-    public function execute(RekindledMtrDotShData $rekindledData): string
+    public function execute(RekindledMtrData $rekindledData): string
     {
         $exploded = explode(PHP_EOL, $rekindledData->plainTextBody);
 

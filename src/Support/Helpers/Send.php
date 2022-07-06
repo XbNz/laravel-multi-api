@@ -15,13 +15,13 @@ use Webmozart\Assert\Assert;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
-class Async
+class Send
 {
     /**
      * @param array<Request> $requests
-     * @return array<Response>
+     * @return array<RequestResponseWrapper>
      */
-    public static function withClient(Client $client, array $requests): array
+    public static function async(Client $client, array $requests): array
     {
         Assert::allIsInstanceOf($requests, Request::class);
 
@@ -42,5 +42,20 @@ class Async
         ]))->promise()->wait();
 
         return $requestResponseData->toArray();
+    }
+
+    public static function sync(Client $client, Request $request): RequestResponseWrapper
+    {
+        try {
+            $response = $client->send($request);
+        } catch (Exception $e) {
+            if ($e instanceof TransferException) {
+                ApiProviderException::fromTransferException($e);
+            }
+
+            throw $e;
+        }
+
+        return new RequestResponseWrapper($request, $response);
     }
 }

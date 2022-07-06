@@ -6,14 +6,14 @@ namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\Str;
 use JsonException;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrDotShData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrData;
 
 class ConvertPingPlainToJsonAction
 {
     /**
      * @throws JsonException
      */
-    public function execute(RekindledMtrDotShData $rekindledData): string
+    public function execute(RekindledMtrData $rekindledData): string
     {
         $plain = $rekindledData->plainTextBody;
 

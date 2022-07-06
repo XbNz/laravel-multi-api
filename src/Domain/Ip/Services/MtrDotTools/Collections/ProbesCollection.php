@@ -47,6 +47,11 @@ class ProbesCollection extends Collection
         });
     }
 
+    public function findById(string $id): MtrDotToolsProbeData
+    {
+        return $this->sole(fn(MtrDotToolsProbeData $probe) => $probe->probeId === $id);
+    }
+
     public function online(bool $online = true): self
     {
         return $this->filter(fn(MtrDotToolsProbeData $data) => $data->isOnline === $online);

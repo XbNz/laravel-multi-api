@@ -6,7 +6,7 @@ namespace XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh;
 
 use Webmozart\Assert\Assert;
 
-class RekindledMtrDotShData
+class RekindledMtrData
 {
     public function __construct(
         public readonly string $plainTextBody,

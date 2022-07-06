@@ -12,13 +12,13 @@ use XbNz\Resolver\Domain\Ip\Services\Request;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Mappings\Mapper;
 
-class ListAllProbesMapper implements Mapper
+class ListAllProbesMapper
 {
     /**
      * @return ProbesCollection<MtrDotToolsProbeData>
      * @throws MtrDotToolsException
      */
-    public static function map(RequestResponseWrapper $requestResponse): ProbesCollection
+    public function map(RequestResponseWrapper $requestResponse): ProbesCollection
     {
         try {
             $jsonResponse = json_decode(
