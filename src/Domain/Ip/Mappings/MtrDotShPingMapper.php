@@ -11,7 +11,7 @@ use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShPingResultsData;
 use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShPingStatisticsResultsData;
 use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Factories\Ip\MtrDotShPingSequenceResultsFactory;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Mappings\Mapper;
 
 class MtrDotShPingMapper implements Mapper
@@ -21,7 +21,7 @@ class MtrDotShPingMapper implements Mapper
     ) {
     }
 
-    public function map(RawResultsData $rawIpResults): MtrDotShPingResultsData
+    public function map(RequestResponseWrapper $rawIpResults): MtrDotShPingResultsData
     {
         $sequences = Collection::make($rawIpResults->data['sequences'])
             ->map(fn (array $sequence, string $sequencePosition) => MtrDotShPingSequenceResultsFactory::fromRawSequence($sequence, (int) $sequencePosition))
@@ -45,8 +45,8 @@ class MtrDotShPingMapper implements Mapper
         );
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $request): bool
     {
-        return $driver === MtrDotShPingDriver::class;
+        return $request === MtrDotShPingDriver::class;
     }
 }

@@ -11,6 +11,7 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\IpVersion;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\MTR;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\Ping;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\TestType;
+use XbNz\Resolver\Support\DTOs\Mappable;
 
 /**
  * @template TKey of array-key

@@ -15,7 +15,7 @@ use XbNz\Resolver\Domain\Ip\Mappings\IpInfoDotIoMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\MtrDotShMtrMapper;
 use XbNz\Resolver\Domain\Ip\Mappings\MtrDotShPingMapper;
 use XbNz\Resolver\Factories\RawResultsFactory;
-use XbNz\Resolver\Support\DTOs\MappableDTO;
+use XbNz\Resolver\Support\DTOs\Mappable;
 use XbNz\Resolver\Tests\TestCase;
 
 class MapperTest extends TestCase
@@ -43,7 +43,7 @@ class MapperTest extends TestCase
             $mapper = app($mapperClass);
             $dto = $mapper->map($rawResults);
 
-            $this->assertInstanceOf(MappableDTO::class, $dto);
+            $this->assertInstanceOf(Mappable::class, $dto);
         }
 
         // Assert

@@ -6,9 +6,9 @@ namespace XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh;
 
 use Illuminate\Support\Collection;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Support\DTOs\MappableDTO;
+use XbNz\Resolver\Support\DTOs\Mappable;
 
-class MtrDotShPingResultsData implements MappableDTO
+class MtrDotShPingResultsData implements Mappable
 {
     /**
      * @param Collection<MtrDotShPingSequenceResultsData> $sequences

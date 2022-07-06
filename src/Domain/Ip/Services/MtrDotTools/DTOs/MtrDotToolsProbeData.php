@@ -6,6 +6,7 @@ namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs;
 
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\MTR;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\Ping;
+use XbNz\Resolver\Support\DTOs\Mappable;
 
 class MtrDotToolsProbeData
 {

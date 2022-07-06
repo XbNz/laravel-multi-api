@@ -7,10 +7,10 @@ namespace XbNz\Resolver\Domain\Ip\Mappings;
 use Illuminate\Support\Collection;
 use XbNz\Resolver\Domain\Ip\Actions\MtrProbeSearchAction;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShMtrResultsData;
+use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrResultData;
 use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Factories\Ip\MtrDotShMtrHopResultsFactory;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Mappings\Mapper;
 
 class MtrDotShMtrMapper implements Mapper
@@ -20,21 +20,21 @@ class MtrDotShMtrMapper implements Mapper
     ) {
     }
 
-    public function map(RawResultsData $rawIpResults): MtrDotShMtrResultsData
+    public function map(RequestResponseWrapper $rawIpResults): MtrResultData
     {
         $hops = Collection::make($rawIpResults->data['hops'])
             ->map(fn (array $hop, string $hopPosition) => MtrDotShMtrHopResultsFactory::fromRawHop($hop, (int) $hopPosition))
             ->values();
 
-        return new MtrDotShMtrResultsData(
+        return new MtrResultData(
             $this->searchAction->execute(searchTerm: $rawIpResults->data['probe_id'])->sole(),
             IpDataFactory::fromIp($rawIpResults->data['target_ip']),
             $hops
         );
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $request): bool
     {
-        return $driver === MtrDotShMtrDriver::class;
+        return $request === MtrDotShMtrDriver::class;
     }
 }

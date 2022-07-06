@@ -5,50 +5,50 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Support\Actions;
 
 use Exception;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Pool;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Psr\Http\Message\RequestInterface;
 use Webmozart\Assert\Assert;
+use XbNz\Resolver\Domain\Ip\Services\Request;
 use XbNz\Resolver\Factories\GuzzleClientFactory;
 use XbNz\Resolver\Factories\RawResultsFactory;
-use XbNz\Resolver\Support\Drivers\Driver;
-use XbNz\Resolver\Support\DTOs\DriverConsumableDTO;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class FetchRawDataAction
 {
     public function __construct(
-        private GuzzleClientFactory $guzzleClientFactory
+        private readonly GuzzleClientFactory $guzzleClientFactory
     ) {
     }
 
     /**
-     * @param array<DriverConsumableDTO> $dataObjects
-     * @param array<Driver> $drivers
-     * @return array<RawResultsData>
+     * @param array<Request> $requests
+     * @return array<RequestResponseWrapper>
      */
-    public function execute(array $dataObjects, array $drivers): array
+    public function execute(array $requests): array
     {
-        Assert::allImplementsInterface($drivers, Driver::class);
+        Assert::allImplementsInterface($requests, Request::class);
 
         $pools = Collection::make();
-        $rawResultsData = Collection::make();
+        $requestResponseData = Collection::make();
 
-        foreach ($drivers as $driver) {
-            [$requests,] = Collection::make($driver->getRequests($dataObjects))
-                ->partition(fn ($requestOrBuilder) => $requestOrBuilder instanceof RequestInterface);
+        $promises = [];
+        foreach ($requests as $request) {
+            $client = $this->guzzleClientFactory->for($request::class);
 
-            $client = $this->guzzleClientFactory->for($driver::class);
-
-            $pools->push(new Pool($client, $requests->toArray(), [
+            HandlerStack::create()
+            $pools->push(new Pool($client, [($request)()], [
                 'concurrency' => Config::get('resolver.async_concurrent_requests', 10),
-                'fulfilled' => static function (Response $response, $index) use ($rawResultsData, $driver) {
-                    $rawResultsData->push(RawResultsFactory::fromResponse($response, $driver::class));
+                'fulfilled' => static function (Response $response, $index) use ($requestResponseData, $request) {
+                    $requestResponseData->push(new RequestResponseWrapper($request::class, ($request)(), $response));
                 },
                 'rejected' => static function (Exception $e, $index) {
                     if ($e instanceof TransferException) {
@@ -60,9 +60,11 @@ class FetchRawDataAction
             ]));
         }
 
+
         $pools->map(fn (Pool $pool) => $pool->promise())
             ->each(fn (PromiseInterface $promise) => $promise->wait());
 
-        return $rawResultsData->toArray();
+
+        return $requestResponseData->toArray();
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Factories;
 
 use Illuminate\Support\Collection;
-use XbNz\Resolver\Support\DTOs\MappableDTO;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\Mappable;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Mappings\Mapper;
 
 class MappedResultFactory
@@ -19,10 +19,10 @@ class MappedResultFactory
     ) {
     }
 
-    public function fromRaw(RawResultsData $rawDataDto): MappableDTO
+    public function fromRaw(RequestResponseWrapper $rawDataDto): Mappable
     {
         return Collection::make($this->mappers)
-            ->sole(fn (Mapper $mapper) => $mapper->supports($rawDataDto->provider))
+            ->sole(fn (Mapper $mapper) => $mapper->supports($rawDataDto->request))
             ->map($rawDataDto);
     }
 }

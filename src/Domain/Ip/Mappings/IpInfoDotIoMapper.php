@@ -7,12 +7,12 @@ namespace XbNz\Resolver\Domain\Ip\Mappings;
 use Locale;
 use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Mappings\Mapper;
 
 class IpInfoDotIoMapper implements Mapper
 {
-    public function map(RawResultsData $rawIpResults): NormalizedGeolocationResultsData
+    public function map(RequestResponseWrapper $rawIpResults): NormalizedGeolocationResultsData
     {
         if ($rawIpResults->data['loc'] !== null) {
             $coordinates = explode(',', $rawIpResults->data['loc']);
@@ -23,7 +23,7 @@ class IpInfoDotIoMapper implements Mapper
         }
 
         return new NormalizedGeolocationResultsData(
-            $rawIpResults->provider,
+            $rawIpResults->request,
             $rawIpResults->data['ip'],
             $country ?? null,
             optional($rawIpResults->data['city'] ?? null, static fn (string $city) => blank($city) ? null : $city),
@@ -33,8 +33,8 @@ class IpInfoDotIoMapper implements Mapper
         );
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $request): bool
     {
-        return $driver === IpInfoDotIoDriver::class;
+        return $request === IpInfoDotIoDriver::class;
     }
 }

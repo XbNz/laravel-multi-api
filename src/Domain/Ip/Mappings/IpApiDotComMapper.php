@@ -6,15 +6,15 @@ namespace XbNz\Resolver\Domain\Ip\Mappings;
 
 use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotComDriver;
 use XbNz\Resolver\Domain\Ip\DTOs\NormalizedGeolocationResultsData;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Mappings\Mapper;
 
 class IpApiDotComMapper implements Mapper
 {
-    public function map(RawResultsData $rawIpResults): NormalizedGeolocationResultsData
+    public function map(RequestResponseWrapper $rawIpResults): NormalizedGeolocationResultsData
     {
         return new NormalizedGeolocationResultsData(
-            $rawIpResults->provider,
+            $rawIpResults->request,
             $rawIpResults->data['ip'],
             optional($rawIpResults->data['country_name'] ?? null, static fn (string $country) => blank($country) ? null : $country),
             optional($rawIpResults->data['city'] ?? null, static fn (string $city) => blank($city) ? null : $city),
@@ -23,8 +23,8 @@ class IpApiDotComMapper implements Mapper
         );
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $request): bool
     {
-        return $driver === IpApiDotComDriver::class;
+        return $request === IpApiDotComDriver::class;
     }
 }

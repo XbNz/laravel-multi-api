@@ -20,8 +20,8 @@ use XbNz\Resolver\Factories\Ip\IpDataFactory;
 use XbNz\Resolver\Factories\MappedResultFactory;
 use XbNz\Resolver\Support\Actions\FetchRawDataAction;
 use XbNz\Resolver\Support\Drivers\Driver;
-use XbNz\Resolver\Support\DTOs\MappableDTO;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\Mappable;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 
 class IpBuilder
 {
@@ -51,6 +51,13 @@ class IpBuilder
         $this->chosenDrivers = Collection::make();
         $this->chosenIps = Collection::make();
         $this->drivers = Collection::make($drivers);
+    }
+
+    public function mtrTools()
+    {
+
+
+        return $this;
     }
 
     public function ipInfoDotIo(): static
@@ -159,17 +166,17 @@ class IpBuilder
     }
 
     /**
-     * @return array<MappableDTO>
+     * @return array<Mappable>
      */
     public function normalize(): array
     {
         return Collection::make($this->raw())
-            ->map(fn (RawResultsData $rawData) => $this->mapperResultFactory->fromRaw($rawData))
+            ->map(fn (RequestResponseWrapper $rawData) => $this->mapperResultFactory->fromRaw($rawData))
             ->toArray();
     }
 
     /**
-     * @return array<RawResultsData>
+     * @return array<RequestResponseWrapper>
      */
     public function raw(): array
     {

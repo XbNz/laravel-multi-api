@@ -1,11 +1,11 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests;
+namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\ListAllProbes;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 
-class ListAllProbesRequest
+class ListAllProbesRequest implements \XbNz\Resolver\Domain\Ip\Services\Request
 {
     public const URI = 'https://mtr.tools';
     public const PATH = '/probes.json';

@@ -17,7 +17,7 @@ use XbNz\Resolver\Domain\Ip\Drivers\IpInfoDotIoDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShMtrDriver;
 use XbNz\Resolver\Domain\Ip\Drivers\MtrDotShPingDriver;
 use XbNz\Resolver\Resolver\Resolver;
-use XbNz\Resolver\Support\DTOs\RawResultsData;
+use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Exceptions\ApiProviderException;
 
 class DriverTest extends \XbNz\Resolver\Tests\TestCase
@@ -183,7 +183,7 @@ class DriverTest extends \XbNz\Resolver\Tests\TestCase
                 $driver,
             ])->withIps(['1.1.1.1'])->raw();
 
-            $this->assertInstanceOf(RawResultsData::class, $raw[0]);
+            $this->assertInstanceOf(RequestResponseWrapper::class, $raw[0]);
             $dotNotatedResultSet = Arr::dot($raw[0]->data);
 
             foreach ($fields as $field) {
