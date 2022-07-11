@@ -4,22 +4,31 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\Domain\Ip\Actions;
 
+use Illuminate\Support\ItemNotFoundException;
 use Illuminate\Support\Str;
 use JsonException;
 use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrData;
+use XbNz\Resolver\Domain\Ip\Exceptions\MtrParseException;
 
 class ConvertPingPlainToJsonAction
 {
     /**
-     * @throws JsonException
+     * @throws MtrParseException
      */
     public function execute(RekindledMtrData $rekindledData): string
     {
         $plain = $rekindledData->plainTextBody;
 
-        $exploded = collect(explode(PHP_EOL, $plain));
+        $explodedByLine = collect(explode(PHP_EOL, $plain));
 
-        $sequences = $exploded
+        try {
+            $packetsTransmittedLine = $explodedByLine->sole(fn (string $line) => Str::of($line)->contains('packets transmitted'));
+        } catch (ItemNotFoundException $e) {
+            throw new MtrParseException("Was not able to parse plain ping response for probe {$rekindledData->probeId}");
+        }
+
+
+        $sequences = $explodedByLine
             ->filter(fn (string $line) => Str::of($line)->contains('icmp_seq'))
             ->values()
             ->map(function (string $sequence) {
@@ -31,8 +40,6 @@ class ConvertPingPlainToJsonAction
                     'rtt' => (float) Str::of($sequence)->between('e=', 'ms')->trim()->value(),
                 ];
             });
-
-        $packetsTransmittedLine = $exploded->sole(fn (string $line) => Str::of($line)->contains('packets transmitted'));
 
         $packetsTransmitted = (int) Str::of($packetsTransmittedLine)
             ->before('packets transmitted')

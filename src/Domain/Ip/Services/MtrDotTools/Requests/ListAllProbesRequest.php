@@ -1,6 +1,6 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\ListAllProbes;
+namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;

@@ -2,15 +2,11 @@
 
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers;
 
-use GuzzleHttp\Psr7\Response;
 use JsonException;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\ProbesCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsProbeData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Exceptions\MtrDotToolsException;
-use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\ListAllProbes\ListAllProbesRequest;
-use XbNz\Resolver\Domain\Ip\Services\Request;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
-use XbNz\Resolver\Support\Mappings\Mapper;
 
 class ListAllProbesMapper
 {

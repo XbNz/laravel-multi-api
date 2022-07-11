@@ -2,24 +2,15 @@
 
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers;
 
-use GuzzleHttp\Psr7\Response;
-use JsonException;
 use XbNz\Resolver\Domain\Ip\Actions\ConvertMtrPlainToJsonAction;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrResultData;
 use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\HopCollection;
-use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\MtrResultsCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\ProbesCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsHopData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsMtrResultsData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Exceptions\MtrDotToolsException;
-use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\MtrDotToolsService;
-use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformMtr\PerformMtrRequest;
-use XbNz\Resolver\Factories\Ip\MtrDotShMtrHopResultsFactory;
-use XbNz\Resolver\Factories\Ip\RekindledMtrDotShFactory;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
-use XbNz\Resolver\Support\Mappings\Mapper;
 
 class PerformMtrMapper
 {
@@ -28,9 +19,6 @@ class PerformMtrMapper
     ) {
     }
 
-    /**
-     * @throws MtrDotToolsException
-     */
     public function map(RequestResponseWrapper $requestResponse, ProbesCollection $probesCollection): MtrDotToolsMtrResultsData
     {
         $plainTextResponse = $requestResponse->guzzleResponse->getBody()->getContents();
