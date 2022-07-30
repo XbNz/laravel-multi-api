@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\ServiceProviders;
 
+use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\ListAllProbesMapper;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\PerformMtrMapper;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\PerformPingMapper;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\MtrDotToolsService;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\ListAllProbesRequest;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformMtrRequest;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformPingRequest;
+use XbNz\Resolver\Domain\Ip\Services\Service;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbstractApiDotComStrategy as AbstractApiDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy as IpApiDotComAuthStrategy;
@@ -28,6 +34,7 @@ use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShMtrStrategy as Mt
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShPingStrategy as MtrDotShPingRetryStrategy;
 use XbNz\Resolver\Factories\GuzzleClientFactory;
 use XbNz\Resolver\Factories\MappedResultFactory;
+use XbNz\Resolver\Factories\UniversalMiddlewaresFactory;
 
 
 class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -37,62 +44,63 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../../config/resolver.php', 'resolver');
 
         $this->app->tag([
-            IpGeolocationDotIoAuthStrategy::class,
-            IpDataDotCoAuthStrategy::class,
-            AbuseIpDbDotComAuthStrategy::class,
-            IpApiDotComAuthStrategy::class,
-            IpInfoDotIoAuthStrategy::class,
-            AbstractApiDotComAuthStrategy::class,
+//            IpGeolocationDotIoAuthStrategy::class,
+//            IpDataDotCoAuthStrategy::class,
+//            AbuseIpDbDotComAuthStrategy::class,
+//            IpApiDotComAuthStrategy::class,
+//            IpInfoDotIoAuthStrategy::class,
+//            AbstractApiDotComAuthStrategy::class,
         ], 'auth-strategies');
 
         $this->app->tag([
-            IpGeolocationDotIoRetryStrategy::class,
-            IpDataDotCoRetryStrategy::class,
-            AbuseIpDbDotComRetryStrategy::class,
-            IpApiDotComRetryStrategy::class,
-            MtrDotShMtrRetryStrategy::class,
-            MtrDotShPingRetryStrategy::class,
-            IpDashApiDotComRetryStrategy::class,
-            IpApiDotCoRetryStrategy::class,
-            AbstractApiDotComRetryStrategy::class,
+//            IpGeolocationDotIoRetryStrategy::class,
+//            IpDataDotCoRetryStrategy::class,
+//            AbuseIpDbDotComRetryStrategy::class,
+//            IpApiDotComRetryStrategy::class,
+//            MtrDotShMtrRetryStrategy::class,
+//            MtrDotShPingRetryStrategy::class,
+//            IpDashApiDotComRetryStrategy::class,
+//            IpApiDotCoRetryStrategy::class,
+//            AbstractApiDotComRetryStrategy::class,
         ], 'retry-strategies');
 
         $this->app->tag([
-            MtrDotShMtrFormatterStrategy::class,
-            IpApiDotComFormatterStrategy::class,
-            MtrDotShPingFormatterStrategy::class,
+//            IpApiDotComFormatterStrategy::class,
         ], 'response-formatters');
 
         $this->app->tag([
-//            IpGeolocationDotIoMapper::class,
-//            IpDataDotCoMapper::class,
-//            AbuseIpDbDotComMapper::class,
-//            MtrDotShMtrMapper::class,
-//            IpApiDotComMapper::class,
-//            MtrDotShPingMapper::class,
-//            IpInfoDotIoMapper::class,
-//            IpDashApiDotComMapper::class,
-//            IpApiDotCoMapper::class,
-//            AbstractApiDotComMapper::class,
             ListAllProbesMapper::class,
             PerformMtrMapper::class,
+            PerformPingMapper::class
         ], 'mappers');
 
-        $this->app->when(GuzzleClientFactory::class)
-            ->needs('$authStrategies')
-            ->giveTagged('auth-strategies');
 
-        $this->app->when(GuzzleClientFactory::class)
-            ->needs('$retryStrategies')
-            ->giveTagged('retry-strategies');
+        $this->app->bind(GuzzleClientFactory::class, static function (Application $app) {
 
-        $this->app->when(GuzzleClientFactory::class)
-            ->needs('$responseFormatters')
-            ->giveTagged('response-formatters');
+            return new GuzzleClientFactory(
+                $app->make(UniversalMiddlewaresFactory::class),
+                iterator_to_array($app->tagged('auth-strategies')->getIterator()),
+                iterator_to_array($app->tagged('retry-strategies')->getIterator()),
+                iterator_to_array($app->tagged('response-formatters')->getIterator()),
+            );
+        });
+
+        $this->app->bind(MtrDotToolsService::class, static function (Application $app) {
+            return new MtrDotToolsService(
+                $app->make(GuzzleClientFactory::class)->for(MtrDotToolsService::class),
+                $app->make(ListAllProbesRequest::class),
+                $app->make(ListAllProbesMapper::class),
+                $app->make(PerformMtrRequest::class),
+                $app->make(PerformMtrMapper::class),
+                $app->make(PerformPingRequest::class),
+                $app->make(PerformPingMapper::class)
+            );
+        });
 
         $this->app->when(MappedResultFactory::class)
             ->needs('$mappers')
             ->giveTagged('mappers');
+
     }
 
     public function boot(): void

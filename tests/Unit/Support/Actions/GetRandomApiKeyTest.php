@@ -14,10 +14,10 @@ use XbNz\Resolver\Support\Exceptions\MissingApiKeyException;
 class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
 {
     /** @test */
-    public function it_fetches_the_key_for_the_given_uri()
+    public function it_fetches_the_key_for_the_given_service()
     {
         Config::set('ip-resolver.api-keys', [
-            'SomeRandomDriver::class' => ['::api-key-1::', '::api-key-2::'],
+            'SomeRandomService::class' => ['::api-key-1::', '::api-key-2::'],
 
             '::just random noise::' => ['::these shouldnt::', '::even see::', '::the light of::', '::day::'],
             '::just random noisee::' => ['::these shouldnt::', '::even see::', '::the light of::', '::day::'],
@@ -25,9 +25,9 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
             '::just random noiseeee::' => ['::these shouldnt::', '::even see::', '::the light of::', '::day::'],
         ]);
 
-        $driver = 'SomeRandomDriver::class';
+        $service = 'SomeRandomService::class';
 
-        $key = Str::of(app(GetRandomApiKeyAction::class)->execute($driver, 'ip-resolver.api-keys'));
+        $key = Str::of(app(GetRandomApiKeyAction::class)->execute($service, 'ip-resolver.api-keys'));
 
         $this->assertTrue(
             $key->contains('::api-key-1::') || $key->contains('::api-key-2::')
@@ -52,13 +52,13 @@ class GetRandomApiKeyTest extends \XbNz\Resolver\Tests\TestCase
     }
 
     /** @test **/
-    public function if_the_api_host_is_in_the_config_but_no_key_is_provided_it_throws_an_exception(): void
+    public function if_the_api_service_is_in_the_config_but_no_key_is_provided_it_throws_an_exception(): void
     {
         Config::set('ip-resolver.api-keys', [
-            'DriverIsPresentButNoApiKeyAssigned::class' => [],
+            'ServiceIsPresentButNoApiKeyAssigned::class' => [],
         ]);
 
-        $driver = 'DriverIsPresentButNoApiKeyAssigned::class';
+        $driver = 'ServiceIsPresentButNoApiKeyAssigned::class';
 
         try {
             app(GetRandomApiKeyAction::class)->execute($driver, 'ip-resolver.api-keys');

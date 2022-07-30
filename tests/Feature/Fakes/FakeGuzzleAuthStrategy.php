@@ -16,8 +16,8 @@ class FakeGuzzleAuthStrategy implements AuthStrategy
         });
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $service): bool
     {
-        return $driver === FakeDriver::class;
+        return $service === FakeDriver::class;
     }
 }

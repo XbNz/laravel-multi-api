@@ -34,8 +34,8 @@ class IpDataDotCoStrategy implements AuthStrategy
         };
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $service): bool
     {
-        return $driver === IpDataDotCoDriver::class;
+//        return $service ===
     }
 }

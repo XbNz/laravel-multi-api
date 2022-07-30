@@ -25,8 +25,8 @@ class MtrDotShMtrStrategy implements RetryStrategy
         );
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $service): bool
     {
-        return $driver === MtrDotShMtrDriver::class;
+//        return $service ===
     }
 }

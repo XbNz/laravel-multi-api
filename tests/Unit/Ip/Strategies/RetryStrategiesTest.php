@@ -31,6 +31,11 @@ use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShPingStrategy;
 
 class RetryStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
+    /**
+     * TODO:
+     * Move everything in here to their own separate service folder and test them individually (as seen with MTR tools)
+     */
+
     /** @test **/
     public function the_number_of_retries_in_the_config_equates_to_the_number_of_failed_responses_meaning_it_retries_on_all_of_them_as_intended(): void
     {

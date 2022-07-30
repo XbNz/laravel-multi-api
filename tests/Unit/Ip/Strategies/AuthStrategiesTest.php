@@ -25,6 +25,12 @@ use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpInfoDotIoStrategy;
 
 class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
+
+    /**
+     * TODO:
+     * Move everything in here to their own separate service folder and test them individually (as seen with MTR tools)
+     */
+
     /** @test **/
     public function it_retrieves_a_random_key_for_abuse_ip_db_and_applies_it_to_the_key_header_without_removing_previous_values(): void
     {

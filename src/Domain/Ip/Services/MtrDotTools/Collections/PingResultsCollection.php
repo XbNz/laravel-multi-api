@@ -20,11 +20,4 @@ class PingResultsCollection extends Collection
     {
         parent::__construct($items);
     }
-
-    public function encounteredPacketLoss(int $percentage = 1): self
-    {
-        $this->filter(fn (MtrDotToolsPingResultsData $result) => $result->packetLossPercentage >= $percentage);
-    }
-
-    // TODO: Add fun collection methods to all your collections. THEN TEST & RUN STATIC ANALYSIS!!!
 }

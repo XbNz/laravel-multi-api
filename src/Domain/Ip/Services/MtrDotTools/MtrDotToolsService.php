@@ -3,6 +3,7 @@
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Collection;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
@@ -19,14 +20,15 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\PerformPingMapper;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\ListAllProbesRequest;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformMtrRequest;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformPingRequest;
+use XbNz\Resolver\Domain\Ip\Services\Service;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Helpers\Send;
+use function _PHPStan_c0c409264\RingCentral\Psr7\uri_for;
 
-class MtrDotToolsService
+class MtrDotToolsService implements Service
 {
-
     public function __construct(
-        private readonly Client $client,
+        private readonly ClientInterface $client,
 
         private readonly ListAllProbesRequest $listAllProbesRequest,
         private readonly ListAllProbesMapper $listAllProbesMapper,
@@ -65,14 +67,12 @@ class MtrDotToolsService
      */
     public function mtr(
         array $ipData,
-        ProbesCollection $probes = new ProbesCollection()
+        ProbesCollection $probes,
+        ?callable $intercept = null
     ): MtrResultsCollection {
 
         Assert::allIsInstanceOf($ipData, IpData::class);
         Assert::allIsInstanceOf($probes, MtrDotToolsProbeData::class);
-
-        // TODO: Change config logic and fix this
-
 
         $requests = Collection::make($ipData)
             ->map(function (IpData $ipDataObject) use ($probes) {
@@ -81,6 +81,10 @@ class MtrDotToolsService
             })->flatten();
 
         $responses = Send::async($this->client, $requests->toArray());
+
+        if ($intercept !== null) {
+            $intercept($responses);
+        }
 
         return MtrResultsCollection::make($responses)
             ->map(fn (RequestResponseWrapper $wrapper) => $this->performMtrMapper->map($wrapper, $probes));
@@ -91,7 +95,8 @@ class MtrDotToolsService
      */
     public function ping(
         array $ipData,
-        ProbesCollection $probes = new ProbesCollection()
+        ProbesCollection $probes,
+        ?callable $intercept = null
     ): PingResultsCollection {
 
         Assert::allIsInstanceOf($ipData, IpData::class);
@@ -104,6 +109,10 @@ class MtrDotToolsService
             })->flatten();
 
         $responses = Send::async($this->client, $requests->toArray());
+
+        if ($intercept !== null) {
+            $intercept($responses);
+        }
 
         return PingResultsCollection::make($responses)
             ->map(fn (RequestResponseWrapper $wrapper) => $this->performPingMapper->map($wrapper, $probes));

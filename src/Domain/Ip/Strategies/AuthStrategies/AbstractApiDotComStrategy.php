@@ -33,8 +33,8 @@ class AbstractApiDotComStrategy implements AuthStrategy
         };
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $service): bool
     {
-        return $driver === AbstractApiDotComDriver::class;
+//        return $service ===
     }
 }

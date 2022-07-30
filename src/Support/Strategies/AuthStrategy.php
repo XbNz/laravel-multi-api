@@ -8,5 +8,5 @@ interface AuthStrategy
 {
     public function guzzleMiddleware(): callable;
 
-    public function supports(string $driver): bool;
+    public function supports(string $service): bool;
 }

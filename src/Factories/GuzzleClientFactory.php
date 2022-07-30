@@ -9,6 +9,7 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;
+use XbNz\Resolver\Domain\Ip\Services\Service;
 use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Strategies\AuthStrategy;
 use XbNz\Resolver\Support\Strategies\NullStrategy;
@@ -31,24 +32,24 @@ class GuzzleClientFactory
     }
 
     /**
-     * @param class-string<Driver> $driver Driver FQN e.g. IpGeolocationDotIoDriver::class. Refer to readme file for all supported drivers.
+     * @param class-string<Service> $service Service FQN e.g. MtrDotToolsService::class
      * @param array<array<callable>> $overrides
      */
-    public function for(string $driver, array $overrides = []): Client
+    public function for(string $service, array $overrides = []): Client
     {
         $contextualMiddlewares = [];
 
         $contextualMiddlewares['auth_strategy'] = Collection::make($this->authStrategies)
-            ->first(fn (AuthStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
+            ->first(fn (AuthStrategy $strategy) => $strategy->supports($service), new NullStrategy())
             ->guzzleMiddleware();
 
         $contextualMiddlewares['response_formatter'] = Collection::make($this->responseFormatters)
-            ->first(fn (ResponseFormatterStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
+            ->first(fn (ResponseFormatterStrategy $strategy) => $strategy->supports($service), new NullStrategy())
             ->guzzleMiddleware();
 
         if ((bool) Config::get('resolver.use_retries', false)) {
             $contextualMiddlewares['retry_strategy'] = Collection::make($this->retryStrategies)
-                ->first(fn (RetryStrategy $strategy) => $strategy->supports($driver), new NullStrategy())
+                ->first(fn (RetryStrategy $strategy) => $strategy->supports($service), new NullStrategy())
                 ->guzzleMiddleware();
         }
 

@@ -43,8 +43,8 @@ class IpGeolocationDotIoStrategy implements RetryStrategy
         );
     }
 
-    public function supports(string $driver): bool
+    public function supports(string $service): bool
     {
-        return $driver === IpGeolocationDotIoDriver::class;
+//        return $service ===
     }
 }
