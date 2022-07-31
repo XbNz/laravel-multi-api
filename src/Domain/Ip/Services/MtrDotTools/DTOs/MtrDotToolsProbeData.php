@@ -25,6 +25,9 @@ class MtrDotToolsProbeData
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $raw
+     */
     public static function fromRaw(array $raw, string $probeId): self
     {
         $mtr = match ($raw['caps']['mtr'] ?? false) {

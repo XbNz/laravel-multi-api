@@ -29,7 +29,6 @@ use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpGeolocationDotIoStrateg
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShMtrStrategy as MtrDotShMtrRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\MtrDotShPingStrategy as MtrDotShPingRetryStrategy;
 use XbNz\Resolver\Factories\GuzzleClientFactory;
-use XbNz\Resolver\Factories\MappedResultFactory;
 use XbNz\Resolver\Factories\UniversalMiddlewaresFactory;
 
 class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -89,10 +88,6 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
                 $app->make(PerformPingMapper::class)
             );
         });
-
-        $this->app->when(MappedResultFactory::class)
-            ->needs('$mappers')
-            ->giveTagged('mappers');
     }
 
     public function boot(): void

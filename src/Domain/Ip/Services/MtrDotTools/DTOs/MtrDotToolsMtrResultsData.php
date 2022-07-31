@@ -11,7 +11,7 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\HopCollection;
 class MtrDotToolsMtrResultsData
 {
     /**
-     * @param HopCollection<MtrDotToolsHopData> $hops
+     * @param HopCollection<int, MtrDotToolsHopData> $hops
      */
     public function __construct(
         public readonly MtrDotToolsProbeData $probe,

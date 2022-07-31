@@ -11,6 +11,7 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\HopCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\ProbesCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsHopData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsMtrResultsData;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsProbeData;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 
 class PerformMtrMapper
@@ -20,6 +21,9 @@ class PerformMtrMapper
     ) {
     }
 
+    /**
+     * @param ProbesCollection<int, MtrDotToolsProbeData> $probesCollection
+     */
     public function map(RequestResponseWrapper $requestResponse, ProbesCollection $probesCollection): MtrDotToolsMtrResultsData
     {
         $plainTextResponse = $requestResponse->guzzleResponse->getBody()->getContents();

@@ -33,7 +33,7 @@ class ConvertMtrPlainToJsonAction
                     ->reject(fn ($rowValue) => strlen($rowValue) < 1)
                     ->values()
                     ->slice(1)
-                    ->tap(function ($rowWithoutMtrStepIndex) use (&$targetInfo) {
+                    ->tap(function (Collection $rowWithoutMtrStepIndex) use (&$targetInfo) {
                         $targetInfo = $rowWithoutMtrStepIndex
                             ->reject(fn ($rowValue) => is_numeric($rowValue) || Str::contains($rowValue, '%'));
                     })

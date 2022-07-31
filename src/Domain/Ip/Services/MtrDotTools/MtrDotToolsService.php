@@ -39,7 +39,7 @@ class MtrDotToolsService implements Service
     }
 
     /**
-     * @return ProbesCollection<MtrDotToolsProbeData>
+     * @return ProbesCollection<int, MtrDotToolsProbeData>
      * @throws MtrDotToolsException
      */
     public function listProbes(?callable $intercept = null): ProbesCollection
@@ -58,8 +58,8 @@ class MtrDotToolsService implements Service
 
     /**
      * @param array<IpData> $ipData
-     * @param ProbesCollection<MtrDotToolsProbeData> $probes
-     * @return MtrResultsCollection<MtrDotToolsMtrResultsData>
+     * @param ProbesCollection<int, MtrDotToolsProbeData> $probes
+     * @return MtrResultsCollection<int, MtrDotToolsMtrResultsData>
      */
     public function mtr(
         array $ipData,
@@ -86,7 +86,9 @@ class MtrDotToolsService implements Service
     }
 
     /**
-     * @return PingResultsCollection<MtrDotToolsPingResultsData>
+     * @param array<IpData> $ipData
+     * @param ProbesCollection<int, MtrDotToolsProbeData> $probes
+     * @return PingResultsCollection<int, MtrDotToolsPingResultsData>
      */
     public function ping(
         array $ipData,

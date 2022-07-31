@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Support\Helpers;
 
 use Exception;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
@@ -22,7 +22,7 @@ class Send
      * @param array<Request> $requests
      * @return array<RequestResponseWrapper>
      */
-    public static function async(Client $client, array $requests): array
+    public static function async(ClientInterface $client, array $requests): array
     {
         Assert::allIsInstanceOf($requests, Request::class);
 
@@ -45,7 +45,7 @@ class Send
         return $requestResponseData->toArray();
     }
 
-    public static function sync(Client $client, Request $request): RequestResponseWrapper
+    public static function sync(ClientInterface $client, Request $request): RequestResponseWrapper
     {
         try {
             $response = $client->send($request);

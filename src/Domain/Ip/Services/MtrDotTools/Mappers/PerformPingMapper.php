@@ -12,6 +12,7 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\ProbesCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsPingResultsData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsPingSequenceResultsData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsPingStatisticsResultsData;
+use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsProbeData;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 
 class PerformPingMapper
@@ -21,6 +22,9 @@ class PerformPingMapper
     ) {
     }
 
+    /**
+     * @param ProbesCollection<int, MtrDotToolsProbeData> $probesCollection
+     */
     public function map(RequestResponseWrapper $requestResponse, ProbesCollection $probesCollection): MtrDotToolsPingResultsData
     {
         $plainTextResponse = $requestResponse->guzzleResponse->getBody()->getContents();

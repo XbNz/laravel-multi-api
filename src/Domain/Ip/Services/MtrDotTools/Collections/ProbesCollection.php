@@ -20,25 +20,37 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\IpVersion;
  */
 class ProbesCollection extends Collection
 {
+    /**
+     * @param array<int, MtrDotToolsProbeData> $items
+     */
     public function __construct(array $items = [])
     {
         parent::__construct($items);
     }
 
+    /**
+     * @return self<int, MtrDotToolsProbeData>
+     */
     public function canPerformMtrOn(IpVersion $ipVersion): self
     {
         return $this->filter(fn (MtrDotToolsProbeData $data) => $data->mtr->compatibleWith($ipVersion));
     }
 
+    /**
+     * @return self<int, MtrDotToolsProbeData>
+     */
     public function canPerformPingOn(IpVersion $ipVersion): self
     {
         return $this->filter(fn (MtrDotToolsProbeData $data) => $data->ping->compatibleWith($ipVersion));
     }
 
+    /**
+     * @return self<int, MtrDotToolsProbeData>
+     */
     public function fuzzySearch(string $term): self
     {
         return $this->filter(static function (MtrDotToolsProbeData $data) use ($term) {
-            return Collection::make($data)
+            return Collection::make((array) $data)
                 ->reject(fn (mixed $value) => is_string($value) === false)
                 ->filter(fn (string $value) => Str::of($term)->lower()->contains((string) Str::of($value)->lower()))
                 ->isNotEmpty();
@@ -50,6 +62,9 @@ class ProbesCollection extends Collection
         return $this->sole(fn (MtrDotToolsProbeData $probe) => $probe->probeId === $id);
     }
 
+    /**
+     * @return self<int, MtrDotToolsProbeData>
+     */
     public function online(bool $online = true): self
     {
         return $this->filter(fn (MtrDotToolsProbeData $data) => $data->isOnline === $online);

@@ -26,6 +26,12 @@ class MtrDotToolsHopData
     ) {
     }
 
+    /**
+     * @param array{
+     *     'hop_host': string,
+     *     'statistics': array<string, string>
+     * } $hop
+     */
     public static function fromRaw(array $hop, int $positionKey): self
     {
         return new self(

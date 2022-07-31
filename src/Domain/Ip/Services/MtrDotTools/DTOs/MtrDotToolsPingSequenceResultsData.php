@@ -18,6 +18,9 @@ class MtrDotToolsPingSequenceResultsData
         Assert::ip($ip);
     }
 
+    /**
+     * @param array{'size': int, 'ip': string, 'sequence_number': int, 'time_to_live': int, 'rtt': float} $sequence
+     */
     public static function fromRaw(array $sequence): self
     {
         return new self(

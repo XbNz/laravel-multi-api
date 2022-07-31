@@ -13,7 +13,7 @@ use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 class ListAllProbesMapper
 {
     /**
-     * @return ProbesCollection<MtrDotToolsProbeData>
+     * @return ProbesCollection<int, MtrDotToolsProbeData>
      * @throws MtrDotToolsException
      */
     public function map(RequestResponseWrapper $requestResponse): ProbesCollection

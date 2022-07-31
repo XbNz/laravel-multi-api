@@ -32,7 +32,7 @@ class ConvertPingPlainToJsonAction
             ->map(function (string $sequence) {
                 return [
                     'size' => (int) Str::of($sequence)->before('bytes from')->trim()->value(),
-                    'ip' => (string) Str::of($sequence)->between('from', ':')->trim()->value(),
+                    'ip' => Str::of($sequence)->between('from', ':')->trim()->value(),
                     'sequence_number' => (int) Str::of($sequence)->between('q=', 'ttl')->trim()->value(),
                     'time_to_live' => (int) Str::of($sequence)->between('l=', 'time')->trim()->value(),
                     'rtt' => (float) Str::of($sequence)->between('e=', 'ms')->trim()->value(),
