@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs;
 
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
-use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\PingSequenceCollection;
 
 class MtrDotToolsPingResultsData
 {

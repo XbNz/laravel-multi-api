@@ -27,7 +27,7 @@ class AbstractApiDotComMapper implements Mapper
 //    /**
 //     * @template T
 //     *
-//     * @param T $driver
+//     * @param T $request
 //     * @return T|null
 //     */
 //    private function getValue(mixed $value)

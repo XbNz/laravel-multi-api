@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
 use Illuminate\Support\Facades\Config;
-use XbNz\Resolver\Domain\Ip\Drivers\IpApiDotCoDriver;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 use XbNz\Resolver\Support\Strategies\RetryStrategy;
 

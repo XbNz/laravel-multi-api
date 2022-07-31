@@ -7,7 +7,6 @@ namespace XbNz\Resolver\Factories;
 use Illuminate\Support\Collection;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\Services\Request;
-use XbNz\Resolver\Support\DTOs\Mappable;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 use XbNz\Resolver\Support\Mappings\Mapper;
 

@@ -6,7 +6,6 @@ namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs;
 
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\MTR;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums\Ping;
-use XbNz\Resolver\Support\DTOs\Mappable;
 
 class MtrDotToolsProbeData
 {
@@ -28,14 +27,14 @@ class MtrDotToolsProbeData
 
     public static function fromRaw(array $raw, string $probeId): self
     {
-        $mtr = match($raw['caps']['mtr'] ?? false) {
+        $mtr = match ($raw['caps']['mtr'] ?? false) {
             true => MTR::OnBothIpVersions,
             4 => MTR::OnIpVersion4,
             6 => MTR::OnIpVersion6,
             default => MTR::Incapable,
         };
 
-        $ping = match($raw['caps']['ping'] ?? false) {
+        $ping = match ($raw['caps']['ping'] ?? false) {
             true => Ping::OnBothIpVersions,
             4 => Ping::OnIpVersion4,
             6 => Ping::OnIpVersion6,

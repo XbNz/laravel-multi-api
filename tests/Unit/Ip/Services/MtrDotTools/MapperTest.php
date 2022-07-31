@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Services\MtrDotTools;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
+use XbNz\Resolver\Domain\Ip\Exceptions\ParseException;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsHopData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsMtrResultsData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsPingResultsData;
@@ -20,7 +23,6 @@ use XbNz\Resolver\Tests\TestCase;
 
 class MapperTest extends TestCase
 {
-
     /** @test **/
     public function the_probe_data_is_mapped_correctly(): void
     {
@@ -36,10 +38,11 @@ class MapperTest extends TestCase
         $clientFactoryMock->shouldReceive('for')
             ->once()
             ->with(MtrDotToolsService::class)
-            ->andReturn(new Client(['handler' => $mockHandler]));
+            ->andReturn(new Client([
+                'handler' => $mockHandler,
+            ]));
 
         $service = app(MtrDotToolsService::class);
-
 
         // Act
         $ran = 0;
@@ -95,7 +98,9 @@ class MapperTest extends TestCase
         $clientFactoryMock->shouldReceive('for')
             ->once()
             ->with(MtrDotToolsService::class)
-            ->andReturn(new Client(['handler' => $mockHandler]));
+            ->andReturn(new Client([
+                'handler' => $mockHandler,
+            ]));
 
         $service = app(MtrDotToolsService::class);
 
@@ -138,7 +143,76 @@ class MapperTest extends TestCase
         $this->assertSame($collection->first()->hops[1]->averageJitter, 0.1);
         $this->assertSame($collection->first()->hops[1]->maximumJitter, 0.1);
         $this->assertSame($collection->first()->hops[1]->interarrivalJitter, 0.5);
+    }
 
+    /** @test **/
+    public function a_parse_error_is_thrown_when_the_mtr_response_cannot_be_mapped(): void
+    {
+        // Arrange
+        $clientFactoryMock = $this->mock(GuzzleClientFactory::class);
+
+        $mockHandler = new MockHandler([
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], json_encode($this->listProbeSampleData())),
+            new Response(200, [
+                'Content-Type' => 'text/plain',
+            ], 'utter-bogus-data'),
+        ]);
+
+        $clientFactoryMock->shouldReceive('for')
+            ->once()
+            ->with(MtrDotToolsService::class)
+            ->andReturn(new Client([
+                'handler' => $mockHandler,
+            ]));
+
+        $service = app(MtrDotToolsService::class);
+
+        // Act & Assert
+        $probes = $service->listProbes();
+
+        $this->expectException(ParseException::class);
+
+        $service->mtr(
+            [IpData::fromIp('1.1.1.1')],
+            $probes->take(1),
+        );
+    }
+
+    /** @test **/
+    public function a_parse_error_is_thrown_when_the_ping_response_cannot_be_mapped(): void
+    {
+        // Arrange
+        $clientFactoryMock = $this->mock(GuzzleClientFactory::class);
+
+        $mockHandler = new MockHandler([
+            new Response(200, [
+                'Content-Type' => 'application/json',
+            ], json_encode($this->listProbeSampleData())),
+            new Response(200, [
+                'Content-Type' => 'text/plain',
+            ], 'utter-bogus-data'),
+        ]);
+
+        $clientFactoryMock->shouldReceive('for')
+            ->once()
+            ->with(MtrDotToolsService::class)
+            ->andReturn(new Client([
+                'handler' => $mockHandler,
+            ]));
+
+        $service = app(MtrDotToolsService::class);
+
+        // Act & Assert
+        $probes = $service->listProbes();
+
+        $this->expectException(ParseException::class);
+
+        $service->ping(
+            [IpData::fromIp('1.1.1.1')],
+            $probes->take(1),
+        );
     }
 
     /** @test **/
@@ -159,7 +233,9 @@ class MapperTest extends TestCase
         $clientFactoryMock->shouldReceive('for')
             ->once()
             ->with(MtrDotToolsService::class)
-            ->andReturn(new Client(['handler' => $mockHandler]));
+            ->andReturn(new Client([
+                'handler' => $mockHandler,
+            ]));
 
         $service = app(MtrDotToolsService::class);
 

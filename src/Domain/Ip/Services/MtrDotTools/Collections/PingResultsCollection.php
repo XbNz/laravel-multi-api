@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections;
 
 use ArrayAccess;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
-use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsPingResultsData;
 
 /**
  * @template TKey of array-key

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs;
 
 use Webmozart\Assert\Assert;
@@ -8,7 +10,6 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\HopCollection;
 
 class MtrDotToolsMtrResultsData
 {
-
     /**
      * @param HopCollection<MtrDotToolsHopData> $hops
      */

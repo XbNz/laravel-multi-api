@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\Services\Service;
-use XbNz\Resolver\Support\Drivers\Driver;
 use XbNz\Resolver\Support\Strategies\AuthStrategy;
 use XbNz\Resolver\Support\Strategies\NullStrategy;
 use XbNz\Resolver\Support\Strategies\ResponseFormatterStrategy;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers;
 
 use XbNz\Resolver\Domain\Ip\Actions\ConvertMtrPlainToJsonAction;
@@ -9,7 +11,6 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\HopCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections\ProbesCollection;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsHopData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsMtrResultsData;
-use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Exceptions\MtrDotToolsException;
 use XbNz\Resolver\Support\DTOs\RequestResponseWrapper;
 
 class PerformMtrMapper
@@ -35,7 +36,7 @@ class PerformMtrMapper
         $arrayOfMtrData = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
         $hops = HopCollection::make($arrayOfMtrData['hops'])
-            ->map(fn(array $hop, int $index) => MtrDotToolsHopData::fromRaw($hop, $index));
+            ->map(fn (array $hop, int $index) => MtrDotToolsHopData::fromRaw($hop, $index));
 
         return new MtrDotToolsMtrResultsData(
             $probe,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests;
 
 use GuzzleHttp\Psr7\Request;
@@ -8,7 +10,9 @@ use GuzzleHttp\Psr7\Uri;
 class ListAllProbesRequest implements \XbNz\Resolver\Domain\Ip\Services\Request
 {
     public const URI = 'https://mtr.tools';
+
     public const PATH = '/probes.json';
+
     public const HEADERS = [
         'Accept' => 'application/json',
     ];

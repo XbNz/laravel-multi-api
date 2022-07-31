@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrData;
+use XbNz\Resolver\Domain\Ip\Exceptions\ParseException;
 
 class ConvertMtrPlainToJsonAction
 {
@@ -49,6 +50,10 @@ class ConvertMtrPlainToJsonAction
                     'statistics' => $statistics,
                 ];
             });
+
+        if ($hops->isEmpty()) {
+            throw new ParseException("Was not able to parse plain MTR response for probe {$rekindledData->probeId}");
+        }
 
         return Collection::make([
             'probe_id' => $rekindledData->probeId,

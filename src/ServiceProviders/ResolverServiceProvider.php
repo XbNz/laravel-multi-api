@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace XbNz\Resolver\ServiceProviders;
 
-use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\ListAllProbesMapper;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\PerformMtrMapper;
@@ -13,7 +12,6 @@ use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\MtrDotToolsService;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\ListAllProbesRequest;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformMtrRequest;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests\PerformPingRequest;
-use XbNz\Resolver\Domain\Ip\Services\Service;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbstractApiDotComStrategy as AbstractApiDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpApiDotComStrategy as IpApiDotComAuthStrategy;
@@ -21,8 +19,6 @@ use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpDataDotCoStrategy as IpD
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpGeolocationDotIoStrategy as IpGeolocationDotIoAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpInfoDotIoStrategy as IpInfoDotIoAuthStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\IpApiDotComStrategy as IpApiDotComFormatterStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShMtrStrategy as MtrDotShMtrFormatterStrategy;
-use XbNz\Resolver\Domain\Ip\Strategies\ResponseFormatterStratagies\MtrDotShPingStrategy as MtrDotShPingFormatterStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbstractApiDotComStrategy as AbstractApiDotComRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\AbuseIpDbDotComStrategy as AbuseIpDbDotComRetryStrategy;
 use XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies\IpApiDotComStrategy as IpApiDotComRetryStrategy;
@@ -36,7 +32,6 @@ use XbNz\Resolver\Factories\GuzzleClientFactory;
 use XbNz\Resolver\Factories\MappedResultFactory;
 use XbNz\Resolver\Factories\UniversalMiddlewaresFactory;
 
-
 class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function register(): void
@@ -44,39 +39,37 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../../config/resolver.php', 'resolver');
 
         $this->app->tag([
-//            IpGeolocationDotIoAuthStrategy::class,
-//            IpDataDotCoAuthStrategy::class,
-//            AbuseIpDbDotComAuthStrategy::class,
-//            IpApiDotComAuthStrategy::class,
-//            IpInfoDotIoAuthStrategy::class,
-//            AbstractApiDotComAuthStrategy::class,
+            //            IpGeolocationDotIoAuthStrategy::class,
+            //            IpDataDotCoAuthStrategy::class,
+            //            AbuseIpDbDotComAuthStrategy::class,
+            //            IpApiDotComAuthStrategy::class,
+            //            IpInfoDotIoAuthStrategy::class,
+            //            AbstractApiDotComAuthStrategy::class,
         ], 'auth-strategies');
 
         $this->app->tag([
-//            IpGeolocationDotIoRetryStrategy::class,
-//            IpDataDotCoRetryStrategy::class,
-//            AbuseIpDbDotComRetryStrategy::class,
-//            IpApiDotComRetryStrategy::class,
-//            MtrDotShMtrRetryStrategy::class,
-//            MtrDotShPingRetryStrategy::class,
-//            IpDashApiDotComRetryStrategy::class,
-//            IpApiDotCoRetryStrategy::class,
-//            AbstractApiDotComRetryStrategy::class,
+            //            IpGeolocationDotIoRetryStrategy::class,
+            //            IpDataDotCoRetryStrategy::class,
+            //            AbuseIpDbDotComRetryStrategy::class,
+            //            IpApiDotComRetryStrategy::class,
+            //            MtrDotShMtrRetryStrategy::class,
+            //            MtrDotShPingRetryStrategy::class,
+            //            IpDashApiDotComRetryStrategy::class,
+            //            IpApiDotCoRetryStrategy::class,
+            //            AbstractApiDotComRetryStrategy::class,
         ], 'retry-strategies');
 
         $this->app->tag([
-//            IpApiDotComFormatterStrategy::class,
+            //            IpApiDotComFormatterStrategy::class,
         ], 'response-formatters');
 
         $this->app->tag([
             ListAllProbesMapper::class,
             PerformMtrMapper::class,
-            PerformPingMapper::class
+            PerformPingMapper::class,
         ], 'mappers');
 
-
         $this->app->bind(GuzzleClientFactory::class, static function (Application $app) {
-
             return new GuzzleClientFactory(
                 $app->make(UniversalMiddlewaresFactory::class),
                 iterator_to_array($app->tagged('auth-strategies')->getIterator()),
@@ -100,7 +93,6 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->when(MappedResultFactory::class)
             ->needs('$mappers')
             ->giveTagged('mappers');
-
     }
 
     public function boot(): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Enums;
 
 enum MTR
@@ -8,7 +10,6 @@ enum MTR
     case OnIpVersion6;
     case OnBothIpVersions;
     case Incapable;
-
 
     public function compatibleWith(IpVersion $ipVersion): bool
     {

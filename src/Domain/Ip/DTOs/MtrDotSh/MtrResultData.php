@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use Webmozart\Assert\Assert;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsProbeData;
-use XbNz\Resolver\Support\DTOs\Mappable;
 
 class MtrResultData
 {
@@ -22,6 +21,4 @@ class MtrResultData
     ) {
         Assert::allIsInstanceOf($hops->toArray(), MtrDotShMtrHopResultsData::class);
     }
-
-    public static function fromRaw(array $raw, )
 }

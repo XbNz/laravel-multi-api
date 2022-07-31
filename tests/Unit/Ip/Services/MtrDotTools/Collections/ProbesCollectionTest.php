@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Services\MtrDotTools\Collections;
 
 use Illuminate\Support\ItemNotFoundException;
@@ -20,19 +22,43 @@ class ProbesCollectionTest extends TestCase
             '::test::',
             MTR::OnIpVersion4,
             Ping::OnIpVersion4,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
         $dtoB = new MtrDotToolsProbeData(
             '::test::',
             MTR::OnIpVersion6,
             Ping::OnIpVersion6,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
         $dtoC = new MtrDotToolsProbeData(
             '::test::',
             MTR::OnBothIpVersions,
             Ping::OnBothIpVersions,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
 
         $collection = new ProbesCollection([$dtoA, $dtoB, $dtoC]);
@@ -43,9 +69,7 @@ class ProbesCollectionTest extends TestCase
         $shouldBeDtoBandC = $collection->canPerformMtrOn(IpVersion::SIX)->values();
         $shouldBeDtoC = $collection->canPerformMtrOn(IpVersion::FOUR)->canPerformMtrOn(IpVersion::SIX)->values();
 
-
         // Assert
-
 
         $this->assertSame($dtoA, $shouldBeDtoAandC[0]);
         $this->assertSame($dtoC, $shouldBeDtoAandC[1]);
@@ -54,7 +78,6 @@ class ProbesCollectionTest extends TestCase
         $this->assertSame($dtoC, $shouldBeDtoBandC[1]);
 
         $this->assertSame($dtoC, $shouldBeDtoC->sole());
-
     }
 
     /** @test **/
@@ -65,19 +88,43 @@ class ProbesCollectionTest extends TestCase
             '::test::',
             MTR::OnIpVersion4,
             Ping::OnIpVersion4,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
         $dtoB = new MtrDotToolsProbeData(
             '::test::',
             MTR::OnIpVersion6,
             Ping::OnIpVersion6,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
         $dtoC = new MtrDotToolsProbeData(
             '::test::',
             MTR::OnBothIpVersions,
             Ping::OnBothIpVersions,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
 
         $collection = new ProbesCollection([$dtoA, $dtoB, $dtoC]);
@@ -88,9 +135,7 @@ class ProbesCollectionTest extends TestCase
         $shouldBeDtoBandC = $collection->canPerformPingOn(IpVersion::SIX)->values();
         $shouldBeDtoC = $collection->canPerformPingOn(IpVersion::FOUR)->canPerformPingOn(IpVersion::SIX)->values();
 
-
         // Assert
-
 
         $this->assertSame($dtoA, $shouldBeDtoAandC[0]);
         $this->assertSame($dtoC, $shouldBeDtoAandC[1]);
@@ -109,19 +154,43 @@ class ProbesCollectionTest extends TestCase
             '::test::',
             MTR::OnIpVersion4,
             Ping::OnIpVersion4,
-            null, null, null, null, null, null, null, true, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            true,
+            null
         );
         $dtoB = new MtrDotToolsProbeData(
             '::test::',
             MTR::OnIpVersion6,
             Ping::OnIpVersion6,
-            null, null, null, null, null, null, null, false, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false,
+            null
         );
         $dtoC = new MtrDotToolsProbeData(
             '::test::',
             MTR::OnIpVersion6,
             Ping::OnIpVersion6,
-            null, null, null, null, null, null, null, false, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false,
+            null
         );
 
         $collection = new ProbesCollection([$dtoA, $dtoB, $dtoC]);
@@ -130,7 +199,6 @@ class ProbesCollectionTest extends TestCase
 
         $shouldBeDtoA = $collection->online(true)->values();
         $shouldBeDtoBandC = $collection->online(false)->values();
-
 
         // Assert
 
@@ -147,13 +215,29 @@ class ProbesCollectionTest extends TestCase
             'very-unique-id',
             MTR::OnIpVersion4,
             Ping::OnIpVersion4,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
         $dtoB = new MtrDotToolsProbeData(
             'test',
             MTR::OnIpVersion6,
             Ping::OnIpVersion6,
-            null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
 
         $collection = new ProbesCollection([$dtoA, $dtoB]);
@@ -166,5 +250,4 @@ class ProbesCollectionTest extends TestCase
         $this->expectException(ItemNotFoundException::class);
         $collection->findById('complete-gibberish');
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Unit\Ip\Strategies\MtrDotToolsService;
 
 use GuzzleHttp\Client;
@@ -38,7 +40,6 @@ class RetryStrategyTest extends TestCase
             new ConnectException('Test', new Request('GET', '/')),
             new Response(200),
         ];
-
 
         $mockHandler = new MockHandler($mockQueue);
         $stack = HandlerStack::create($mockHandler);

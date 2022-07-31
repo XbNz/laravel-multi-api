@@ -25,7 +25,6 @@ use XbNz\Resolver\Domain\Ip\Strategies\AuthStrategies\IpInfoDotIoStrategy;
 
 class AuthStrategiesTest extends \XbNz\Resolver\Tests\TestCase
 {
-
     /**
      * TODO:
      * Move everything in here to their own separate service folder and test them individually (as seen with MTR tools)

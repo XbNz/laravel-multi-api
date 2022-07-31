@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections;
 
-use Illuminate\Support\Collection;
 use ArrayAccess;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 
 /**

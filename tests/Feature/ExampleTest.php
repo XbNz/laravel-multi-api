@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Tests\Feature;
 
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
@@ -16,8 +18,6 @@ class ExampleTest extends TestCase
         $service = app(MtrDotToolsService::class);
 
         $probes = $service->listProbes()->canPerformPingOn(IpVersion::FOUR)->online()->fuzzySearch('netherlands');
-
-
 
         dd($service->ping([IpData::fromIp('1.1.1.1')], $probes));
 

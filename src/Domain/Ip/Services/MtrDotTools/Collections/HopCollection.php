@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Collections;
 
 use ArrayAccess;
@@ -19,6 +21,4 @@ class HopCollection extends Collection
     {
         parent::__construct($items);
     }
-
-
 }

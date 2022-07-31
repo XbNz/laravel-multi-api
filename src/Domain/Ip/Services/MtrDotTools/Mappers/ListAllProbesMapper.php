@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers;
 
 use JsonException;
@@ -18,7 +20,10 @@ class ListAllProbesMapper
     {
         try {
             $jsonResponse = json_decode(
-                $requestResponse->guzzleResponse->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR
+                $requestResponse->guzzleResponse->getBody()->getContents(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
             );
         } catch (JsonException $e) {
             throw new MtrDotToolsException('Failed to decode JSON response from MTR.tools');

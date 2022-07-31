@@ -6,14 +6,13 @@ namespace XbNz\Resolver\Domain\Ip\Actions;
 
 use Illuminate\Support\ItemNotFoundException;
 use Illuminate\Support\Str;
-use JsonException;
 use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\RekindledMtrData;
-use XbNz\Resolver\Domain\Ip\Exceptions\MtrParseException;
+use XbNz\Resolver\Domain\Ip\Exceptions\ParseException;
 
 class ConvertPingPlainToJsonAction
 {
     /**
-     * @throws MtrParseException
+     * @throws ParseException
      */
     public function execute(RekindledMtrData $rekindledData): string
     {
@@ -24,9 +23,8 @@ class ConvertPingPlainToJsonAction
         try {
             $packetsTransmittedLine = $explodedByLine->sole(fn (string $line) => Str::of($line)->contains('packets transmitted'));
         } catch (ItemNotFoundException $e) {
-            throw new MtrParseException("Was not able to parse plain ping response for probe {$rekindledData->probeId}");
+            throw new ParseException("Was not able to parse plain ping response for probe {$rekindledData->probeId}");
         }
-
 
         $sequences = $explodedByLine
             ->filter(fn (string $line) => Str::of($line)->contains('icmp_seq'))

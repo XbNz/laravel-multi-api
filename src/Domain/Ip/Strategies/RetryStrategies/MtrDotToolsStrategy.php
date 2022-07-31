@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
 use Illuminate\Support\Facades\Config;

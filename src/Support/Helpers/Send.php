@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\Helpers;
 
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Pool;
-use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Collection;

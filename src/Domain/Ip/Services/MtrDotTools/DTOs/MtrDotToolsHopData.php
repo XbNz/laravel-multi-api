@@ -1,8 +1,8 @@
 <?php
 
-namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs;
+declare(strict_types=1);
 
-use XbNz\Resolver\Domain\Ip\DTOs\MtrDotSh\MtrDotShMtrHopResultsData;
+namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs;
 
 class MtrDotToolsHopData
 {
