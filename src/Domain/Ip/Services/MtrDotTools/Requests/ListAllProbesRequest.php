@@ -7,7 +7,7 @@ namespace XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Requests;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 
-class ListAllProbesRequest implements \XbNz\Resolver\Domain\Ip\Services\Request
+class ListAllProbesRequest
 {
     public const URI = 'https://mtr.tools';
 
@@ -17,7 +17,7 @@ class ListAllProbesRequest implements \XbNz\Resolver\Domain\Ip\Services\Request
         'Accept' => 'application/json',
     ];
 
-    public function __invoke(): Request
+    public static function generate(): \GuzzleHttp\Psr7\Request
     {
         $uri = new Uri(self::URI);
         $uri = $uri->withPath(self::PATH);

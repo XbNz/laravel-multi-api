@@ -9,11 +9,11 @@ use GuzzleHttp\Psr7\Uri;
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\DTOs\MtrDotToolsProbeData;
 
-class PerformPingRequest implements \XbNz\Resolver\Domain\Ip\Services\Request
+class PerformPingRequest
 {
     public const URI = 'https://mtr.tools';
 
-    public function __invoke(MtrDotToolsProbeData $probe, IpData $ipData): Request
+    public static function generate(MtrDotToolsProbeData $probe, IpData $ipData): \GuzzleHttp\Psr7\Request
     {
         $uri = new Uri(self::URI);
         $uri = $uri->withPath("/{$probe->probeId}/ping/{$ipData->ip}");

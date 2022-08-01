@@ -29,11 +29,8 @@ class MtrDotToolsService implements Service
 {
     public function __construct(
         private readonly ClientInterface $client,
-        private readonly ListAllProbesRequest $listAllProbesRequest,
         private readonly ListAllProbesMapper $listAllProbesMapper,
-        private readonly PerformMtrRequest $performMtrRequest,
         private readonly PerformMtrMapper $performMtrMapper,
-        private readonly PerformPingRequest $performPingRequest,
         private readonly PerformPingMapper $performPingMapper,
     ) {
     }
@@ -46,7 +43,7 @@ class MtrDotToolsService implements Service
     {
         $response = Send::sync(
             $this->client,
-            ($this->listAllProbesRequest)()
+            ListAllProbesRequest::generate(),
         );
 
         if ($intercept !== null) {
@@ -72,7 +69,7 @@ class MtrDotToolsService implements Service
         $requests = Collection::make($ipData)
             ->map(function (IpData $ipDataObject) use ($probes) {
                 return Collection::make($probes)
-                    ->map(fn (MtrDotToolsProbeData $probe) => ($this->performMtrRequest)($probe, $ipDataObject));
+                    ->map(fn (MtrDotToolsProbeData $probe) => PerformMtrRequest::generate($probe, $ipDataObject));
             })->flatten();
 
         $responses = Send::async($this->client, $requests->toArray());
@@ -101,7 +98,7 @@ class MtrDotToolsService implements Service
         $requests = Collection::make($ipData)
             ->map(function (IpData $ipDataObject) use ($probes) {
                 return Collection::make($probes)
-                    ->map(fn (MtrDotToolsProbeData $probe) => ($this->performPingRequest)($probe, $ipDataObject));
+                    ->map(fn (MtrDotToolsProbeData $probe) => PerformPingRequest::generate($probe, $ipDataObject));
             })->flatten();
 
         $responses = Send::async($this->client, $requests->toArray());

@@ -80,11 +80,8 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->bind(MtrDotToolsService::class, static function (Application $app) {
             return new MtrDotToolsService(
                 $app->make(GuzzleClientFactory::class)->for(MtrDotToolsService::class),
-                $app->make(ListAllProbesRequest::class),
                 $app->make(ListAllProbesMapper::class),
-                $app->make(PerformMtrRequest::class),
                 $app->make(PerformMtrMapper::class),
-                $app->make(PerformPingRequest::class),
                 $app->make(PerformPingMapper::class)
             );
         });
