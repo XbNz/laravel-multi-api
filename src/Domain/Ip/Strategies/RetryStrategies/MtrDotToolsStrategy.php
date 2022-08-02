@@ -6,6 +6,7 @@ namespace XbNz\Resolver\Domain\Ip\Strategies\RetryStrategies;
 
 use Illuminate\Support\Facades\Config;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\MtrDotToolsService;
+use XbNz\Resolver\Domain\Ip\Services\Service;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
@@ -25,6 +26,9 @@ class MtrDotToolsStrategy implements RetryStrategy
         );
     }
 
+    /**
+     * @param class-string<Service> $service
+     */
     public function supports(string $service): bool
     {
         return $service === MtrDotToolsService::class;
