@@ -19,7 +19,8 @@
         "illuminate/cache": "^9.0",
         "illuminate/collections": "^9.0",
         "illuminate/http": "^9.0",
-        "illuminate/support": "^9.0"
+        "illuminate/support": "^9.0",
+        "league/iso3166": "^4.0"
     },
     "require-dev": {
         "orchestra/testbench": "^7.4",

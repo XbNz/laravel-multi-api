@@ -6,6 +6,7 @@ namespace XbNz\Resolver\Tests\Feature\Ip\Services\IpGeolocationDotIo;
 
 use XbNz\Resolver\Domain\Ip\DTOs\IpData;
 use XbNz\Resolver\Domain\Ip\Services\IpGeolocationDotIo\IpGeolocationDotIoService;
+use XbNz\Resolver\Support\ValueObjects\Country;
 use XbNz\Resolver\Tests\TestCase;
 
 class ServiceTest extends TestCase
