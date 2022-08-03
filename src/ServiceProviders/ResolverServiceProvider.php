@@ -6,6 +6,7 @@ namespace XbNz\Resolver\ServiceProviders;
 
 use Illuminate\Foundation\Application;
 use XbNz\Resolver\Domain\Ip\Services\IpGeolocationDotIo\IpGeolocationDotIoService;
+use XbNz\Resolver\Domain\Ip\Services\IpGeolocationDotIo\Mappers\GeolocationMapper;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\ListAllProbesMapper;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\PerformMtrMapper;
 use XbNz\Resolver\Domain\Ip\Services\MtrDotTools\Mappers\PerformPingMapper;
@@ -56,6 +57,7 @@ class ResolverServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->bind(IpGeolocationDotIoService::class, static function (Application $app) {
             return new IpGeolocationDotIoService(
                 $app->make(GuzzleClientFactory::class)->for(IpGeolocationDotIoService::class),
+                $app->make(GeolocationMapper::class),
             );
         });
     }

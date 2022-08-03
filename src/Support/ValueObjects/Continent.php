@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\ValueObjects;
 
 use Illuminate\Support\Str;
-use Locale;
 
 class Continent
 {
     public function __construct(
-        private readonly string $code,
-        private readonly string $name,
+        public readonly string $code,
+        public readonly string $name,
     ) {
     }
 

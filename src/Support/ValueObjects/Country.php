@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace XbNz\Resolver\Support\ValueObjects;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ItemNotFoundException;
 use Illuminate\Support\Str;
 use League\ISO3166\Exception\DomainException;
 use League\ISO3166\ISO3166;
-use Locale;
 use Webmozart\Assert\Assert;
 
 class Country
@@ -28,12 +28,11 @@ class Country
     public static function from(string $string): self
     {
         Assert::stringNotEmpty($string);
-        // TODO: Pick up here: country value object is complete. Continue with rest of ipgeolocation json
         $string = Str::of($string)->lower()->value();
 
         $country = rescue(
-            static fn() => self::tryIso($string),
-            static fn() => self::tryName($string)
+            static fn () => self::tryIso($string),
+            static fn () => self::tryName($string)
         );
 
         return new self(
@@ -51,8 +50,8 @@ class Country
     public static function tryIso(string $string): array
     {
         return rescue(
-            static fn() => (new ISO3166)->alpha2($string),
-            static fn() => (new ISO3166)->alpha3($string)
+            static fn () => (new ISO3166())->alpha2($string),
+            static fn () => (new ISO3166())->alpha3($string)
         );
     }
 
@@ -66,10 +65,10 @@ class Country
         try {
             return $countries->sole(function ($country) use ($string) {
                 $lower = Str::of($country['name'])->lower()->value();
-                return Str::of($lower)->contains($string);
+                return $lower === $string;
             });
         } catch (ItemNotFoundException) {
-            throw new DomainException;
+            throw new DomainException();
         }
     }
 }
