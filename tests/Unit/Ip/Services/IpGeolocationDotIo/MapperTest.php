@@ -126,7 +126,7 @@ class MapperTest extends TestCase
         }
         JSON;
 
-        $array = json_decode($json, true);
+        $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
         return array_merge($array, $extras);
     }

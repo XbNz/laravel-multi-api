@@ -27,7 +27,7 @@ class MtrDotToolsStrategy implements RetryStrategy
     }
 
     /**
-     * @param class-string<Service> $service
+     * @param class-string<MtrDotToolsService> $service
      */
     public function supports(string $service): bool
     {

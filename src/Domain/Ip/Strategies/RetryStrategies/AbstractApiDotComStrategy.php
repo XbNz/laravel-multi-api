@@ -8,13 +8,13 @@ use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Facades\Config;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use XbNz\Resolver\Domain\Ip\Services\IpGeolocationDotIo\IpGeolocationDotIoService;
+use XbNz\Resolver\Domain\Ip\Services\AbstractApiDotCom\AbstractApiDotComService;
 use XbNz\Resolver\Domain\Ip\Services\Service;
 use XbNz\Resolver\Support\Actions\GetRandomApiKeyAction;
 use XbNz\Resolver\Support\Guzzle\Middlewares\WithRetry;
 use XbNz\Resolver\Support\Strategies\RetryStrategy;
 
-class IpGeolocationDotIoStrategy implements RetryStrategy
+class AbstractApiDotComStrategy implements RetryStrategy
 {
     public function __construct(
         private readonly GetRandomApiKeyAction $getRandomApiKey,
@@ -36,19 +36,19 @@ class IpGeolocationDotIoStrategy implements RetryStrategy
                 ?ResponseInterface $response
             ) {
                 $uri = $request->getUri();
-                $randomKey = $this->getRandomApiKey->execute(IpGeolocationDotIoService::class, 'ip-resolver.api-keys');
+                $randomKey = $this->getRandomApiKey->execute(AbstractApiDotComService::class, 'ip-resolver.api-keys');
 
-                $newUri = Uri::withQueryValue($uri, 'apiKey', $randomKey);
+                $newUri = Uri::withQueryValue($uri, 'api_key', $randomKey);
                 $request = $request->withUri($newUri);
             }
         );
     }
 
     /**
-     * @param class-string<IpGeolocationDotIoService> $service
+     * @param class-string<AbstractApiDotComService> $service
      */
     public function supports(string $service): bool
     {
-        return $service === IpGeolocationDotIoService::class;
+        return $service === AbstractApiDotComService::class;
     }
 }

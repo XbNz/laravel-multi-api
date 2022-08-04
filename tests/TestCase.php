@@ -6,6 +6,7 @@ namespace XbNz\Resolver\Tests;
 
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Illuminate\Support\Facades\Config;
+use XbNz\Resolver\Domain\Ip\Services\AbstractApiDotCom\AbstractApiDotComService;
 use XbNz\Resolver\Domain\Ip\Services\IpGeolocationDotIo\IpGeolocationDotIoService;
 use XbNz\Resolver\Facades\ResolverFacade;
 use XbNz\Resolver\ServiceProviders\IpServiceProvider;
@@ -42,6 +43,9 @@ class TestCase extends \Orchestra\Testbench\TestCase
         Config::set('ip-resolver.api-keys', [
             IpGeolocationDotIoService::class => [
                 env('IP_GEOLOCATION_DOT_IO_API_KEY'),
+            ],
+            AbstractApiDotComService::class => [
+                env('ABSTRACTAPI_DOT_COM_GEOLOCATION_API_KEY'),
             ],
         ]);
     }
